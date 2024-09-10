@@ -7,8 +7,8 @@ interface ButtonProps {
 }
 
 const Button: React.FC<ButtonProps> = ({ label, onClick, disabled = false }) => {
-  const activeClass = "active:bg-activeOrange active:text-white active:shadow-customInner";
-  const disabledClass = "disabled:bg-lightGray disabled:text-black";
+  const activeClass = "active:bg-active-orange active:text-white active:shadow-customInner";
+  const disabledClass = "disabled:bg-light-gray disabled:text-black";
 
   return (
     <button
