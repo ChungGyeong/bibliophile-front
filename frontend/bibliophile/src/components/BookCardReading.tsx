@@ -1,6 +1,5 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import ProgressBar from "@/components/common/ProgressBar.tsx";
 
 interface BookCardReadingProps {
   thumbnail: string;
@@ -10,11 +9,10 @@ interface BookCardReadingProps {
   createdDate: string;
   readingPage: number;
   totalPage: number;
-  readingPercent: number;
   isActive: boolean;
 }
 
-const activeClass = "bg-light-yellow";
+const activeClass = "bg-lightYellow";
 
 const BookCardReading: React.FC<BookCardReadingProps> = ({
   thumbnail,
@@ -24,12 +22,11 @@ const BookCardReading: React.FC<BookCardReadingProps> = ({
   createdDate,
   readingPage,
   totalPage,
-  readingPercent,
   isActive,
 }) => {
   const navigate = useNavigate();
 
-  const handleClickNavigateMoreInfo = (e: { stopPropagation: () => void }) => {
+  const handleClickNavMoreInfo = (e: { stopPropagation: () => void }) => {
     // TODO: 상세페이지로 이동
     e.stopPropagation();
     navigate("");
@@ -37,8 +34,8 @@ const BookCardReading: React.FC<BookCardReadingProps> = ({
 
   return (
     <div
-      className={`border-common h-[140px] w-full flex p-[10px] gap-[10px] shadow-custom active:shadow-custom-inner ${isActive && activeClass}`}
-      onClick={handleClickNavigateMoreInfo}
+      className={`bg-white border-common h-[140px] w-full flex p-[10px] gap-[10px] shadow-custom active:shadow-customInner ${isActive && activeClass}`}
+      onClick={handleClickNavMoreInfo}
     >
       <div className="w-1/3 h-full overflow-hidden object-center object-cover">
         <img src={thumbnail} alt={title} className="w-full h-full" />
@@ -51,21 +48,19 @@ const BookCardReading: React.FC<BookCardReadingProps> = ({
             <p className="font-light text-[10px]">{publisher}</p>
           </div>
           <p
-            className="font-ligt text-medium-gray text-[10px] z-10 relative active:text-black"
-            onClick={handleClickNavigateMoreInfo}
+            className="font-ligt text-mediumGray text-[10px] z-10 relative active:text-black"
+            onClick={handleClickNavMoreInfo}
           >
             더보기
           </p>
         </div>
-        <div>
-          <div className="flex w-full justify-between">
-            <p className="text-[10px]">{createdDate} ~</p>
-            <p className="font-light text-[10px]">
-              {readingPage} / {totalPage} p &nbsp;&nbsp;&nbsp;
-            </p>
-          </div>
-          <ProgressBar isThin={true} readingPercent={readingPercent} />
+        <div className="flex w-full justify-between">
+          <p className="text-[10px]">{createdDate} ~</p>
+          <p className="font-light text-[10px]">
+            {readingPage} / {totalPage} p
+          </p>
         </div>
+        {/*상태바*/}
       </div>
     </div>
   );
