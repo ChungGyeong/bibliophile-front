@@ -6,17 +6,24 @@ interface ButtonProps {
   disabled?: boolean;
 }
 
-const Button: React.FC<ButtonProps> = ({ label, onClick, disabled = false }) => {
-  const activeClass = "active:bg-active-orange active:text-white active:shadow-customInner";
-  const disabledClass = "disabled:bg-light-gray disabled:text-black";
+const Button: React.FC<ButtonProps> = ({ label, onClick, disabled=false }) => {
+
+  const baseClass = 'w-full h-10 rounded-[5px] bg-orange text-black shadow-custom';
+  const activeClass = 'active:bg-activeOrange active:text-white active:shadow-customInner';
+  const disabledClass = 'disabled:bg-lightGray disabled:text-black';
+  const buttonClass = `${baseClass} ${activeClass} ${disabledClass}`;
+
+  const textClass = 'text-base font-regular';
 
   return (
     <button
-      className={`w-full h-10 rounded-[5px] bg-orange text-black shadow-custom ${activeClass} ${disabledClass}`}
+      className={buttonClass}
       onClick={onClick}
       disabled={disabled}
     >
-      <span className="text-base font-regular">{label}</span>
+      <span className={textClass}>
+        {label}
+      </span>
     </button>
   );
 };
