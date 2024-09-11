@@ -29,7 +29,7 @@ const BookCardReading: React.FC<BookCardReadingProps> = ({
 }) => {
   const navigate = useNavigate();
 
-  const handleClickNavMoreInfo = (e: { stopPropagation: () => void }) => {
+  const handleClickNavigateMoreInfo = (e: { stopPropagation: () => void }) => {
     // TODO: 상세페이지로 이동
     e.stopPropagation();
     navigate("");
@@ -38,7 +38,7 @@ const BookCardReading: React.FC<BookCardReadingProps> = ({
   return (
     <div
       className={`border-common h-[140px] w-full flex p-[10px] gap-[10px] shadow-custom active:shadow-custom-inner ${isActive && activeClass}`}
-      onClick={handleClickNavMoreInfo}
+      onClick={handleClickNavigateMoreInfo}
     >
       <div className="w-1/3 h-full overflow-hidden object-center object-cover">
         <img src={thumbnail} alt={title} className="w-full h-full" />
@@ -52,7 +52,7 @@ const BookCardReading: React.FC<BookCardReadingProps> = ({
           </div>
           <p
             className="font-ligt text-medium-gray text-[10px] z-10 relative active:text-black"
-            onClick={handleClickNavMoreInfo}
+            onClick={handleClickNavigateMoreInfo}
           >
             더보기
           </p>
