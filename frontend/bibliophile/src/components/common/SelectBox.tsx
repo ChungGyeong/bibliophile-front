@@ -28,7 +28,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({ options, defaultOption, onSelect 
     <div className="border-common w-full">
       <div className="h-9 px-[10px] flex justify-between items-center" onClick={toggleDropdown}>
         <span className="text-sm font-light">{selectedOption || "옵션을 선택해주세요."}</span>
-        <i className="fi fi-rr-angle-small-down"></i>
+        <i className="fi fi-rr-angle-small-down pt-1 text-gray"></i>
       </div>
 
       {isOpen && (
