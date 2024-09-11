@@ -1,23 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 interface InputBoxProps {
   placeholder?: string;
   value?: string;
   onInputChange: (value: string) => void;
-  errorMessage?: string;
+  noticeMessage?: string;
 }
 
 const InputBox: React.FC<InputBoxProps> = ({
   placeholder = "입력하세요",
   value = "",
   onInputChange,
-  errorMessage,
+  noticeMessage,
 }) => {
   return (
-    <div className="w-full">
-      <div className="h-[14px] mb-2">
-        {errorMessage && <span className="text-xs text-gray">{errorMessage}</span>}
-      </div>
+    <div className="w-full relative">
+      {noticeMessage && <span className="text-xs text-gray absolute -top-4">{noticeMessage}</span>}
       <input
         type="text"
         value={value}
