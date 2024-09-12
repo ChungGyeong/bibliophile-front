@@ -5,6 +5,7 @@ interface InputBoxProps {
   value?: string;
   onInputChange: (value: string) => void;
   noticeMessage?: string;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 const InputBox: React.FC<InputBoxProps> = ({
@@ -12,6 +13,7 @@ const InputBox: React.FC<InputBoxProps> = ({
   value = "",
   onInputChange,
   noticeMessage,
+  onKeyDown,
 }) => {
   return (
     <div className="w-full relative">
@@ -20,6 +22,7 @@ const InputBox: React.FC<InputBoxProps> = ({
         type="text"
         value={value}
         onChange={event => onInputChange(event.target.value)}
+        onKeyDown={onKeyDown}
         placeholder={placeholder}
         className="w-full h-9 text-sm font-light border-common px-[10px]"
       />
