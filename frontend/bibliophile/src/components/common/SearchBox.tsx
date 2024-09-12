@@ -3,29 +3,22 @@ import { useNavigate } from "react-router-dom";
 import InputBox from "./InputBox";
 
 interface SearchBoxProps {
-  placeholder?: string;
   value?: string;
   onInputChange: (value: string) => void;
-  searchRoute?: string;
-  barcodeRoute?: string;
+  onUpdatedValue: (value: string) => void;
 }
 
-const SearchBox: React.FC<SearchBoxProps> = ({
-  placeholder = "검색어를 입력해주세요.",
-  value = "",
-  onInputChange,
-  searchRoute = "/search",
-  barcodeRoute = "/barcode",
-}) => {
+const SearchBox: React.FC<SearchBoxProps> = ({ value = "", onInputChange, onUpdatedValue }) => {
   const navigate = useNavigate();
 
   const handleSearchIconClick = () => {
     if (value) {
-      navigate(`${searchRoute}?query=${value}`);
+      onUpdatedValue(value);
     }
   };
   const handleBarcodeIconClick = () => {
-    navigate(barcodeRoute);
+    // TODO: 바코드 페이지로 이동
+    navigate("/");
   };
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -37,7 +30,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
     <div className="flex w-full">
       <div className="flex-grow">
         <InputBox
-          placeholder={placeholder}
+          placeholder="검색어를 입력해주세요"
           value={value}
           onInputChange={onInputChange}
           onKeyDown={handleKeyDown}
