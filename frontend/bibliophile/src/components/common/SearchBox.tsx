@@ -14,22 +14,34 @@ const SearchBox: React.FC<SearchBoxProps> = ({
   placeholder = "검색어를 입력해주세요.",
   value = "",
   onInputChange,
-  searchRoute = "/",
-  barcodeRoute = "/",
+  searchRoute = "/search",
+  barcodeRoute = "/barcode",
 }) => {
   const navigate = useNavigate();
 
   const handleSearchIconClick = () => {
-    navigate(searchRoute);
+    if (value) {
+      navigate(`${searchRoute}?query=${value}`);
+    }
   };
   const handleBarcodeIconClick = () => {
     navigate(barcodeRoute);
+  };
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearchIconClick();
+    }
   };
 
   return (
     <div className="flex w-full">
       <div className="flex-grow">
-        <InputBox placeholder={placeholder} value={value} onInputChange={onInputChange} />
+        <InputBox
+          placeholder={placeholder}
+          value={value}
+          onInputChange={onInputChange}
+          onKeyDown={handleKeyDown}
+        />
       </div>
 
       <div className="flex ml-[20px] pt-1">
