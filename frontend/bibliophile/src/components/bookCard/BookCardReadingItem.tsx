@@ -16,7 +16,7 @@ interface BookCardReadingProps {
 
 const activeClass = "bg-light-yellow";
 
-const BookCardReading: React.FC<BookCardReadingProps> = ({
+const BookCardReadingItem: React.FC<BookCardReadingProps> = ({
   thumbnail,
   title,
   authors,
@@ -71,4 +71,4 @@ const BookCardReading: React.FC<BookCardReadingProps> = ({
   );
 };
 
-export default BookCardReading;
+export default BookCardReadingItem;
