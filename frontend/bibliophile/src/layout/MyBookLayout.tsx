@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import MyBookTab from "./MyBookTab";
+import BottomNavigationBar from "./BottomNavigationBar.tsx";
 
 interface MyBookLayoutProps {
   page?: React.ReactNode;
@@ -17,6 +18,7 @@ const MyBookLayout: React.FC<MyBookLayoutProps> = ({ page }) => {
     <React.Fragment>
       <MyBookTab activeTab={activeTab} onChange={handleTabChange} />
       <main className="w-[90%] m-auto">{page}</main>
+      <BottomNavigationBar />
     </React.Fragment>
   );
 };
