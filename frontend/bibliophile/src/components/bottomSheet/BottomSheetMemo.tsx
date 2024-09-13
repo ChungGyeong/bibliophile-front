@@ -78,13 +78,13 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({ label }) => {
           {images.map((image, index) => (
             <div
               key={index}
-              className="me-3 w-[60px] h-[60px] border-2 border-gray-300 rounded-md outline-none mb-5 flex items-center justify-center relative"
+              className="me-3 w-[60px] h-[60px] border-2 border-gray-300 rounded-md outline-none mb-5 flex items-center justify-center relative overflow-hidden"
             >
               <button
                 onClick={() => handleImageDelete(index)}
-                className="absolute top-[-8px] right-[-8px] w-[20px] h-[20px] flex items-center justify-center text-xs"
+                className="absolute top-0 right-0 w-[20px] h-[20px] flex items-center justify-center text-xs"
               >
-                <i className="fi fi-rr-circle-xmark"></i>
+                <i className="fi fi-rr-cross-small color-white text-xl pt-2 text-white [text-shadow:_2px_2px_6px_rgb(0_0_0_/_0.1)]"></i>
               </button>
               <img src={image} alt="이미지" className="w-full h-full object-cover" />
             </div>
