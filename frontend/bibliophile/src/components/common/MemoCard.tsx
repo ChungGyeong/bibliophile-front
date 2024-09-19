@@ -2,15 +2,15 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 interface CardProps {
-  type: "review" | "memo";
+  type: "report" | "memo";
   id: number;
   content: string;
   imgUrl: string;
   createdDate: string;
-  pages?: number;
+  memoPage?: number;
 }
 
-const MemoCard: React.FC<CardProps> = ({ type, id, content, imgUrl, createdDate, pages }) => {
+const MemoCard: React.FC<CardProps> = ({ type, id, content, imgUrl, createdDate, memoPage }) => {
   const navigate = useNavigate();
 
   const formatDate = (date: string) => {
@@ -18,7 +18,7 @@ const MemoCard: React.FC<CardProps> = ({ type, id, content, imgUrl, createdDate,
   };
 
   const handleMemoCardClick = () => {
-    if (type === "review") {
+    if (type === "report") {
       navigate("");
     } else if (type === "memo") {
       navigate("");
@@ -41,12 +41,12 @@ const MemoCard: React.FC<CardProps> = ({ type, id, content, imgUrl, createdDate,
         </div>
 
         <div
-          className={`font-light text-xs ${type === "review" ? "line-clamp-6" : "line-clamp-5"}`}
+          className={`font-light text-xs ${type === "report" ? "line-clamp-6" : "line-clamp-5"}`}
         >
           {content}
         </div>
-        {type === "memo" && pages && (
-          <div className="text-right font-medium text-[10px] text-gray-500 mt-2">... {pages} p</div>
+        {type === "memo" && memoPage && (
+          <div className="text-right font-medium text-[10px] text-gray-500 mt-2">... {memoPage} p</div>
         )}
       </div>
     </div>
