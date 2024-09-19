@@ -6,15 +6,15 @@ interface PageLayoutProps {
 }
 
 const PageLayout: React.FC<PageLayoutProps> = ({ page }) => {
-  const [activeTab, setActiveTab] = useState("홈");
-  const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
+  const [activeNav, setActiveNav] = useState("홈");
+  const handleNavChange = (nav: string) => {
+    setActiveNav(nav);
   };
 
   return (
     <React.Fragment>
       <main className="w-[90%] m-auto">{page}</main>
-      <NavBar activeTab={activeTab} onTabChange={handleTabChange} />
+      <NavBar activeNav={activeNav} onNavChange={handleNavChange} />
     </React.Fragment>
   );
 };

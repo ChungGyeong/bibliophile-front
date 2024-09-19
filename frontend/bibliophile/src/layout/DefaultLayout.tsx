@@ -1,4 +1,5 @@
 import React from "react";
+
 interface DefaultLayoutProps {
   page?: React.ReactNode;
 }

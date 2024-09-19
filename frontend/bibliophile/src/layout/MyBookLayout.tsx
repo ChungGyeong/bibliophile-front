@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import MyBookTab from "./MyBookTab";
-import BottomNavigationBar from "./BottomNavigationBar.tsx";
+import NavBar from "./NavBar.tsx";
 
 interface MyBookLayoutProps {
   page?: React.ReactNode;
@@ -14,11 +14,16 @@ const MyBookLayout: React.FC<MyBookLayoutProps> = ({ page }) => {
     console.log(`활성화된 탭: ${tab}`);
   };
 
+  const [activeNav, setActiveNav] = useState("홈");
+  const handleNavChange = (nav: string) => {
+    setActiveNav(nav);
+  };
+
   return (
     <React.Fragment>
       <MyBookTab activeTab={activeTab} onChange={handleTabChange} />
       <main className="w-[90%] m-auto">{page}</main>
-      <BottomNavigationBar />
+      <NavBar activeNav={activeNav} onNavChange={handleNavChange} />
     </React.Fragment>
   );
 };
