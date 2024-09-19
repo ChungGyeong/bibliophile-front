@@ -64,7 +64,7 @@ const FoxHouse: React.FC<FoxData> = ({ foxId, level, foxType, exp, feedCount, fo
         <div className="w-[160px] flex flex-col items-center">
           <span className="text-white text-sm font-medium">Lv {level}</span>
           {/* TODO: 프로그레스바 최대 경험치 기준 어떻게 받을지에 따라 마저 작성 */}
-          <ProgressBar isThin={false} readingPercent={exp} />
+          <ProgressBar isThin={false} percent={exp} />
         </div>
 
         <div className="flex flex-col items-center">
