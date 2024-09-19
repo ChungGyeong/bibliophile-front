@@ -2,14 +2,14 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 interface NavBarProps {
-  activeTab: string;
-  onTabChange: (tab: string) => void;
+  activeNav: string;
+  onNavChange: (nav: string) => void;
 }
 
-const NavBar: React.FC<NavBarProps> = ({ activeTab, onTabChange }) => {
+const NavBar: React.FC<NavBarProps> = ({ activeNav, onNavChange }) => {
   const navigate = useNavigate();
 
-  const tabs = [
+  const navs = [
     {
       name: "나의 책장",
       icon: "fi fi-tr-story-book text-gray",
@@ -42,22 +42,22 @@ const NavBar: React.FC<NavBarProps> = ({ activeTab, onTabChange }) => {
     },
   ];
 
-  const handleTabClick = (tab: string, route: string) => {
-    onTabChange(tab);
+  const handleNavClick = (nav: string, route: string) => {
+    onNavChange(nav);
     navigate(route);
   };
 
   return (
     <div className="fixed w-full bottom-0 h-[60px] bg-white shadow-navbar flex">
-      {tabs.map(tab => (
+      {navs.map(nav => (
         <button
-          key={tab.name}
-          onClick={() => handleTabClick(tab.name, tab.route)}
+          key={nav.name}
+          onClick={() => handleNavClick(nav.name, nav.route)}
           className="flex-1 flex flex-col items-center justify-center"
         >
-          <i className={`text-xl ${activeTab === tab.name ? tab.activeIcon : tab.icon}`} />
-          <span className={`text-[10px] leading-none ${activeTab === tab.name ? "" : "text-gray"}`}>
-            {tab.name}
+          <i className={`text-xl ${activeNav === nav.name ? nav.activeIcon : nav.icon}`} />
+          <span className={`text-[10px] leading-none ${activeNav === nav.name ? "" : "text-gray"}`}>
+            {nav.name}
           </span>
         </button>
       ))}
