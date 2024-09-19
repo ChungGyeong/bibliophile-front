@@ -2,10 +2,10 @@ import React, { useState } from "react";
 
 interface LikeButtonProps {
   isBookmarked?: boolean;
-  bookmarkId: string;
+  bookId: number;
 }
 
-const LikeButton: React.FC<LikeButtonProps> = ({ isBookmarked = false, bookmarkId }) => {
+const LikeButton: React.FC<LikeButtonProps> = ({ isBookmarked = false, bookId }) => {
   const [bookmarked, setBookmarked] = useState(isBookmarked);
 
   const handleToggleBookmarked = () => {
@@ -15,11 +15,11 @@ const LikeButton: React.FC<LikeButtonProps> = ({ isBookmarked = false, bookmarkI
   };
 
   return (
-    <button onClick={handleToggleBookmarked}>
+    <button onClick={handleToggleBookmarked} className="z-10">
       {bookmarked ? (
-        <i className="fi fi-sr-heart text-orange text-xl" />
+        <i className="fi fi-sr-heart text-orange text-base" />
       ) : (
-        <i className="fi fi-sr-heart text-soft-gray text-xl" />
+        <i className="fi fi-sr-heart text-soft-gray text-base" />
       )}
     </button>
   );
