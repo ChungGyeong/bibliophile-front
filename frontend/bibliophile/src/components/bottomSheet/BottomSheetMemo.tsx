@@ -104,7 +104,7 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
         <div className="flex justify-start items-center w-[90%] h-[10%] my-5">
           <div
             onClick={handleIconClick}
-            className="me-4 aspect-square h-full border-2 border-gray-300 p-2 rounded-md outline-none mb-7 flex items-center justify-center"
+            className="me-4 aspect-square h-full border-2 border-gray-300 p-2 rounded-md outline-none mb-5 flex items-center justify-center"
           >
             <i className="m-0 p-0 fi fi-rr-add-image text-2xl pt-2"></i>
             <input
