@@ -3,26 +3,23 @@ import React from "react";
 interface BottomSheetProps {
   height: number;
   children: React.ReactNode;
+  onClose?: () => void;
 }
 
-const BottomSheet: React.FC<BottomSheetProps> = ({ height, children }) => {
+const BottomSheet: React.FC<BottomSheetProps> = ({ height, children, onClose }) => {
   const getHeightClass = () => {
-    if (height === 700) return "h-[700px]";
+    if (height === 90) return "h-[90%]";
     else if (height === 440) return "h-[440px]";
     return "h-[600px]";
   };
 
-  const handleClose = () => {
-    alert("닫기");
-  };
-
   return (
     <div
-      className={`w-[360px] ${getHeightClass()} fixed bg-white border border-gray rounded-lg shadow-md`}
+      className={`w-full ${getHeightClass()} fixed bg-white border border-gray rounded-lg shadow-md`}
     >
       <i
         className="fi fi-rr-cross-small p-1 absolute top-[10px] right-[10px] text-[25px]"
-        onClick={handleClose}
+        onClick={onClose}
       ></i>
       {children}
     </div>
