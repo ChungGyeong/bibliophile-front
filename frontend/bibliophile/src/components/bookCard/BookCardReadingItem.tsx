@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import ProgressBar from "@/components/common/ProgressBar.tsx";
 
 interface BookCardReadingProps {
+  myBookId: number;
   thumbnail: string;
   title: string;
   authors: string;
@@ -17,6 +18,7 @@ interface BookCardReadingProps {
 const activeClass = "bg-light-yellow";
 
 const BookCardReadingItem: React.FC<BookCardReadingProps> = ({
+  myBookId,
   thumbnail,
   title,
   authors,
@@ -30,9 +32,8 @@ const BookCardReadingItem: React.FC<BookCardReadingProps> = ({
   const navigate = useNavigate();
 
   const handleClickNavigateMoreInfo = (e: { stopPropagation: () => void }) => {
-    // TODO: 상세페이지로 이동
     e.stopPropagation();
-    navigate("");
+    navigate(`/reading/${myBookId}`);
   };
 
   return (
