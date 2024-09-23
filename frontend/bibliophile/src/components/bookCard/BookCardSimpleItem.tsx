@@ -2,16 +2,22 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 interface BookCardSimpleItemProps {
+  bookId: number;
   thumbnail: string;
   title: string;
   authors: string;
 }
 
-const BookCardSimpleItem: React.FC<BookCardSimpleItemProps> = ({ thumbnail, title, authors }) => {
+const BookCardSimpleItem: React.FC<BookCardSimpleItemProps> = ({
+  bookId,
+  thumbnail,
+  title,
+  authors,
+}) => {
   const navigate = useNavigate();
 
   const handleClickItem = () => {
-    navigate("");
+    navigate(`/books/${bookId}`);
   };
 
   return (
