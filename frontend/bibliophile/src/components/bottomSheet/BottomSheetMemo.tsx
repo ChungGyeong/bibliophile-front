@@ -1,27 +1,53 @@
 import React, { useRef, useState } from "react";
 import BottomSheet from "./BottomSheet";
-import Button from "../Button";
+import Button from "../common/Button";
 
-interface BottomSheetMemoProps {
-  label: string;
+interface MemoImage {
+  imgUrl: string;
+  createdDate: string;
+  lastModifyDate: string;
 }
 
-const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({ label }) => {
-  const [memo, setMemo] = useState<string>("");
-  const [images, setImages] = useState<string[]>([]);
+interface BottomSheetMemoProps {
+  onClose: () => void;
+  label: string;
+  mode: string;
+  content?: string;
+  memoPage?: number;
+  memoImgList?: MemoImage[];
+}
+
+const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
+  onClose,
+  label,
+  mode,
+  content = "",
+  memoPage = null,
+  memoImgList = [],
+}) => {
+  const [memo, setMemo] = useState<string>(content);
+  const [page, setPage] = useState<number>(memoPage);
+  const [images, setImages] = useState<MemoImage[]>(memoImgList);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleMemoChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMemo(e.target.value);
   };
 
+  const handlePageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPage(Number(e.target.value));
+  };
+
   const handleButtonClick = () => {
-    alert(`입력값: ${memo}`);
+    alert(`입력값: ${memo}, ${page}, ${images}`);
+    onClose();
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      const fileArray = Array.from(e.target.files).map(file => URL.createObjectURL(file));
+      const fileArray = Array.from(e.target.files).map(file => ({
+        imgUrl: URL.createObjectURL(file),
+      }));
       if (images.length >= 3) {
         alert("이미지는 3개까지 업로드 할 수 있습니다.");
         return;
@@ -50,20 +76,35 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({ label }) => {
     return "";
   };
 
+  const getHeightByLabel = (label: string): string => {
+    return label === "메모" ? "h-[290px]" : "h-[340px]";
+  };
+
   return (
-    <BottomSheet height={700}>
-      <div className="flex flex-col items-center justify-center m-[5%]">
-        <p className="font-bold text-xl leading-normal my-[10%]">{label} 작성하기</p>
+    <BottomSheet height={90} onClose={onClose}>
+      <div className="flex flex-col items-center justify-center m-[5%] h-full">
+        <p className="font-bold text-xl leading-normal mb-[10%]">
+          {label} {mode}
+        </p>
         <textarea
           value={memo}
           onChange={handleMemoChange}
           placeholder={getPlaceholder(label)}
-          className="w-[300px] h-[340px] border-2 border-gray-300 p-2 rounded-md outline-none mb-5 font-light text-xs"
+          className={`w-[90%] ${getHeightByLabel(label)} border-2 border-gray-300 p-2 rounded-md outline-none mb-7 font-light text-xs`}
         />
-        <div className="flex justify-start items-center w-[300px]">
+        {label === "메모" && (
+          <input
+            type="text"
+            placeholder="페이지를 입력해주세요"
+            className="w-[80%] border-b-2 border-gray focus:border-black outline-none text-gray-500 text-sm py-3 mb-7"
+            value={page}
+            onChange={handlePageChange}
+          />
+        )}
+        <div className="flex justify-start items-center w-[90%] h-[10%] my-5">
           <div
             onClick={handleIconClick}
-            className="me-3 w-[60px] h-[60px] border-2 border-gray-300 p-2 rounded-md outline-none mb-5 flex items-center justify-center"
+            className="me-4 aspect-square h-full border-2 border-gray-300 p-2 rounded-md outline-none mb-5 flex items-center justify-center"
           >
             <i className="m-0 p-0 fi fi-rr-add-image text-2xl pt-2"></i>
             <input
@@ -78,7 +119,7 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({ label }) => {
           {images.map((image, index) => (
             <div
               key={index}
-              className="me-3 w-[60px] h-[60px] border-2 border-gray-300 rounded-md outline-none mb-5 flex items-center justify-center relative overflow-hidden"
+              className="me-4 aspect-square h-full border-2 border-gray-300 rounded-md outline-none mb-5 flex items-center justify-center relative overflow-hidden"
             >
               <button
                 onClick={() => handleImageDelete(index)}
@@ -86,7 +127,7 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({ label }) => {
               >
                 <i className="fi fi-rr-cross-small color-white text-xl pt-2 text-white [text-shadow:_2px_2px_6px_rgb(0_0_0_/_0.1)]"></i>
               </button>
-              <img src={image} alt="이미지" className="w-full h-full object-cover" />
+              <img src={image.imgUrl} alt="이미지" className="w-full h-full object-cover" />
             </div>
           ))}
         </div>
