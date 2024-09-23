@@ -46,11 +46,7 @@ interface BookSimpleDataResponse {
   thumbnail: string;
 }
 
-interface BookDetailProps {
-  bookId: number;
-}
-
-const BookDetailPage: React.FC<BookDetailProps> = () => {
+const BookDetailPage: React.FC = () => {
   const navigate = useNavigate();
 
   const { bookId } = useParams<{ bookId: string }>();
