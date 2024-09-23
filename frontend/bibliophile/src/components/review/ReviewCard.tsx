@@ -10,6 +10,7 @@ interface ReviewCardProps {
 }
 
 const ReviewCard: React.FC<ReviewCardProps> = ({ content, star, nickname, type }) => {
+  const [isOpenModal, setIsOpenModal] = useState(false);
   const [isLong, setIsLong] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [editedContent, setEditedContent] = useState(content);
@@ -33,6 +34,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ content, star, nickname, type }
 
   const handleClickDeleteButton = () => {
     // TODO: 리뷰 삭제 API 요청
+    setIsOpenModal(!isOpenModal);
   };
 
   const renderListType = () => {
@@ -81,6 +83,14 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ content, star, nickname, type }
         onClick={handleClickCard}
         className="border-common flex flex-col items-center p-3 gap-2.5"
       >
+        {isOpenModal && (
+          <Modal
+            title="정말 삭제 하시겠습니까?"
+            isOpen={isOpenModal}
+            handleClickClose={() => setIsOpenModal(false)}
+            handleClickConfirm={handleClickDeleteButton}
+          />
+        )}
         <div className="flex gap-1 w-full justify-between">
           <StarScore mode="read" score={star} />
           <div>
