@@ -1,6 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import BottomSheetMemo from "@/components/bottomSheet/BottomSheetMemo";
 import Modal from "react-modal";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  type CarouselApi,
+} from "@/components/ui/carousel";
 
 const data = {
   memoId: 1,
@@ -27,10 +33,19 @@ const data = {
 const MemoPage: React.FC = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [api, setApi] = useState<CarouselApi | null>(null);
 
   const handleDotClick = (index: number) => {
-    setCurrentImageIndex(index);
+    api?.scrollTo(index);
   };
+
+  useEffect(() => {
+    if (!api) return;
+
+    api.on("select", () => {
+      setCurrentImageIndex(api.selectedScrollSnap());
+    });
+  }, [api]);
 
   const handleClickBack = () => {
     alert("뒤로가기");
@@ -52,13 +67,21 @@ const MemoPage: React.FC = () => {
         </button>
       </div>
 
-      <div className="w-full text-center">
-        <img
-          src={data.memoImgList[currentImageIndex].imgUrl}
-          alt="사진"
-          className="w-full h-64 object-cover rounded-lg"
-        />
-      </div>
+      <Carousel className="w-full" setApi={setApi}>
+        <CarouselContent>
+          {data.memoImgList.map((image, index) => (
+            <CarouselItem key={index}>
+              <div className="w-full text-center">
+                <img
+                  src={image.imgUrl}
+                  alt={`사진 ${index + 1}`}
+                  className="w-full h-64 object-cover rounded-lg"
+                />
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
 
       <div className="flex justify-center mt-4 space-x-2">
         {data.memoImgList.map((_, index) => (
