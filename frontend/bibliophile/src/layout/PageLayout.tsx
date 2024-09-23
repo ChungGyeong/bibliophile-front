@@ -12,10 +12,10 @@ const PageLayout: React.FC<PageLayoutProps> = ({ page }) => {
   };
 
   return (
-    <React.Fragment>
-      <main className="w-[90%] m-auto">{page}</main>
+    <main className="max-w-[600px] min-w-[320px] m-auto">
+      <div className="w-[90%] m-auto">{page}</div>
       <NavBar activeNav={activeNav} onNavChange={handleNavChange} />
-    </React.Fragment>
+    </main>
   );
 };
 
