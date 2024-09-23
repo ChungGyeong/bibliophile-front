@@ -59,7 +59,7 @@ const MemoPage: React.FC = () => {
     <div className="mt-2">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center" onClick={handleClickBack}>
-          <i className="fi fi-rr-angle-left text-xl pt-2"></i>
+          <i className="fi fi-rr-angle-left text-xl pt-2 me-2"></i>
           <p className="font-medium text-xl ml-2 font-semibold pt-1">메모</p>
         </div>
         <button onClick={handleClickPencil} className="pt-2">
@@ -95,7 +95,7 @@ const MemoPage: React.FC = () => {
         ))}
       </div>
       <p className="font-regular text-lg pt-2">... {data.memoPage}p</p>
-      <p className="font-light text-lg  leading-6 pt-2">{data.content}</p>
+      <p className="font-light text-lg  leading-7 pt-2 whitespace-pre-line">{data.content}</p>
       <p className="font-light text-sm  text-medium-gray pt-2 text-right">
         {data.createdDate.split(" ")[0]}
       </p>
