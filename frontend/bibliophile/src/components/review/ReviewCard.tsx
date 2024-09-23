@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import StarScore from "@/components/review/StarScore.tsx";
+import Modal from "@/components/common/Modal.tsx";
 
 interface ReviewCardProps {
   content: string;
@@ -46,7 +47,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ content, star, nickname, type }
           <StarScore mode="read" score={star} />
           <p className="text-xs font-light text-dark-gray">{nickname}</p>
         </div>
-        <p className="text-xs font-light">{content}</p>
+        <p className="text-xs font-light text-left w-full">{content}</p>
       </div>
     ) : (
       <div
@@ -54,7 +55,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ content, star, nickname, type }
         className="border-common shadow-custom flex items-center gap-2 p-3"
       >
         <StarScore mode="read" score={star} />
-        <p className="text-xs font-light">{shortContent}</p>
+        <p className="text-xs font-light text-left w-full">{shortContent}</p>
       </div>
     );
   };
@@ -87,7 +88,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ content, star, nickname, type }
             <i className="fi fi-rr-trash" onClick={handleClickDeleteButton}></i>
           </div>
         </div>
-        <p className="text-xs font-light">{content}</p>
+        <p className="text-xs font-light text-left w-full">{content}</p>
       </div>
     );
   };
