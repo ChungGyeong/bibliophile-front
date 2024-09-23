@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import StarScore from "@/components/review/StarScore.tsx";
+import Modal from "@/components/common/Modal.tsx";
 
 interface ReviewCardProps {
   content: string;
@@ -9,6 +10,7 @@ interface ReviewCardProps {
 }
 
 const ReviewCard: React.FC<ReviewCardProps> = ({ content, star, nickname, type }) => {
+  const [isOpenModal, setIsOpenModal] = useState(false);
   const [isLong, setIsLong] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [editedContent, setEditedContent] = useState(content);
@@ -32,6 +34,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ content, star, nickname, type }
 
   const handleClickDeleteButton = () => {
     // TODO: 리뷰 삭제 API 요청
+    setIsOpenModal(!isOpenModal);
   };
 
   const renderListType = () => {
@@ -46,7 +49,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ content, star, nickname, type }
           <StarScore mode="read" score={star} />
           <p className="text-xs font-light text-dark-gray">{nickname}</p>
         </div>
-        <p className="text-xs font-light">{content}</p>
+        <p className="text-xs font-light text-left w-full">{content}</p>
       </div>
     ) : (
       <div
@@ -54,7 +57,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ content, star, nickname, type }
         className="border-common shadow-custom flex items-center gap-2 p-3"
       >
         <StarScore mode="read" score={star} />
-        <p className="text-xs font-light">{shortContent}</p>
+        <p className="text-xs font-light text-left w-full">{shortContent}</p>
       </div>
     );
   };
@@ -80,6 +83,14 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ content, star, nickname, type }
         onClick={handleClickCard}
         className="border-common flex flex-col items-center p-3 gap-2.5"
       >
+        {isOpenModal && (
+          <Modal
+            title="정말 삭제 하시겠습니까?"
+            isOpen={isOpenModal}
+            handleClickClose={() => setIsOpenModal(false)}
+            handleClickConfirm={handleClickDeleteButton}
+          />
+        )}
         <div className="flex gap-1 w-full justify-between">
           <StarScore mode="read" score={star} />
           <div>
@@ -87,7 +98,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ content, star, nickname, type }
             <i className="fi fi-rr-trash" onClick={handleClickDeleteButton}></i>
           </div>
         </div>
-        <p className="text-xs font-light">{content}</p>
+        <p className="text-xs font-light text-left w-full">{content}</p>
       </div>
     );
   };
