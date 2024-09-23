@@ -9,12 +9,12 @@ import {
 } from "@/components/ui/carousel";
 
 const data = {
-  memoId: 1,
-  content: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-  memoPage: 100,
-  createdDate: "2024-02-18 07:53:23.795698",
-  lastModifyDate: "2024-02-18 07:53:23.795698",
-  memoImgList: [
+  bookReportId: 1,
+  content:
+    "행정각부의 설치·조직과 직무범위는 법률로 정한다. 법관이 중대한 심신상의 장해로 직무를 수행할 수 없을 때에는 법률이 정하는 바에 의하여 퇴직하게 할 수 있다. \n 국가는 건전한 소비행위를 계도하고 생산품의 품질향상을 촉구하기 위한 소비자보호운동을 법률이 정하는 바에 의하여 보장한다. \n 국무총리 또는 행정각부의 장은 소관사무에 관하여 법률이나 대통령령의 위임 또는 직권으로 총리령 또는 부령을 발할 수 있다.모든 국민은 법 앞에 평등하다. 누구든지 성별·종교 또는 사회적 신분에 의하여 정치적·경제적·사회적·문화적 생활의 모든 영역에 있어서 차별을 받지 아니한다.",
+  imgUrl: "string",
+  isHost: true,
+  bookReportImgList: [
     {
       imgUrl:
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZ31kw4e5HGBiNACrH0HqtYgMsr9L8vL-CCg&s",
@@ -27,10 +27,19 @@ const data = {
       createdDate: "2024-02-18 07:53:23.795698",
       lastModifyDate: "2024-02-18 07:53:23.795698",
     },
+    {
+      imgUrl:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZ31kw4e5HGBiNACrH0HqtYgMsr9L8vL-CCg&s",
+      createdDate: "2024-02-18 07:53:23.795698",
+      lastModifyDate: "2024-02-18 07:53:23.795698",
+    },
   ],
+  createdDate: "2024-02-18 07:53:23.795698",
+  lastModifyDate: "2024-02-18 07:53:23.795698",
+  timeStamp: "2024-02-18 07:53:23.795698",
 };
 
-const MemoPage: React.FC = () => {
+const ReportPage: React.FC = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [api, setApi] = useState<CarouselApi | null>(null);
@@ -60,7 +69,7 @@ const MemoPage: React.FC = () => {
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center" onClick={handleClickBack}>
           <i className="fi fi-rr-angle-left text-xl pt-2 me-2"></i>
-          <p className="font-medium text-xl ml-2 font-semibold pt-1">메모</p>
+          <p className="font-medium text-xl ml-2 font-semibold pt-1">독후감</p>
         </div>
         <button onClick={handleClickPencil} className="pt-2">
           <i className="fi fi-sr-pencil text-orange text-xl pt-2"></i>
@@ -69,7 +78,7 @@ const MemoPage: React.FC = () => {
 
       <Carousel className="w-full" setApi={setApi}>
         <CarouselContent>
-          {data.memoImgList.map((image, index) => (
+          {data.bookReportImgList.map((image, index) => (
             <CarouselItem key={index}>
               <div className="w-full text-center">
                 <img
@@ -84,7 +93,7 @@ const MemoPage: React.FC = () => {
       </Carousel>
 
       <div className="flex justify-center mt-4 space-x-2">
-        {data.memoImgList.map((_, index) => (
+        {data.bookReportImgList.map((_, index) => (
           <div
             key={index}
             onClick={() => handleDotClick(index)}
@@ -94,9 +103,8 @@ const MemoPage: React.FC = () => {
           ></div>
         ))}
       </div>
-      <p className="font-regular text-lg pt-2">... {data.memoPage}p</p>
-      <p className="font-light text-lg  leading-7 pt-2 whitespace-pre-line">{data.content}</p>
-      <p className="font-light text-sm  text-medium-gray pt-2 text-right">
+      <p className="font-light text-lg leading-7 pt-4 whitespace-pre-line">{data.content}</p>
+      <p className="font-light text-sm text-medium-gray pt-2 text-right">
         {data.createdDate.split(" ")[0]}
       </p>
 
@@ -109,11 +117,10 @@ const MemoPage: React.FC = () => {
       >
         <div className="bg-white rounded-t-lg shadow-lg w-full h-[90%] overflow-auto">
           <BottomSheetMemo
-            label="메모"
-            mode="작성하기"
+            label="독후감"
+            mode="수정하기"
             content={data.content}
-            memoPage={data.memoPage}
-            memoImgList={data.memoImgList}
+            memoImgList={data.bookReportImgList}
             onClose={() => setIsModalOpen(false)}
           />
         </div>
@@ -122,4 +129,4 @@ const MemoPage: React.FC = () => {
   );
 };
 
-export default MemoPage;
+export default ReportPage;
