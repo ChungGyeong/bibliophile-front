@@ -4,12 +4,7 @@ import Button from "../components/common/Button";
 import BookCardSimpleList from "../components/bookCard/BookCardSimpleList";
 import LikeButton from "../components/common/LikeButton";
 import ReviewCard from "../components/review/ReviewCard";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  type CarouselApi,
-} from "../components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem } from "../components/ui/carousel";
 
 interface BookDataResponse {
   status: number;
@@ -54,7 +49,6 @@ const BookDetailPage: React.FC = () => {
   const [relatedBooks, setRelatedBooks] = useState<BookSimpleDataResponse[]>([]);
   const [reviews, setReviews] = useState<ReviewDataResponse[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [api, setApi] = useState<CarouselApi | null>(null);
 
   const groupReviews = (reviews: ReviewDataResponse[], size: number) => {
     const grouped = [];
@@ -183,14 +177,6 @@ const BookDetailPage: React.FC = () => {
     setReviews(dummyReviews);
   }, [bookId]);
 
-  useEffect(() => {
-    if (!api) return;
-
-    api.on("select", () => {
-      setCurrentSlide(api.selectedScrollSnap());
-    });
-  }, [api]);
-
   const handleStartReading = () => {
     // TODO: API 개발 뒤, 읽기 시작 API 요청으로 대체하기
     // 성공 시 bookData의 readingStatus가 "READING"이 될 것
@@ -247,10 +233,10 @@ const BookDetailPage: React.FC = () => {
 
       <hr />
 
-      <div className="my-[30px]">
+      <div className="mt-[30px] mb-[40px]">
         <h2 className="font-medium text-[18px] mb-[10px]">리뷰 모아보기</h2>
 
-        <Carousel setApi={setApi}>
+        <Carousel>
           <CarouselContent>
             {groupedReviews.map((group, index) => (
               <CarouselItem key={index}>
@@ -268,17 +254,6 @@ const BookDetailPage: React.FC = () => {
               </CarouselItem>
             ))}
           </CarouselContent>
-
-          <div className="flex justify-center mt-4 space-x-2">
-            {groupedReviews.map((_, index) => (
-              <div
-                key={index}
-                className={`w-2 h-2 rounded-full cursor-pointer ${
-                  currentSlide === index ? "bg-orange" : "bg-soft-gray"
-                }`}
-              ></div>
-            ))}
-          </div>
         </Carousel>
       </div>
 
