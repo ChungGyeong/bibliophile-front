@@ -8,11 +8,12 @@ import MyBookFinishPage from "./pages/MyBookFinishPage.tsx";
 import MyBookLikePage from "./pages/MyBookLikePage.tsx";
 import BookDetailPage from "./pages/BookDetailPage.tsx";
 import MemoPage from "./pages/MemoPage.tsx";
+import LoginPage from "./pages/LoginPage.tsx";
 
 const AppRoutes = () => {
   return (
     <Routes>
-      {/*<Route path="/login" element={<DefaultLayout page={<LoginPage />}/>} />*/}
+      <Route path="/login" element={<DefaultLayout page={<LoginPage />} />} />
       <Route path="/" element={<PageLayout page={<HomePage />} />} />
       {/* <Route path="/mybook" element={<MyBookLayout page={<MyBookPage />} />} /> */}
       <Route path="/mybook/reading" element={<MyBookLayout page={<MyBookReadingPage />} />} />
