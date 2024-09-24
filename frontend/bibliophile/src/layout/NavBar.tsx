@@ -48,7 +48,7 @@ const NavBar: React.FC<NavBarProps> = ({ activeNav, onNavChange }) => {
   };
 
   return (
-    <div className="fixed max-w-[600px] min-w-[320px] m-auto w-full bottom-0 h-[60px] bg-white shadow-navbar flex">
+    <div className="fixed max-w-[600px] min-w-[320px] m-auto w-full bottom-0 h-[60px] bg-white shadow-navbar flex z-30">
       {navs.map(nav => (
         <button
           key={nav.name}

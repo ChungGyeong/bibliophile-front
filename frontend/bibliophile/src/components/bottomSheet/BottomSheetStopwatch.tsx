@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import BottomSheet from "./BottomSheet";
 
 const BottomSheetStopwatch: React.FC = () => {
   const [running, setRunning] = useState<boolean>(true);
@@ -31,23 +30,19 @@ const BottomSheetStopwatch: React.FC = () => {
   };
 
   return (
-    <BottomSheet height={600}>
-      <div className="flex flex-col items-center justify-center m-[20%]">
-        <p className="font-light text-base leading-normal">
-          그동안 읽은 시간 : {total_reading_time}
-        </p>
-        <img className="my-[10%]" src="./src/assets/book-reading-fox.gif" alt="책 읽는 여우" />
-        <p className="font-light text-base leading-normal">다시 요리를 시작한지 ...</p>
-        <p className="font-bold text-4xl leading-normal mb-[10%]">{formatTime(time)}</p>
-        <div onClick={handleClickButton}>
-          {running ? (
-            <i className="fi fi-rr-pause-circle text-6xl text-active-orange pt-2"></i>
-          ) : (
-            <i className="fi fi-rr-play-circle text-6xl text-olive pt-2"></i>
-          )}
-        </div>
+    <div className="flex flex-col items-center justify-center m-[20%]">
+      <p className="font-light text-base leading-normal">그동안 읽은 시간 : {total_reading_time}</p>
+      <img className="my-[10%]" src="./src/assets/book-reading-fox.gif" alt="책 읽는 여우" />
+      <p className="font-light text-base leading-normal">다시 요리를 시작한지 ...</p>
+      <p className="font-bold text-4xl leading-normal mb-[10%]">{formatTime(time)}</p>
+      <div onClick={handleClickButton}>
+        {running ? (
+          <i className="fi fi-rr-pause-circle text-6xl text-active-orange pt-2"></i>
+        ) : (
+          <i className="fi fi-rr-play-circle text-6xl text-olive pt-2"></i>
+        )}
       </div>
-    </BottomSheet>
+    </div>
   );
 };
 
