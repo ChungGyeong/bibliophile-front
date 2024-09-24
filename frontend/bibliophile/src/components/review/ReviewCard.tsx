@@ -11,6 +11,8 @@ interface ReviewCardProps {
 const ReviewCard: React.FC<ReviewCardProps> = ({ content, star, nickname, type }) => {
   const [isLong, setIsLong] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+  // @ts-ignore
+  // TODO: 수정 내용 API 요청 시 사용
   const [editedContent, setEditedContent] = useState(content);
 
   const handleClickCard = () => {
