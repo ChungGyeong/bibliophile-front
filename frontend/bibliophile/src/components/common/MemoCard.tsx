@@ -19,9 +19,9 @@ const MemoCard: React.FC<CardProps> = ({ type, id, content, imgUrl, createdDate,
 
   const handleMemoCardClick = () => {
     if (type === "report") {
-      navigate("");
+      navigate(`/report/${id}`);
     } else if (type === "memo") {
-      navigate("");
+      navigate(`/memo/${id}`);
     }
   };
 
@@ -46,7 +46,9 @@ const MemoCard: React.FC<CardProps> = ({ type, id, content, imgUrl, createdDate,
           {content}
         </div>
         {type === "memo" && memoPage && (
-          <div className="text-right font-medium text-[10px] text-gray-500 mt-2">... {memoPage} p</div>
+          <div className="text-right font-medium text-[10px] text-gray-500 mt-2">
+            ... {memoPage} p
+          </div>
         )}
       </div>
     </div>
