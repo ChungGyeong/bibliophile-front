@@ -65,7 +65,7 @@ const BookCardReadingItem: React.FC<BookCardReadingProps> = ({
               {readingPage} / {totalPage} p &nbsp;&nbsp;&nbsp;
             </p>
           </div>
-          <ProgressBar isThin={true} readingPercent={readingPercent} />
+          <ProgressBar isThin={true} percent={readingPercent} />
         </div>
       </div>
     </div>
