@@ -56,7 +56,7 @@ const BookInfo: React.FC<BookInfoProps> = ({
       </p>
 
       <div className="relative z-10 flex flex-col items-center justify-center h-full text-white p-6 pt-12">
-        <div className="relative w-48 h-64 mb-4">
+        <div className="relative w-[140px] h-[200px] mb-4">
           <img
             src={thumbnail}
             alt="Book Cover"
@@ -69,13 +69,12 @@ const BookInfo: React.FC<BookInfoProps> = ({
         <p className="text-xs font-light text-gray-300 mb-8">{publisher}</p>
 
         <div className="w-full max-w-[600px] flex justify-between items-end">
-          <p className="text-sm font-medium">{createDate}부터 7일째</p>
-          <div className="flex flex-col items-end">
-            <p className="text-[10px] mb-1 font-light">클릭하면 여우가 요리를 시작해요!</p>
-            <div className="flex items-end gap-2" onClick={handleClickOpenStopwatch}>
-              <i className="fi fi-rr-alarm-clock"></i>
-              <span className="text-lg font-regular">{totalReadingTime}</span>
-            </div>
+          <p className="text-sm font-medium">
+            {createDate}부터 {}일째
+          </p>
+          <div className="flex items-end gap-2" onClick={handleClickOpenStopwatch}>
+            <i className="fi fi-rr-alarm-clock"></i>
+            <span className="text-lg font-regular">{totalReadingTime}</span>
           </div>
         </div>
       </div>
