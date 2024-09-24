@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import BottomSheet from "./BottomSheet";
-import Button from "../Button";
+import Button from "../common/Button";
 
 const BottomSheetPage: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>("");
