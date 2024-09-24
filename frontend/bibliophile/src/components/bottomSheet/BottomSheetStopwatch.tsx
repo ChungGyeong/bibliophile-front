@@ -14,7 +14,11 @@ const BottomSheetStopwatch: React.FC = () => {
         setTime(prevSeconds => prevSeconds + 1);
       }, 1000);
     }
-    return () => clearInterval(interval);
+    return () => {
+      if (interval !== null) {
+        clearInterval(interval);
+      }
+    };
   }, [running, time]);
 
   const formatTime = (time: number) => {
