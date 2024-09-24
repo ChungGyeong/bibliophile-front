@@ -83,7 +83,7 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
   };
 
   return (
-    <BottomSheet height={90} onClose={onClose}>
+    <BottomSheet height={90} handleCloseBottomSheet={onClose}>
       <div className="flex flex-col items-center justify-center m-[5%] h-full">
         <p className="font-bold text-xl leading-normal mb-[10%]">
           {label} {mode}
@@ -99,7 +99,7 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
             type="text"
             placeholder="페이지를 입력해주세요"
             className="w-[80%] border-b-2 border-gray focus:border-black outline-none text-gray-500 text-sm py-3 mb-7"
-            value={page}
+            value={page ?? 0}
             onChange={handlePageChange}
           />
         )}
