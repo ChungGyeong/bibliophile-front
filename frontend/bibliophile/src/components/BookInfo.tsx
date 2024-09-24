@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import BottomSheetStopwatch from "@/components/bottomSheet/BottomSheetStopwatch.tsx";
 import BottomSheet from "@/components/bottomSheet/BottomSheet.tsx";
+import { calculateDaysSince, formatDate } from "@/utils/calDate.ts";
 
 interface BookInfoProps {
   bookId: number;
@@ -70,7 +71,7 @@ const BookInfo: React.FC<BookInfoProps> = ({
 
         <div className="w-full max-w-[600px] flex justify-between items-end">
           <p className="text-sm font-medium">
-            {createDate}부터 {}일째
+            {formatDate(createDate)}부터 {calculateDaysSince(createDate)}일째
           </p>
           <div className="flex items-end gap-2" onClick={handleClickOpenStopwatch}>
             <i className="fi fi-rr-alarm-clock"></i>
