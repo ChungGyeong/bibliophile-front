@@ -5,7 +5,8 @@ interface LikeButtonProps {
   bookId: number;
 }
 
-const LikeButton: React.FC<LikeButtonProps> = ({ isBookmarked = false, bookId }) => {
+// @ts-ignore
+const LikeButton: React.FC<LikeButtonProps> = ({ isBookmarked = false, bookmarkId }) => {
   const [bookmarked, setBookmarked] = useState(isBookmarked);
 
   const handleToggleBookmarked = () => {
