@@ -26,7 +26,7 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
   memoImgList = [],
 }) => {
   const [memo, setMemo] = useState<string>(content);
-  const [page, setPage] = useState<number>(memoPage);
+  const [page, setPage] = useState<number | null>(memoPage);
   const [images, setImages] = useState<MemoImage[]>(memoImgList);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -47,6 +47,8 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
     if (e.target.files) {
       const fileArray = Array.from(e.target.files).map(file => ({
         imgUrl: URL.createObjectURL(file),
+        createdDate: "",
+        lastModifyDate: "",
       }));
       if (images.length >= 3) {
         alert("이미지는 3개까지 업로드 할 수 있습니다.");
