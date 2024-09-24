@@ -259,7 +259,7 @@ const BookDetailPage: React.FC = () => {
 
       <hr />
 
-      <div className="my-[30px] mb-[80px]">
+      <div className="my-[30px]">
         <h2 className="font-medium text-[18px] mb-[10px]">이 책을 읽은 다른 사용자들은...</h2>
         <BookCardSimpleList books={relatedBooks} />
       </div>
