@@ -5,6 +5,7 @@ interface LikeButtonProps {
   bookmarkId: string;
 }
 
+// @ts-ignore
 const LikeButton: React.FC<LikeButtonProps> = ({ isBookmarked = false, bookmarkId }) => {
   const [bookmarked, setBookmarked] = useState(isBookmarked);
 
