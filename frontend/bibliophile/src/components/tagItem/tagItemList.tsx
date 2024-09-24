@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import TagItem from "./TagItem";
+import TagItem from "./tagItem";
 
 const TAGS: string[] = [
   "# 경제",
