@@ -1,12 +1,13 @@
 import React from "react";
+
 interface DefaultLayoutProps {
   page?: React.ReactNode;
 }
-const DefaultLayout: React.FC<PageLayoutProps> = ({ page }) => {
+const DefaultLayout: React.FC<DefaultLayoutProps> = ({ page }) => {
   return (
-    <React.Fragment>
-      <main className="w-[90%] m-auto">{page}</main>
-    </React.Fragment>
+    <main className="max-w-[600px] min-w-[320px] m-auto">
+      <div className="w-[90%] m-auto">{page}</div>
+    </main>
   );
 };
 

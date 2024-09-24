@@ -1,16 +1,21 @@
-import React from "react";
-import BottomNavigationBar from "./BottomNavigationBar.tsx";
+import React, { useState } from "react";
+import NavBar from "./NavBar.tsx";
 
 interface PageLayoutProps {
   page?: React.ReactNode;
 }
 
 const PageLayout: React.FC<PageLayoutProps> = ({ page }) => {
+  const [activeNav, setActiveNav] = useState("홈");
+  const handleNavChange = (nav: string) => {
+    setActiveNav(nav);
+  };
+
   return (
-    <React.Fragment>
-      <main className="w-[90%] m-auto">{page}</main>
-      <BottomNavigationBar />
-    </React.Fragment>
+    <main className="max-w-[600px] min-w-[320px] m-auto">
+      <div className="w-[90%] m-auto">{page}</div>
+      <NavBar activeNav={activeNav} onNavChange={handleNavChange} />
+    </main>
   );
 };
 

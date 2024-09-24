@@ -1,7 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import ProgressBar from "@/components/common/ProgressBar.tsx";
 
 interface BookCardReadingProps {
+  myBookId: number;
   thumbnail: string;
   title: string;
   authors: string;
@@ -9,12 +11,14 @@ interface BookCardReadingProps {
   createdDate: string;
   readingPage: number;
   totalPage: number;
+  readingPercent: number;
   isActive: boolean;
 }
 
-const activeClass = "bg-lightYellow";
+const activeClass = "bg-light-yellow";
 
-const BookCardReading: React.FC<BookCardReadingProps> = ({
+const BookCardReadingItem: React.FC<BookCardReadingProps> = ({
+  myBookId,
   thumbnail,
   title,
   authors,
@@ -22,20 +26,20 @@ const BookCardReading: React.FC<BookCardReadingProps> = ({
   createdDate,
   readingPage,
   totalPage,
+  readingPercent,
   isActive,
 }) => {
   const navigate = useNavigate();
 
-  const handleClickNavMoreInfo = (e: { stopPropagation: () => void }) => {
-    // TODO: 상세페이지로 이동
+  const handleClickNavigateMoreInfo = (e: { stopPropagation: () => void }) => {
     e.stopPropagation();
-    navigate("");
+    navigate(`/reading/${myBookId}`);
   };
 
   return (
     <div
-      className={`bg-white border-common h-[140px] w-full flex p-[10px] gap-[10px] shadow-custom active:shadow-customInner ${isActive && activeClass}`}
-      onClick={handleClickNavMoreInfo}
+      className={`border-common h-[140px] w-full flex p-[10px] gap-[10px] shadow-custom active:shadow-custom-inner ${isActive && activeClass}`}
+      onClick={handleClickNavigateMoreInfo}
     >
       <div className="w-1/3 h-full overflow-hidden object-center object-cover">
         <img src={thumbnail} alt={title} className="w-full h-full" />
@@ -48,22 +52,24 @@ const BookCardReading: React.FC<BookCardReadingProps> = ({
             <p className="font-light text-[10px]">{publisher}</p>
           </div>
           <p
-            className="font-ligt text-mediumGray text-[10px] z-10 relative active:text-black"
-            onClick={handleClickNavMoreInfo}
+            className="font-ligt text-medium-gray text-[10px] z-10 relative active:text-black"
+            onClick={handleClickNavigateMoreInfo}
           >
             더보기
           </p>
         </div>
-        <div className="flex w-full justify-between">
-          <p className="text-[10px]">{createdDate} ~</p>
-          <p className="font-light text-[10px]">
-            {readingPage} / {totalPage} p
-          </p>
+        <div>
+          <div className="flex w-full justify-between">
+            <p className="text-[10px]">{createdDate} ~</p>
+            <p className="font-light text-[10px]">
+              {readingPage} / {totalPage} p &nbsp;&nbsp;&nbsp;
+            </p>
+          </div>
+          <ProgressBar isThin={true} readingPercent={readingPercent} />
         </div>
-        {/*상태바*/}
       </div>
     </div>
   );
 };
 
-export default BookCardReading;
+export default BookCardReadingItem;

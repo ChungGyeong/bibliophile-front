@@ -3,11 +3,11 @@ import { Progress } from "@/components/ui/progress";
 
 interface ProgressBarProps {
   isThin: boolean;
-  readingPercent: number;
+  percent: number;
 }
 
-const ProgressBar: React.FC<ProgressBarProps> = ({ isThin, readingPercent }) => {
-  return <Progress value={readingPercent} isThin={isThin} />;
+const ProgressBar: React.FC<ProgressBarProps> = ({ isThin, percent }) => {
+  return <Progress value={percent} isThin={isThin} />;
 };
 
 export default ProgressBar;
