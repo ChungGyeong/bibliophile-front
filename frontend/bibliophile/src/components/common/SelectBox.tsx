@@ -44,7 +44,11 @@ const SelectBox: React.FC<SelectBoxProps> = ({ options, defaultOption, onSelect 
         onClick={handleClickDropDown}
       >
         <span className="text-sm font-light">{selectedOption || "옵션을 선택해주세요."}</span>
-        <i className="fi fi-rr-angle-small-down pt-1 text-gray"></i>
+        {isOpen ? (
+          <i className="fi fi-rr-angle-small-up pt-1 text-dark-gray"></i>
+        ) : (
+          <i className="fi fi-rr-angle-small-down pt-1 text-gray"></i>
+        )}
       </div>
 
       {isOpen && (
