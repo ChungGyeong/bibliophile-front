@@ -1,9 +1,9 @@
-import React from "react";
+import React, { ChangeEventHandler } from "react";
 
 interface InputBoxProps {
   placeholder?: string;
   value?: string;
-  onInputChange: (value: string) => void;
+  handleChangeInput: ChangeEventHandler<HTMLInputElement>;
   noticeMessage?: string;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
@@ -11,7 +11,7 @@ interface InputBoxProps {
 const InputBox: React.FC<InputBoxProps> = ({
   placeholder = "입력하세요",
   value = "",
-  onInputChange,
+  handleChangeInput,
   noticeMessage,
   onKeyDown,
 }) => {
@@ -21,10 +21,10 @@ const InputBox: React.FC<InputBoxProps> = ({
       <input
         type="text"
         value={value}
-        onChange={event => onInputChange(event.target.value)}
+        onChange={handleChangeInput}
         onKeyDown={onKeyDown}
         placeholder={placeholder}
-        className="w-full h-9 text-sm font-light border-common px-[10px]"
+        className="w-full h-9 text-sm font-light border-common px-[10px] outline-0"
       />
     </div>
   );
