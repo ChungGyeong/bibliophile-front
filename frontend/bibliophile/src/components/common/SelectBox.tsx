@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 interface SelectBoxProps {
   options: string[];
@@ -9,6 +9,19 @@ interface SelectBoxProps {
 const SelectBox: React.FC<SelectBoxProps> = ({ options, defaultOption, onSelect }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string | null>(defaultOption);
+  const selectBoxRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (selectBoxRef.current && !selectBoxRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     setSelectedOption(defaultOption);
@@ -25,7 +38,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({ options, defaultOption, onSelect 
   };
 
   return (
-    <div className="border-common w-full">
+    <div className="relative border-common w-full" ref={selectBoxRef}>
       <div
         className="h-9 px-[10px] flex justify-between items-center"
         onClick={handleClickDropDown}
@@ -35,11 +48,12 @@ const SelectBox: React.FC<SelectBoxProps> = ({ options, defaultOption, onSelect 
       </div>
 
       {isOpen && (
-        <ul>
+        <ul className="absolute w-full bg-white border border-t-0 border-gray rounded-b-[5px] z-1">
           {options.map(option => (
             <li
               key={option}
-              className="h-9 px-[10px] flex items-center text-sm font-light text-gray border-t border-gray"
+              className={`h-9 px-[10px] flex items-center text-sm font-light border-t border-gray
+                ${selectedOption === option ? "text-black" : "text-gray"}`}
               onClick={() => handleSelect(option)}
             >
               {option}
