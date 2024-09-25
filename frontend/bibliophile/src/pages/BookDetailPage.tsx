@@ -202,7 +202,12 @@ const BookDetailPage: React.FC = () => {
         </button>
         <div>
           {!isReading && bookData?.data.bookId !== undefined && (
-            <LikeButton isBookmarked={bookData?.data.isBookmarked} bookId={bookData?.data.bookId} />
+            <div className="text-[20px]">
+              <LikeButton
+                isBookmarked={bookData?.data.isBookmarked}
+                bookId={bookData?.data.bookId}
+              />
+            </div>
           )}
         </div>
       </div>
@@ -260,7 +265,7 @@ const BookDetailPage: React.FC = () => {
       <hr />
 
       <div className="my-[30px] mb-[80px]">
-        <h2 className="font-medium text-[18px] mb-[10px]">이 책을 읽은 다른 사용자들은...</h2>
+        <h2 className="font-medium text-[18px] mb-[10px]">비슷한 줄거리의 다른 책도 추천해요!</h2>
         <BookCardSimpleList books={relatedBooks} />
       </div>
     </div>
