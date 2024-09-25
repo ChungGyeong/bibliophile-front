@@ -30,11 +30,11 @@ const MyBookLayout: React.FC<MyBookLayoutProps> = ({ page }) => {
   };
 
   return (
-    <React.Fragment>
+    <main className="max-w-[600px] min-w-[320px] m-auto">
       <MyBookTab activeTab={currentTab()} onChange={handleTabChange} />
-      <main className="w-[90%] m-auto">{page}</main>
+      <div className="w-[90%] m-auto mb-[100px]">{page}</div>
       <NavBar activeNav={activeNav} onNavChange={handleNavChange} />
-    </React.Fragment>
+    </main>
   );
 };
 

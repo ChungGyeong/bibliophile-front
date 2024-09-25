@@ -4,10 +4,10 @@ import Button from "../common/Button";
 import StarScore from "../review/StarScore";
 
 const data = {
-    title: "책 먹는 여우",
-    authors: "프란치스카 비어만",
-    thumbnail: "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788934935018.jpg",
-  }
+  title: "책 먹는 여우",
+  authors: "프란치스카 비어만",
+  thumbnail: "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788934935018.jpg",
+};
 
 const BottomSheetReview: React.FC = () => {
   const [review, setReview] = useState<string>("");
@@ -26,12 +26,12 @@ const BottomSheetReview: React.FC = () => {
   };
 
   return (
-    <BottomSheet height={700}>
+    <BottomSheet height={700} handleCloseBottomSheet={() => {}}>
       <div className="flex flex-col items-center justify-center m-[5%]">
         <p className="font-bold text-xl leading-normal mt-[10%]">리뷰 작성하기</p>
-        <img src={data.thumbnail} alt="thumnail" className="h-[160px] my-[10%]"/>
+        <img src={data.thumbnail} alt="thumnail" className="h-[160px] my-[10%]" />
         <p className="font-regular text-lg leading-normal mb-[2%]">책은 재미있으셨나요?</p>
-        <StarScore onChangeScore={handleScoreChange} mode="write"/>
+        <StarScore onChangeScore={handleScoreChange} mode="write" />
         <textarea
           value={review}
           onChange={handleReviewChange}

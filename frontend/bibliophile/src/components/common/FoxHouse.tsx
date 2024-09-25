@@ -10,7 +10,9 @@ interface FoxData {
   foxStatus: string;
 }
 
+// @ts-ignore
 const FoxHouse: React.FC<FoxData> = ({ foxId, level, foxType, exp, feedCount, foxStatus }) => {
+  // @ts-ignore
   const [currentFeedCount, setCurrentFeedCount] = useState(feedCount);
 
   const renderFoxStatus = () => {

@@ -19,9 +19,9 @@ const MemoCard: React.FC<CardProps> = ({ type, id, content, imgUrl, createdDate,
 
   const handleMemoCardClick = () => {
     if (type === "report") {
-      navigate("");
+      navigate(`/report/${id}`);
     } else if (type === "memo") {
-      navigate("");
+      navigate(`/memo/${id}`);
     }
   };
 
@@ -34,19 +34,23 @@ const MemoCard: React.FC<CardProps> = ({ type, id, content, imgUrl, createdDate,
         <img src={imgUrl} alt="thumbnail" />
       </div>
 
-      <div className="h-[120px] ml-[10px] flex-grow">
-        <div className="flex justify-between text-[10px] mb-[6px]">
-          <div className="font-medium">{formatDate(createdDate)}</div>
-          <span className="font-light text-medium-gray">더보기</span>
-        </div>
+      <div className="h-[120px] ml-[10px] flex-grow flex-grow flex flex-col justify-between">
+        <div>
+          <div className="flex justify-between text-[10px] mb-[6px]">
+            <div className="font-medium">{formatDate(createdDate)}</div>
+            <span className="font-light text-medium-gray">더보기</span>
+          </div>
 
-        <div
-          className={`font-light text-xs ${type === "report" ? "line-clamp-6" : "line-clamp-5"}`}
-        >
-          {content}
+          <div
+            className={`font-light text-xs ${type === "report" ? "line-clamp-6" : "line-clamp-5"}`}
+          >
+            {content}
+          </div>
         </div>
         {type === "memo" && memoPage && (
-          <div className="text-right font-medium text-[10px] text-gray-500 mt-2">... {memoPage} p</div>
+          <div className="text-right font-medium text-[10px] text-gray-500 mt-2">
+            ... {memoPage} p
+          </div>
         )}
       </div>
     </div>

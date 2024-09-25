@@ -48,7 +48,6 @@ const BookDetailPage: React.FC = () => {
   const [bookData, setBookData] = useState<BookDataResponse | null>(null);
   const [relatedBooks, setRelatedBooks] = useState<BookSimpleDataResponse[]>([]);
   const [reviews, setReviews] = useState<ReviewDataResponse[]>([]);
-  const [currentSlide, setCurrentSlide] = useState(0);
 
   const groupReviews = (reviews: ReviewDataResponse[], size: number) => {
     const grouped = [];

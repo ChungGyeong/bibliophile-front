@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import BottomSheet from "./BottomSheet";
-import Button from "../Button";
+import Button from "../common/Button";
 
 const BottomSheetPage: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>("");
@@ -14,7 +14,7 @@ const BottomSheetPage: React.FC = () => {
   };
 
   return (
-    <BottomSheet height={440}>
+    <BottomSheet height={440} handleCloseBottomSheet={() => {}}>
       <div className="flex flex-col items-center justify-center m-[20%]">
         <p className="font-bold text-xl leading-normal my-[15%]">페이지를 입력하세요</p>
         <input
