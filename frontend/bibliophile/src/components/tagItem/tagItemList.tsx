@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TagItem from "./tagItem";
 
 const TAGS: string[] = [
@@ -18,10 +18,12 @@ const SERVERTAGS: string[] = ["# 경제", "# 만화", "# 사회"];
 
 interface TagItemListProps {
   layoutType: "signSelect" | "mypageSelect" | "mySelect";
+  tags: Set<string>;
+  setTags: (selectedTags: Set<string>) => void;
 }
 
-const TagItemList: React.FC<TagItemListProps> = ({ layoutType }) => {
-  const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set());
+const TagItemList: React.FC<TagItemListProps> = ({ layoutType, tags, setTags }) => {
+  const [selectedTags, setSelectedTags] = useState<Set<string>>(tags);
 
   const handleTagClick = (tag: string) => {
     setSelectedTags(prevSelected => {
@@ -39,11 +41,15 @@ const TagItemList: React.FC<TagItemListProps> = ({ layoutType }) => {
     });
   };
 
+  useEffect(() => {
+    if (tags) setTags(selectedTags);
+  }, [selectedTags]);
+
   const renderLayout = () => {
     switch (layoutType) {
       case "signSelect":
         return (
-          <div className="w-[300px] h-[150px] flex-shrink-0 border border-gray p-[10px] rounded-[5px]">
+          <div className="w-full h-[150px] flex-shrink-0 justify-between border border-gray p-[10px] rounded-[5px]">
             {TAGS.map((tag, index) => (
               <TagItem
                 key={index}

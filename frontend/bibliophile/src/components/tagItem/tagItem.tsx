@@ -9,7 +9,7 @@ interface ItemProps {
 
 const tagItem: React.FC<ItemProps> = ({ label, disabled = false, selected, onClick }) => {
   const getButtonClass = () => {
-    return selected ? "bg-active-orange" : "bg-ligh-gray";
+    return selected ? "bg-orange" : "bg-light-gray";
   };
 
   return (

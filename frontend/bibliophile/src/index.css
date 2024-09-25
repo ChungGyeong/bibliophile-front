@@ -60,6 +60,10 @@ body,
   border: solid 1px #bbbbbb;
 }
 
+input[type="text"]:focus {
+  border: solid 1px #444444;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
