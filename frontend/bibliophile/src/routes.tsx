@@ -9,6 +9,7 @@ import MyBookLikePage from "./pages/MyBookLikePage.tsx";
 import BookDetailPage from "./pages/BookDetailPage.tsx";
 import MemoPage from "./pages/MemoPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
+import ReadingBookDetailPage from "./pages/readingbookdetailpage/ReadingBookDetailPage.tsx";
 
 const AppRoutes = () => {
   return (
@@ -21,6 +22,7 @@ const AppRoutes = () => {
       <Route path="/mybook/like" element={<MyBookLayout page={<MyBookLikePage />} />} />
       <Route path="/books/:bookId" element={<PageLayout page={<BookDetailPage />} />} />
       <Route path="/memo/:memoId" element={<PageLayout page={<MemoPage />} />} />
+      <Route path="/reading/:myBookId" element={<PageLayout page={<ReadingBookDetailPage />} />} />
     </Routes>
   );
 };
