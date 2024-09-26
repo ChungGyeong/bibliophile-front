@@ -8,6 +8,7 @@ import MyBookFinishPage from "./pages/MyBookFinishPage.tsx";
 import MyBookLikePage from "./pages/MyBookLikePage.tsx";
 import BookDetailPage from "./pages/BookDetailPage.tsx";
 import MemoPage from "./pages/MemoPage.tsx";
+import ReportPage from "./pages/ReportPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import SignupPage from "@/pages/SignupPage.tsx";
 import ReadingBookDetailPage from "@/pages/readingbookdetailpage/ReadingBookDetailPage.tsx";
@@ -25,6 +26,7 @@ const AppRoutes = () => {
       <Route path="/mybook/like" element={<MyBookLayout page={<MyBookLikePage />} />} />
       <Route path="/books/:bookId" element={<PageLayout page={<BookDetailPage />} />} />
       <Route path="/memo/:memoId" element={<PageLayout page={<MemoPage />} />} />
+      <Route path="/report/:reportId" element={<PageLayout page={<ReportPage />} />} />
       <Route path="/reading/:myBookId" element={<PageLayout page={<ReadingBookDetailPage />} />} />
       <Route path="/search" element={<PageLayout page={<SearchPage />} />} />
     </Routes>

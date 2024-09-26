@@ -36,7 +36,7 @@ const BottomSheetReview: React.FC = () => {
           value={review}
           onChange={handleReviewChange}
           placeholder="책에 대한 평가를 남겨주세요"
-          className="w-[300px] h-[100px] border-2 border-gray-300 p-2 rounded-md outline-none mb-5 font-light text-xs mt-[3%] mb-[10%]"
+          className="w-[300px] h-[100px] border-2 border-gray-300 p-2 rounded-md outline-none font-light text-xs mt-[3%] mb-[10%]"
         />
         <Button label="작성 완료" handleClickButton={handleButtonClick} />
       </div>

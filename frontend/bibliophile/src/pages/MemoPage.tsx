@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import BottomSheetMemo from "@/components/bottomSheet/BottomSheetMemo";
 import Modal from "react-modal";
 import {
@@ -34,6 +35,7 @@ const MemoPage: React.FC = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [api, setApi] = useState<CarouselApi | null>(null);
+  const navigate = useNavigate();
 
   const handleDotClick = (index: number) => {
     api?.scrollTo(index);
@@ -48,7 +50,7 @@ const MemoPage: React.FC = () => {
   }, [api]);
 
   const handleClickBack = () => {
-    alert("뒤로가기");
+    navigate(-1);
   };
 
   const handleClickPencil = () => {
