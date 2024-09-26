@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 interface BottomSheetProps {
   height: number;
@@ -13,16 +13,26 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ height, children, handleClose
     return "h-[600px]";
   };
 
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
+
   return (
-    // TODO: 배경 div 만들어서 스크롤 없애기, 배경 불투명 검은색으로 -> Modal 참고
-    <div
-      className={`w-full ${getHeightClass()} z-20 fixed bottom-[60px] bg-white rounded-lg rounded-b-none`}
-    >
-      <i
-        className="fi fi-rr-cross-small p-1 absolute top-[10px] right-[10px] text-[25px] z-30"
+    <div className="fixed inset-0 z-50 flex items-end justify-center">
+      <div
+        className="fixed inset-0 bg-black bg-opacity-50 z-10"
         onClick={handleCloseBottomSheet}
-      ></i>
-      {children}
+      ></div>
+      <div className={`w-full ${getHeightClass()} z-20 fixed bg-white rounded-lg rounded-b-none`}>
+        <i
+          className="fi fi-rr-cross-small p-1 absolute top-[10px] right-[10px] text-[25px] z-30"
+          onClick={handleCloseBottomSheet}
+        ></i>
+        {children}
+      </div>
     </div>
   );
 };

@@ -14,7 +14,7 @@ const BottomSheetPage: React.FC = () => {
   };
 
   return (
-    <BottomSheet height={440} handleCloseBottomSheet={() => {}}>
+    <div>
       <div className="flex flex-col items-center justify-center m-[20%]">
         <p className="font-bold text-xl leading-normal my-[15%]">페이지를 입력하세요</p>
         <input
@@ -26,7 +26,7 @@ const BottomSheetPage: React.FC = () => {
         />
         <Button label="저장하기" handleClickButton={handleButtonClick} />
       </div>
-    </BottomSheet>
+    </div>
   );
 };
 
