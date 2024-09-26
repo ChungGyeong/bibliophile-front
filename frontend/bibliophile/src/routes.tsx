@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import HomePage from "./pages/HomePage.tsx";
+import HomePage from "./pages/homePage/HomePage.tsx";
 import PageLayout from "./layout/PageLayout.tsx";
 import DefaultLayout from "./layout/DefaultLayout.tsx";
 import MyBookLayout from "./layout/MyBookLayout.tsx";
