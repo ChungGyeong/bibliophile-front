@@ -74,7 +74,7 @@ const Modal: FC<ModalProps> = ({ isOpen, handleClickClose, title, handleClickCon
         >
           &times;
         </button>
-        <Button label="확인" onClick={handleClickConfirm} />
+        <Button label="확인" handleClickButton={handleClickConfirm} />
       </div>
     </div>
   );

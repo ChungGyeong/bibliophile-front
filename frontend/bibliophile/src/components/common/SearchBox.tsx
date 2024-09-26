@@ -1,14 +1,18 @@
-import React from "react";
+import React, { ChangeEventHandler } from "react";
 import { useNavigate } from "react-router-dom";
 import InputBox from "./InputBox";
 
 interface SearchBoxProps {
   value?: string;
-  onInputChange: (value: string) => void;
+  handleChangeSearchBox: ChangeEventHandler<HTMLInputElement>;
   onUpdatedValue: (value: string) => void;
 }
 
-const SearchBox: React.FC<SearchBoxProps> = ({ value = "", onInputChange, onUpdatedValue }) => {
+const SearchBox: React.FC<SearchBoxProps> = ({
+  value = "",
+  handleChangeSearchBox,
+  onUpdatedValue,
+}) => {
   const navigate = useNavigate();
 
   const handleSearchIconClick = () => {
@@ -32,7 +36,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({ value = "", onInputChange, onUpda
         <InputBox
           placeholder="검색어를 입력해주세요"
           value={value}
-          onInputChange={onInputChange}
+          handleChangeInput={handleChangeSearchBox}
           onKeyDown={handleKeyDown}
         />
       </div>

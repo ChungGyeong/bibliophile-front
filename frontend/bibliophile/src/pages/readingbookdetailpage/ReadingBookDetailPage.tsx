@@ -263,7 +263,7 @@ const ReadingBookDetailPage: React.FC = () => {
               </div>
               <ProgressBar isThin={false} percent={bookDetail.readingPercent} />
             </div>
-            <Button label="끝까지 요리했어요!" onClick={handleModalToggle} />
+            <Button label="끝까지 요리했어요!" handleClickButton={handleModalToggle} />
           </div>
         </div>
       ) : (
