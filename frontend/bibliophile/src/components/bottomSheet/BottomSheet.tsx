@@ -26,7 +26,9 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ height, children, handleClose
         className="fixed inset-0 bg-black bg-opacity-50 z-10"
         onClick={handleCloseBottomSheet}
       ></div>
-      <div className={`w-full ${getHeightClass()} z-20 fixed bg-white rounded-lg rounded-b-none`}>
+      <div
+        className={`w-full max-w-[600px] ${getHeightClass()} z-20 fixed bg-white rounded-lg rounded-b-none`}
+      >
         <i
           className="fi fi-rr-cross-small p-1 absolute top-[10px] right-[10px] text-[25px] z-30"
           onClick={handleCloseBottomSheet}
