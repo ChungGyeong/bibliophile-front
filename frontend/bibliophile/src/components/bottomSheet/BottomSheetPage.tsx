@@ -24,7 +24,7 @@ const BottomSheetPage: React.FC = () => {
           value={inputValue}
           onChange={handleInputChange}
         />
-        <Button label="저장하기" onClick={handleButtonClick} />
+        <Button label="저장하기" handleClickButton={handleButtonClick} />
       </div>
     </BottomSheet>
   );

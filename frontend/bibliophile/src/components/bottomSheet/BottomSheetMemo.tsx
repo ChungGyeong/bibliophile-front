@@ -133,7 +133,7 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
             </div>
           ))}
         </div>
-        <Button label="작성 완료" onClick={handleButtonClick} />
+        <Button label="작성 완료" handleClickButton={handleButtonClick} />
       </div>
     </BottomSheet>
   );

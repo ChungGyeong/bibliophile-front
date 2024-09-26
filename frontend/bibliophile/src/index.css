@@ -51,6 +51,7 @@ body,
 #root {
   margin: 0;
   padding: 0;
+  height: 100%;
   width: 100vw;
   font-family: "Pretendard-Regular", "system-ui";
 }

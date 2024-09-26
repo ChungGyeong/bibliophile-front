@@ -212,7 +212,11 @@ const BookDetailPage: React.FC = () => {
       </div>
 
       <div className="mt-[10px] mb-[40px] flex flex-col items-center">
-        <img className="h-[190px] w-[140px] mb-[16px]" src={bookData?.data.thumbnail} />
+        <img
+          className="h-[190px] w-[140px] mb-[16px]"
+          src={bookData?.data.thumbnail}
+          alt={`'${bookData?.data.title}' 표지`}
+        />
         <h2 className="font-medium text-[18px] mb-[2px]">{bookData?.data.title}</h2>
         <p className="text-[14px] font-light">{bookData?.data.authors}</p>
         <span className="font-regular text-medium-gray text-[12px] mt-[12px] mb-[20px]">
@@ -221,9 +225,9 @@ const BookDetailPage: React.FC = () => {
 
         <div className="w-[200px]">
           {isReading ? (
-            <Button label="나의 책장에서 보기" onClick={handleNavigateMyBook} />
+            <Button label="나의 책장에서 보기" handleClickButton={handleNavigateMyBook} />
           ) : (
-            <Button label="읽기 시작하기" onClick={handleStartReading} />
+            <Button label="읽기 시작하기" handleClickButton={handleStartReading} />
           )}
         </div>
       </div>
