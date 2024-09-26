@@ -14,17 +14,35 @@ type ChartOptions = {
         width: number;
       };
       legend: {
+        show: boolean;
+        fontSize: string;
         position: string;
       };
     };
   }[];
   dataLabels: {
     enabled: boolean;
+    dropShadow: {
+      enabled: boolean;
+    };
     style: {
       fontSize: string;
       fontFamily: string;
       color: string;
       fontWeight: number;
+      textShadow: string;
+    };
+  };
+  plotOptions: {
+    pie: {
+      dataLabels: {
+        offset: number;
+        style: {
+          fontSize: string;
+          fontWeight: number;
+          textShadow: string;
+        };
+      };
     };
   };
 };
@@ -33,12 +51,8 @@ const data = [
   { kdc: "0", count: 3 },
   { kdc: "1", count: 3 },
   { kdc: "2", count: 2 },
-  { kdc: "3", count: 4 },
+  { kdc: "9", count: 4 },
   { kdc: "4", count: 5 },
-  { kdc: "5", count: 2 },
-  { kdc: "6", count: 3 },
-  { kdc: "7", count: 1 },
-  { kdc: "8", count: 2 },
 ];
 
 const initialOptions: ChartOptions = {
@@ -52,9 +66,11 @@ const initialOptions: ChartOptions = {
       breakpoint: 480,
       options: {
         chart: {
-          width: 290,
+          width: 300,
         },
         legend: {
+          show: true,
+          fontSize: "12px",
           position: "right",
         },
       },
@@ -62,11 +78,27 @@ const initialOptions: ChartOptions = {
   ],
   dataLabels: {
     enabled: true,
+    dropShadow: {
+      enabled: false,
+    },
     style: {
       fontSize: "8px",
       fontFamily: "Pretendard",
       color: "#000",
-      fontWeight: 300,
+      fontWeight: 200,
+      textShadow: "none",
+    },
+  },
+  plotOptions: {
+    pie: {
+      dataLabels: {
+        offset: -7,
+        style: {
+          fontSize: "10px",
+          fontWeight: 400,
+          textShadow: "none",
+        },
+      },
     },
   },
 };
