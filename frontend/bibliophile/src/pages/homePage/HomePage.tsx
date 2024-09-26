@@ -17,7 +17,7 @@ const settings = (setCurrentSlide: (slideIndex: number) => void) => ({
   infinite: true,
   speed: 500,
   arrows: true,
-  beforeChange: (current: number, next: number) => setCurrentSlide(next),
+  beforeChange: (_current: number, next: number) => setCurrentSlide(next),
 });
 
 const readingBooks = [

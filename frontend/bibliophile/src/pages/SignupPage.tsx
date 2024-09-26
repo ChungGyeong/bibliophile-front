@@ -3,18 +3,18 @@ import Button from "@/components/common/Button.tsx";
 import InputBox from "@/components/common/InputBox.tsx";
 import SelectBox from "@/components/common/SelectBox.tsx";
 import TagItemList from "@/components/tagItem/tagItemList.tsx";
-import { userType } from "@/types/user.ts";
+import { UsersResponse } from "@/types/user.ts";
 import DatePicker from "@/components/common/DatePicker.tsx";
 import { formatDateToString } from "@/utils/calDate.ts";
 
 const SignupPage: React.FC = () => {
-  const [input, setInput] = useState<userType>({
+  const [input, setInput] = useState<UsersResponse>({
     userId: 0,
     email: "",
     nickname: "",
     gender: "남성",
     birthday: "",
-    classification: new Set<string>(),
+    classification: [],
     profileImage: "",
     oauthServerType: "KAKAO",
   });
@@ -26,7 +26,7 @@ const SignupPage: React.FC = () => {
 
   const handleChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newNickname = e.target.value;
-    setInput(prev => ({ ...prev, nickname: newNickname }));
+    setInput((prev: UsersResponse) => ({ ...prev, nickname: newNickname }));
 
     const validationResult = validationNickname(newNickname);
 
@@ -37,15 +37,18 @@ const SignupPage: React.FC = () => {
   };
 
   const handleChangeGender = (value: string) => {
-    setInput(prev => ({ ...prev, gender: value }));
+    setInput((prev: UsersResponse) => ({ ...prev, gender: value }));
   };
 
   const handleChangeBirthday = (date: Date | undefined) => {
-    setInput(prev => ({ ...prev, birthday: date ? formatDateToString(date) : "" }));
+    setInput((prev: UsersResponse) => ({
+      ...prev,
+      birthday: date ? formatDateToString(date) : "",
+    }));
   };
 
   const handleChangeClassification = (selectedTags: Set<string>) => {
-    setInput(prev => ({ ...prev, classification: selectedTags }));
+    setInput((prev: UsersResponse) => ({ ...prev, classification: Array.from(selectedTags) }));
   };
 
   const handleClickSignup = () => {
@@ -103,7 +106,7 @@ const SignupPage: React.FC = () => {
         </div>
         <TagItemList
           layoutType="signSelect"
-          tags={input.classification}
+          tags={new Set(input.classification)}
           setTags={handleChangeClassification}
         />
       </div>

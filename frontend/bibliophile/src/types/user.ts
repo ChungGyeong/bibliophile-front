@@ -11,7 +11,7 @@ export interface UsersResponse {
   nickname: string;
   gender: string;
   birthday: string;
-  classification: [];
+  classification: string[];
   profileImage: string;
   oauthServerType: "KAKAO" | "GOOGLE" | "NAVER";
 }

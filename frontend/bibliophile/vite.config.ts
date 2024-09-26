@@ -16,26 +16,33 @@ export default defineConfig({
       registerType: "autoUpdate",
       injectRegister: false,
 
-      pwaAssets: {
-        disabled: false,
-        config: true,
-      },
-
       manifest: {
         name: "책 먹는 여우",
         short_name: "책 먹는 여우",
         description: "책 먹는 여우",
-        theme_color: "#ffffff",
+        theme_color: process.env.VITE_THEME_COLOR || "#ffffff",
+        icons: [
+          {
+            src: "favicon.png",
+            sizes: "192x192",
+            type: "image/png",
+          },
+          {
+            src: "favicon.png",
+            sizes: "512x512",
+            type: "image/png",
+          },
+        ],
       },
 
       workbox: {
-        globPatterns: ["**/*.{js,css,html,svg,png,ico}"],
+        globPatterns: ["**/*.{js,css,html,svg,png,ico,jpg,jpeg}"],
         cleanupOutdatedCaches: true,
         clientsClaim: true,
       },
 
       devOptions: {
-        enabled: false,
+        enabled: true,
         navigateFallback: "index.html",
         suppressWarnings: true,
         type: "module",
