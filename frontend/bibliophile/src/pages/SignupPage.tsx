@@ -3,16 +3,16 @@ import Button from "@/components/common/Button.tsx";
 import InputBox from "@/components/common/InputBox.tsx";
 import SelectBox from "@/components/common/SelectBox.tsx";
 import TagItemList from "@/components/tagItem/tagItemList.tsx";
-import { UsersResponse } from "@/types/user.ts";
+import { ClassificationType, UsersResponse } from "@/types/user.ts";
 import DatePicker from "@/components/common/DatePicker.tsx";
 import { formatDateToString } from "@/utils/calDate.ts";
 
 const SignupPage: React.FC = () => {
-  const [input, setInput] = useState<UsersResponse>({
+  const [inputs, setInputs] = useState<UsersResponse>({
     userId: 0,
     email: "",
     nickname: "",
-    gender: "남성",
+    gender: "MAN",
     birthday: "",
     classification: [],
     profileImage: "",
@@ -26,7 +26,7 @@ const SignupPage: React.FC = () => {
 
   const handleChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newNickname = e.target.value;
-    setInput((prev: UsersResponse) => ({ ...prev, nickname: newNickname }));
+    setInputs((prev: UsersResponse) => ({ ...prev, nickname: newNickname }));
 
     const validationResult = validationNickname(newNickname);
 
@@ -37,18 +37,36 @@ const SignupPage: React.FC = () => {
   };
 
   const handleChangeGender = (value: string) => {
-    setInput((prev: UsersResponse) => ({ ...prev, gender: value }));
+    setInputs((prev: UsersResponse) => ({ ...prev, gender: value === "남성" ? "MAN" : "WOMAN " }));
   };
 
   const handleChangeBirthday = (date: Date | undefined) => {
-    setInput((prev: UsersResponse) => ({
+    setInputs((prev: UsersResponse) => ({
       ...prev,
       birthday: date ? formatDateToString(date) : "",
     }));
   };
 
   const handleChangeClassification = (selectedTags: Set<string>) => {
-    setInput((prev: UsersResponse) => ({ ...prev, classification: Array.from(selectedTags) }));
+    const validClassifications: ClassificationType[] = Array.from(selectedTags).filter(tag =>
+      [
+        "GENERAL_WORKS",
+        "PHILOSOPHY",
+        "RELIGION",
+        "SOCIAL_SCIENCES",
+        "NATURAL_SCIENCES",
+        "TECHNOLOGY",
+        "ARTS",
+        "LANGUAGE",
+        "LITERATURE",
+        "HISTORY",
+      ].includes(tag)
+    ) as ClassificationType[];
+
+    setInputs((prev: UsersResponse) => ({
+      ...prev,
+      classification: validClassifications,
+    }));
   };
 
   const handleClickSignup = () => {
@@ -75,7 +93,7 @@ const SignupPage: React.FC = () => {
       <div className="flex w-full justify-between items-center">
         <p className="w-1/3 font-medium text-base">닉네임</p>
         <InputBox
-          value={input.nickname}
+          value={inputs.nickname}
           handleChangeInput={handleChangeNickname}
           placeholder="닉네임을 입력해주세요"
           noticeMessage={
@@ -91,7 +109,7 @@ const SignupPage: React.FC = () => {
         <p className="w-1/3 font-medium text-base">성별</p>
         <SelectBox
           options={["남성", "여성"]}
-          defaultOption={input.gender}
+          defaultOption={inputs.gender === "MAN" ? "남성" : "여성"}
           onSelect={handleChangeGender}
         />
       </div>
@@ -106,13 +124,13 @@ const SignupPage: React.FC = () => {
         </div>
         <TagItemList
           layoutType="signSelect"
-          tags={new Set(input.classification)}
+          tags={new Set(inputs.classification)}
           setTags={handleChangeClassification}
         />
       </div>
       <Button
         label="회원가입"
-        disabled={!(input.nickname && input.gender && input.birthday)}
+        disabled={!(inputs.nickname && inputs.gender && inputs.birthday)}
         handleClickButton={handleClickSignup}
       />
     </div>
