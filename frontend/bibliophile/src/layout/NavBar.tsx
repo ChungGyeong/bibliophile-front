@@ -38,7 +38,7 @@ const NavBar: React.FC<NavBarProps> = ({ activeNav, onNavChange }) => {
       name: "프로필",
       icon: "fi fi-rr-user text-gray",
       activeIcon: "fi fi-sr-user",
-      route: "/",
+      route: "/mypage",
     },
   ];
 

@@ -26,7 +26,7 @@ const InputBox: React.FC<InputBoxProps> = ({
         onChange={handleChangeInput}
         onKeyDown={onKeyDown}
         placeholder={placeholder}
-        className={`w-full h-9 border-common px-[10px] outline-0 ${type === "search" ? "text-base font-medium" : "text-sm font-light"}`}
+        className={`w-full h-9 border-common px-[10px] outline-0 ${type === "bold" ? "text-base font-medium" : "text-sm font-light"}`}
       />
     </div>
   );

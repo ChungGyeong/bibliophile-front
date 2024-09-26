@@ -12,6 +12,7 @@ import LoginPage from "./pages/LoginPage.tsx";
 import SignupPage from "@/pages/SignupPage.tsx";
 import ReadingBookDetailPage from "@/pages/readingbookdetailpage/ReadingBookDetailPage.tsx";
 import SearchPage from "@/pages/SearchPage.tsx";
+import MyPage from "@/pages/MyPage.tsx";
 
 const AppRoutes = () => {
   return (
@@ -27,6 +28,7 @@ const AppRoutes = () => {
       <Route path="/memo/:memoId" element={<PageLayout page={<MemoPage />} />} />
       <Route path="/reading/:myBookId" element={<PageLayout page={<ReadingBookDetailPage />} />} />
       <Route path="/search" element={<PageLayout page={<SearchPage />} />} />
+      <Route path="/mypage" element={<PageLayout page={<MyPage />} />} />
     </Routes>
   );
 };
