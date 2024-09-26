@@ -1,60 +1,121 @@
-import axios, { AxiosInstance } from "axios";
-import dotenv from "dotenv";
+import axios from "axios";
+import { getToken } from "@/utils/bakingCookies.ts";
+import { getRefreshToken } from "@/api/outh.ts";
 
-dotenv.config();
+// 액세스 토큰 및 리프레시 토큰이 없는 인스턴스
+const clientInstance = axios.create({
+  baseURL: import.meta.env.VITE_REST_API_URL,
+});
 
-const createClientInstance = (): AxiosInstance => {
-  return axios.create({
-    baseURL: import.meta.env.VITE_REST_API_URL as string,
-    timeout: 5000,
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": process.env.CLIENT_URL as string,
-      "Access-Control-Allow-Credentials": "true",
-    },
-    withCredentials: true,
-  });
-};
+clientInstance.interceptors.request.use(
+  config => {
+    config.headers["Content-Type"] = "application/json";
+    config.headers["Access-Control-Allow-Origin"] = import.meta.env.VITE_CLIENT_URL;
+    config.headers["Access-Control-Allow-Credentials"] = "true";
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
 
-// TODO: 필요할 때 주석 해제 후 사용 예정
-// const createAuthClientInstance = () => {
-//     const accessToken = sessionStorage.getItem("accessToken");
-//
-//     const instance = axios.create({
-//         baseURL: import.meta.env.VITE_REST_API_URL,
-//         timeout: 5000,
-//         headers: {
-//             "Content-Type": "application/json",
-//             "Authorization": `Bearer ${accessToken}`,
-//             "Access-Control-Allow-Origin": import.meta.env.VITE_CLIENT_URL,
-//             "Access-Control-Allow-Credentials": "true",
-//         },
-//         withCredentials: true,
-//     });
-//
-//     return instance;
-// };
+clientInstance.interceptors.response.use(
+  response => {
+    return response.data;
+  },
+  error => {
+    console.error("API 호출 오류:", error);
+    return Promise.reject(error);
+  }
+);
 
-// const createAuthWithRefreshClientInstance = () => {
-//     const accessToken = sessionStorage.getItem("accessToken");
-//     const refreshToken = Cookies.get("refreshToken");
-//
-//     const instance = axios.create({
-//         baseURL: import.meta.env.VITE_REST_API_URL,
-//         timeout: 5000,
-//         headers: {
-//             "Content-Type": "application/json",
-//             "Authorization": `Bearer ${accessToken}`,
-//             "Authorization-refresh": `Bearer ${refreshToken}`,
-//             "Access-Control-Allow-Origin": import.meta.env.VITE_CLIENT_URL,
-//             "Access-Control-Allow-Credentials": "true",
-//         },
-//         withCredentials: true,
-//     });
-//
-//     return instance;
-// };
+// 액세스 토큰만 있는 인스턴스
+const authClientInstance = axios.create({
+  baseURL: import.meta.env.VITE_REST_API_URL,
+});
 
-export const clientInstance = createClientInstance();
-// export const authClientInstance = createAuthClientInstance();
-// export const authWithRefreshClientInstance = createAuthWithRefreshClientInstance();
+authClientInstance.interceptors.request.use(
+  config => {
+    const token = getToken("accessToken");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+      config.headers["Content-Type"] = "application/json";
+      config.headers["Access-Control-Allow-Origin"] = import.meta.env.VITE_CLIENT_URL;
+      config.headers["Access-Control-Allow-Credentials"] = "true";
+    } else console.error("에세스 토큰 없음!!");
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
+
+authClientInstance.interceptors.response.use(
+  response => {
+    return response.data;
+  },
+  error => {
+    console.error("API 호출 오류:", error);
+    return Promise.reject(error);
+  }
+);
+
+// 액세스 토큰 및 리프레시 토큰 둘 다 있는 인스턴스
+const authWithRefreshClientInstance = axios.create({
+  baseURL: import.meta.env.VITE_REST_API_URL,
+});
+
+authWithRefreshClientInstance.interceptors.request.use(
+  config => {
+    const accessToken = getToken("accessToken"); // 액세스 토큰 가져오기
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+      config.headers["Content-Type"] = "application/json";
+      config.headers["Access-Control-Allow-Origin"] = import.meta.env.VITE_CLIENT_URL;
+      config.headers["Access-Control-Allow-Credentials"] = "true";
+    } else console.error("");
+
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
+
+authWithRefreshClientInstance.interceptors.response.use(
+  response => {
+    return response.data;
+  },
+  async error => {
+    const originalRequest = error.config;
+
+    if (error.response.status === 401) {
+      const refreshToken = getToken("refreshToken");
+
+      if (refreshToken) {
+        try {
+          const { status } = await getRefreshToken();
+          const newAccessToken = getToken("accessToken");
+
+          if (status === 200) {
+            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+            originalRequest.headers["Content-Type"] = "application/json";
+            originalRequest.headers["Access-Control-Allow-Origin"] =
+              import.meta.env.VITE_CLIENT_URL;
+            originalRequest.headers["Access-Control-Allow-Credentials"] = "true";
+          }
+
+          return axios(originalRequest);
+        } catch (refreshError) {
+          console.error("리프레시 토큰 오류:", refreshError);
+          return Promise.reject(refreshError);
+        }
+      }
+    }
+
+    console.error("API 호출 오류:", error);
+    return Promise.reject(error);
+  }
+);
+
+export { clientInstance, authClientInstance, authWithRefreshClientInstance };
