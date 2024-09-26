@@ -7,7 +7,8 @@ interface BookCardItemProps {
   title: string;
   thumbnail: string;
   authors: string;
-  completionReadingTime: string;
+  isBookmarked?: boolean;
+  completionReadingTime?: string;
 }
 
 const BookCardItem: React.FC<BookCardItemProps> = ({
@@ -15,6 +16,7 @@ const BookCardItem: React.FC<BookCardItemProps> = ({
   title,
   thumbnail,
   authors,
+  isBookmarked,
   completionReadingTime,
 }) => {
   const navigate = useNavigate();
@@ -35,10 +37,10 @@ const BookCardItem: React.FC<BookCardItemProps> = ({
       onClick={handleClickNavigateMoreInfo}
     >
       <div className="flex gap-5 justify-between whitespace-nowrap items-start h-[18px]">
-        {completionReadingTime !== "" ? (
+        {completionReadingTime ? (
           <p className="text-medium-gray text-[10px] font-medium">{completionReadingTime}</p>
         ) : (
-          <LikeButton bookId={bookId} />
+          <LikeButton isBookmarked={isBookmarked} bookId={bookId} />
         )}
         <div>
           <p
@@ -52,12 +54,18 @@ const BookCardItem: React.FC<BookCardItemProps> = ({
 
       <img
         src={thumbnail}
-        alt={title}
+        alt={`'${title}' 표지`}
         className="object-contain self-center mt-2 aspect-[0.75] w-[90px]"
       />
 
-      <p className="self-start mt-3.5 ml-5 font-regular text-xs">{title}</p>
-      <p className="self-start ml-5 font-light text-medium-gray text-[10px]">{authors}</p>
+      <p className="self-start mt-3.5 ml-5 font-regular text-xs">
+        {title.slice(0, 7)}
+        {title.length > 7 && "..."}
+      </p>
+      <p className="self-start ml-5 font-light text-medium-gray text-[10px]">
+        {authors.slice(0, 8)}
+        {authors.length > 8 && "..."}
+      </p>
     </div>
   );
 };

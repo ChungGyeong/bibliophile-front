@@ -100,8 +100,7 @@ const SearchPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col w-full gap-5 overflow-y-auto">
-      <div></div>
+    <div className="flex flex-col w-full gap-10 overflow-y-auto mt-5">
       <SearchBox value={searchString} handleChangeSearchBox={handleChangeSearchBox} />
       {results.length === 0 ? (
         <p className="mt-7 m-auto text-base font-light">검색 결과가 없습니다.</p>
@@ -114,7 +113,7 @@ const SearchPage: React.FC = () => {
               title={result.title}
               thumbnail={result.thumbnail}
               authors={result.authors}
-              completionReadingTime={""}
+              isBookmarked={result.isBookmarked}
             />
           ))}
         </BookCardGrid>
