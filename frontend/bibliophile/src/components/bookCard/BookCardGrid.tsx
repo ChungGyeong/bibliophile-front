@@ -1,66 +1,11 @@
 import React from "react";
-import BookCardItem from "@/components/bookCard/BookCardItem.tsx";
 
-const datas = [
-  {
-    books_id: 1,
-    title: "string",
-    authors: "string",
-    thumbnail: "https://image.yes24.com/goods/232775/XL",
-    completionReadingTime: "2024-02-18",
-  },
-  {
-    books_id: 2,
-    title: "string",
-    authors: "string",
-    thumbnail: "https://image.yes24.com/goods/232775/XL",
-    completionReadingTime: "",
-  },
-  {
-    books_id: 1,
-    title: "string",
-    authors: "string",
-    thumbnail: "https://image.yes24.com/goods/232775/XL",
-    completionReadingTime: "2024-02-18",
-  },
-  {
-    books_id: 2,
-    title: "string",
-    authors: "string",
-    thumbnail: "https://image.yes24.com/goods/232775/XL",
-    completionReadingTime: "",
-  },
-  {
-    books_id: 1,
-    title: "string",
-    authors: "string",
-    thumbnail: "https://image.yes24.com/goods/232775/XL",
-    completionReadingTime: "2024-02-18",
-  },
-  {
-    books_id: 2,
-    title: "string",
-    authors: "string",
-    thumbnail: "https://image.yes24.com/goods/232775/XL",
-    completionReadingTime: "",
-  },
-];
+interface BookCardGridProps {
+  children: React.ReactNode;
+}
 
-const BookCardGrid: React.FC = () => {
-  return (
-    <div className="flex w-full flex-wrap justify-between gap-5 overflow-auto">
-      {datas.map((data, idx) => (
-        <BookCardItem
-          key={idx}
-          bookId={data.books_id}
-          title={data.title}
-          thumbnail={data.thumbnail}
-          authors={data.authors}
-          completionReadingTime={data.completionReadingTime}
-        />
-      ))}
-    </div>
-  );
+const BookCardGrid: React.FC<BookCardGridProps> = ({ children }) => {
+  return <div className="grid grid-cols-2 gap-x-[5%] gap-y-[20px] w-full">{children}</div>;
 };
 
 export default BookCardGrid;

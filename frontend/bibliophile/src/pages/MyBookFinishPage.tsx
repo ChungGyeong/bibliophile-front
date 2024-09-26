@@ -1,5 +1,6 @@
 import React from "react";
 import BookCardItem from "../components/bookCard/BookCardItem";
+import BookCardGrid from "@/components/bookCard/BookCardGrid.tsx";
 
 // TODO: 추후 API로 불러오기
 const finishedBooks = [
@@ -36,7 +37,7 @@ const finishedBooks = [
 const MyBookFinishPage: React.FC = () => {
   return (
     <div className="mt-[40px]">
-      <div className="grid grid-cols-2 gap-x-[5%] gap-y-[20px] w-full">
+      <BookCardGrid>
         {finishedBooks.map((book, idx) => (
           <BookCardItem
             key={idx}
@@ -47,7 +48,7 @@ const MyBookFinishPage: React.FC = () => {
             completionReadingTime={book.completionReadingTime}
           />
         ))}
-      </div>
+      </BookCardGrid>
     </div>
   );
 };

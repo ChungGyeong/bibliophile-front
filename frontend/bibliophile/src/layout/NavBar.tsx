@@ -32,7 +32,7 @@ const NavBar: React.FC<NavBarProps> = ({ activeNav, onNavChange }) => {
       name: "검색",
       icon: "fi fi-rr-search text-gray",
       activeIcon: "fi fi-sr-search",
-      route: "/",
+      route: "/search",
     },
     {
       name: "프로필",
