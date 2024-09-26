@@ -18,9 +18,9 @@ const LikeButton: React.FC<LikeButtonProps> = ({ isBookmarked = false, bookmarkI
   return (
     <button onClick={handleToggleBookmarked} className="z-10">
       {bookmarked ? (
-        <i className="fi fi-sr-heart text-orange text-base" />
+        <i className="fi fi-sr-heart text-orange " />
       ) : (
-        <i className="fi fi-sr-heart text-soft-gray text-base" />
+        <i className="fi fi-sr-heart text-soft-gray" />
       )}
     </button>
   );
