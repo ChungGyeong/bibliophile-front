@@ -15,10 +15,10 @@ const data = [
 const defaultStyle: React.CSSProperties = {
   backgroundColor: "#EEEEEE",
   borderRadius: "50%",
-  width: "35px",
-  height: "35px",
   fontSize: "0px",
   pointerEvents: "none",
+  width: "25px", // 날짜 셀 크기 조정
+  height: "25px",
 };
 
 const StreakCalendar: React.FC = () => {
@@ -68,50 +68,53 @@ const StreakCalendar: React.FC = () => {
   );
 
   return (
-    <div className="mt-5 w-full">
-      <DayPicker
-        locale={ko}
-        mode="single"
-        numberOfMonths={1}
-        onMonthChange={handleMonthChange}
-        modifiers={{
-          orange: orangeDays,
-          green: greenDays,
-          yellow: yellowDays,
-        }}
-        modifiersStyles={{
-          orange: {
-            backgroundColor: "#FFA644",
-            borderRadius: "50%",
-            width: "35px",
-            height: "35px",
-          },
-          green: {
-            backgroundColor: "#C5D887",
-            borderRadius: "50%",
-            width: "35px",
-            height: "35px",
-          },
-          yellow: {
-            backgroundColor: "#FFD66C",
-            borderRadius: "50%",
-            width: "35px",
-            height: "35px",
-          },
-        }}
-        styles={{
-          day: defaultStyle,
-          selected: {
-            backgroundColor: "transparent",
-            border: "none",
-          },
-        }}
-        components={{
-          PreviousMonthButton: PreviousButton,
-          NextMonthButton: NextButton,
-        }}
-        className="flex justify-center font-light text-base border-2 border-gray-300 rounded-md p-5"
-      />
+    <div className="mt-5 w-full flex justify-center mt-5 w-full flex justify-center border-2 border-gray-300 rounded-md p-1">
+      {/* 기존의 inline style을 Tailwind CSS로 변환 */}
+      <div className="transform scale-90 max-w-[300px] mx-auto">
+        <DayPicker
+          locale={ko}
+          mode="single"
+          numberOfMonths={1}
+          onMonthChange={handleMonthChange}
+          modifiers={{
+            orange: orangeDays,
+            green: greenDays,
+            yellow: yellowDays,
+          }}
+          modifiersStyles={{
+            orange: {
+              backgroundColor: "#FFA644",
+              borderRadius: "50%",
+              width: "25px", // 날짜 셀 크기 줄이기
+              height: "25px",
+            },
+            green: {
+              backgroundColor: "#C5D887",
+              borderRadius: "50%",
+              width: "25px", // 날짜 셀 크기 줄이기
+              height: "25px",
+            },
+            yellow: {
+              backgroundColor: "#FFD66C",
+              borderRadius: "50%",
+              width: "25px", // 날짜 셀 크기 줄이기
+              height: "25px",
+            },
+          }}
+          styles={{
+            day: defaultStyle,
+            selected: {
+              backgroundColor: "transparent",
+              border: "none",
+            },
+          }}
+          components={{
+            PreviousMonthButton: PreviousButton,
+            NextMonthButton: NextButton,
+          }}
+          className="flex justify-center font-light text-base"
+        />
+      </div>
     </div>
   );
 };

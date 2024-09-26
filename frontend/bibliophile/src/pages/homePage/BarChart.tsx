@@ -85,8 +85,10 @@ const BarChart: React.FC<BarChartProps> = () => {
   const [options] = React.useState<ApexOptions>(initialOptions);
 
   return (
-    <div>
-      <ReactApexChart options={options} series={series} type="bar" width={330} height={200} />
+    <div className="flex justify-center w-full h-full">
+      <div>
+        <ReactApexChart options={options} series={series} type="bar" width={310} height={200} />
+      </div>
     </div>
   );
 };

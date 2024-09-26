@@ -144,7 +144,7 @@ const PieChart: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full h-full">
+    <div className="flex justify-center w-full h-full">
       <div>
         <ReactApexChart options={options} series={series} type="pie" width={300} />
       </div>

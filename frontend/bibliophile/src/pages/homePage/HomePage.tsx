@@ -12,7 +12,7 @@ import WordCloud from "./WordCloud";
 
 const settings = (setCurrentSlide: (slideIndex: number) => void) => ({
   centerMode: true,
-  centerPadding: "50px",
+  centerPadding: "24px",
   slidesToShow: 1,
   infinite: true,
   speed: 500,
@@ -68,7 +68,7 @@ const HomePage: React.FC = () => {
           <Slider {...settings(setCurrentSlide)}>
             {readingBooks.map((book, idx) => (
               <div key={idx}>
-                <div className="mx-4">
+                <div className="mx-2">
                   <BookCardReadingItem
                     myBookId={book.myBookId}
                     thumbnail={book.thumbnail}
@@ -89,7 +89,7 @@ const HomePage: React.FC = () => {
 
         <div className="my-[50px] ">
           <p className="text-black text-xl font-medium font-semibold">독서 캘린더</p>
-          <div className="flex justify-center">
+          <div className="flex justify-center w-full">
             <StreakCalendar />
           </div>
         </div>
