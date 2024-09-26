@@ -5,24 +5,19 @@ import InputBox from "./InputBox";
 interface SearchBoxProps {
   value?: string;
   handleChangeSearchBox: ChangeEventHandler<HTMLInputElement>;
-  onUpdatedValue: (value: string) => void;
 }
 
-const SearchBox: React.FC<SearchBoxProps> = ({
-  value = "",
-  handleChangeSearchBox,
-  onUpdatedValue,
-}) => {
+const SearchBox: React.FC<SearchBoxProps> = ({ value = "", handleChangeSearchBox }) => {
   const navigate = useNavigate();
 
   const handleSearchIconClick = () => {
     if (value) {
-      onUpdatedValue(value);
+      // TODO: API 호출
     }
   };
   const handleBarcodeIconClick = () => {
     // TODO: 바코드 페이지로 이동
-    navigate("/");
+    navigate("/barcode");
   };
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -31,9 +26,10 @@ const SearchBox: React.FC<SearchBoxProps> = ({
   };
 
   return (
-    <div className="flex w-full">
+    <div className="flex w-full gap-4">
       <div className="flex-grow">
         <InputBox
+          type="search"
           placeholder="검색어를 입력해주세요"
           value={value}
           handleChangeInput={handleChangeSearchBox}
@@ -41,15 +37,13 @@ const SearchBox: React.FC<SearchBoxProps> = ({
         />
       </div>
 
-      <div className="flex ml-[20px] pt-1">
-        <button onClick={handleSearchIconClick}>
-          <i className="fi fi-rr-search mr-[10px]" />
-        </button>
+      <button onClick={handleSearchIconClick}>
+        <i className="fi fi-rr-search text-xl" />
+      </button>
 
-        <button onClick={handleBarcodeIconClick}>
-          <i className="fi fi-rr-barcode-read" />
-        </button>
-      </div>
+      <button onClick={handleBarcodeIconClick}>
+        <i className="fi fi-rr-barcode-read text-xl" />
+      </button>
     </div>
   );
 };

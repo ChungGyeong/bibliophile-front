@@ -1,6 +1,7 @@
 import React, { ChangeEventHandler } from "react";
 
 interface InputBoxProps {
+  type?: string;
   placeholder?: string;
   value?: string;
   handleChangeInput: ChangeEventHandler<HTMLInputElement>;
@@ -9,6 +10,7 @@ interface InputBoxProps {
 }
 
 const InputBox: React.FC<InputBoxProps> = ({
+  type,
   placeholder = "입력하세요",
   value = "",
   handleChangeInput,
@@ -24,7 +26,7 @@ const InputBox: React.FC<InputBoxProps> = ({
         onChange={handleChangeInput}
         onKeyDown={onKeyDown}
         placeholder={placeholder}
-        className="w-full h-9 text-sm font-light border-common px-[10px] outline-0"
+        className={`w-full h-9 border-common px-[10px] outline-0 ${type === "search" ? "text-base font-medium" : "text-sm font-light"}`}
       />
     </div>
   );

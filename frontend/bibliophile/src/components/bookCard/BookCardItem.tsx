@@ -20,7 +20,8 @@ const BookCardItem: React.FC<BookCardItemProps> = ({
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleClickNavigateMoreInfo = () => {
+  const handleClickNavigateMoreInfo = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
     if (location.pathname.includes("/mybook/finish")) {
       navigate(`/reading/${bookId}`);
     } else {
