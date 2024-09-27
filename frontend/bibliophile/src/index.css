@@ -65,6 +65,12 @@ input[type="text"]:focus {
   border: solid 1px #444444;
 }
 
+video {
+  width: 280px;
+  height: 280px;
+  object-fit: cover;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
