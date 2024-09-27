@@ -15,6 +15,7 @@ import ReadingBookDetailPage from "@/pages/readingbookdetailpage/ReadingBookDeta
 import SearchPage from "@/pages/searchPage/SearchPage.tsx";
 import MyPage from "@/pages/myPage/MyPage.tsx";
 import BarcodePage from "@/pages/searchPage/BarcodePage.tsx";
+import BookSuggestionPage from "@/pages/BookSuggestionPage.tsx";
 
 const AppRoutes = () => {
   return (

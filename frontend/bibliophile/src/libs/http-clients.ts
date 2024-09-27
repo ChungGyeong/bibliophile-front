@@ -36,7 +36,7 @@ const authClientInstance = axios.create({
 
 authClientInstance.interceptors.request.use(
   config => {
-    const token = getToken("accessToken");
+    const token = getToken("BIBLIOPHILE_TOKEN");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
       config.headers["Content-Type"] = "application/json";
@@ -67,7 +67,7 @@ const authWithRefreshClientInstance = axios.create({
 
 authWithRefreshClientInstance.interceptors.request.use(
   config => {
-    const accessToken = getToken("accessToken"); // 액세스 토큰 가져오기
+    const accessToken = getToken("BIBLIOPHILE_TOKEN"); // 액세스 토큰 가져오기
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
       config.headers["Content-Type"] = "application/json";
@@ -90,12 +90,12 @@ authWithRefreshClientInstance.interceptors.response.use(
     const originalRequest = error.config;
 
     if (error.response.status === 401) {
-      const refreshToken = getToken("refreshToken");
+      const refreshToken = getToken("BIBLIOPHILE_TOKEN_REFRESH");
 
       if (refreshToken) {
         try {
           const { status } = await getRefreshToken();
-          const newAccessToken = getToken("accessToken");
+          const newAccessToken = getToken("BIBLIOPHILE_TOKEN");
 
           if (status === 200) {
             originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;

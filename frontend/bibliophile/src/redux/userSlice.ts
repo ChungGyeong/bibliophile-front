@@ -10,7 +10,7 @@ const initialState: UserType = {
     userId: 0,
     email: "",
     nickname: "",
-    gender: "",
+    gender: "MAN",
     birthday: "",
     classification: [],
     profileImage: "",
