@@ -29,7 +29,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({ value = "", handleChangeSearchBox
     <div className="flex w-full gap-4">
       <div className="flex-grow">
         <InputBox
-          type="search"
+          type="bold"
           placeholder="검색어를 입력해주세요"
           value={value}
           handleChangeInput={handleChangeSearchBox}

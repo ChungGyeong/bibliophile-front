@@ -13,6 +13,7 @@ import LoginPage from "./pages/LoginPage.tsx";
 import SignupPage from "@/pages/SignupPage.tsx";
 import ReadingBookDetailPage from "@/pages/readingbookdetailpage/ReadingBookDetailPage.tsx";
 import SearchPage from "@/pages/SearchPage.tsx";
+import MyPage from "@/pages/myPage/MyPage.tsx";
 
 const AppRoutes = () => {
   return (
@@ -29,6 +30,7 @@ const AppRoutes = () => {
       <Route path="/report/:reportId" element={<PageLayout page={<ReportPage />} />} />
       <Route path="/reading/:myBookId" element={<PageLayout page={<ReadingBookDetailPage />} />} />
       <Route path="/search" element={<PageLayout page={<SearchPage />} />} />
+      <Route path="/mypage" element={<PageLayout page={<MyPage />} />} />
     </Routes>
   );
 };
