@@ -3,6 +3,8 @@ import { ClassificationType, UsersResponse } from "@/types/user.ts";
 import TagItemList from "@/components/tagItem/tagItemList.tsx";
 import InputBox from "@/components/common/InputBox.tsx";
 import Button from "@/components/common/Button.tsx";
+import Modal from "@/components/common/Modal.tsx";
+import AccountManagement from "@/pages/myPage/AccountManagement.tsx";
 
 const user: UsersResponse = {
   userId: 12345,
@@ -28,6 +30,8 @@ const MyPage: React.FC = () => {
     profileImage: user.profileImage,
     oauthServerType: user.oauthServerType,
   });
+  const [isOpenLogoutModal, setIsOpenLogoutModal] = useState(false);
+  const [isOpenDeleteMemberModal, setIsOpenDeleteMemberModal] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -76,10 +80,34 @@ const MyPage: React.FC = () => {
     console.log(inputs);
   };
 
+  const handleClickLogout = () => {
+    setIsOpenLogoutModal(!isOpenLogoutModal);
+  };
+
+  const handleClickDeleteMember = () => {
+    setIsOpenDeleteMemberModal(!isOpenDeleteMemberModal);
+  };
+
   return (
     <div
       className={`flex flex-col items-center justify-center w-full ${isEdit ? "gap-4" : "gap-4"}`}
     >
+      {isOpenLogoutModal && (
+        <Modal
+          title="정말 로그아웃 하시겠어요?"
+          isOpen={isOpenLogoutModal}
+          handleClickClose={handleClickLogout}
+          handleClickConfirm={() => {}}
+        />
+      )}
+      {isOpenDeleteMemberModal && (
+        <Modal
+          title="정말 탈퇴 하시겠어요?"
+          isOpen={isOpenDeleteMemberModal}
+          handleClickClose={handleClickDeleteMember}
+          handleClickConfirm={() => {}}
+        />
+      )}
       {isEdit ? (
         <div>
           <div>
@@ -152,6 +180,13 @@ const MyPage: React.FC = () => {
       <div></div>
 
       <Button label={isEdit ? "저장하기" : "프로필 편집"} handleClickButton={handleClickButton} />
+
+      {!isEdit && (
+        <AccountManagement
+          handleClickLogout={handleClickLogout}
+          handleClickDeleteMember={handleClickDeleteMember}
+        />
+      )}
     </div>
   );
 };

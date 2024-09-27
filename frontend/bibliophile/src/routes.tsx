@@ -12,7 +12,7 @@ import LoginPage from "./pages/LoginPage.tsx";
 import SignupPage from "@/pages/SignupPage.tsx";
 import ReadingBookDetailPage from "@/pages/readingbookdetailpage/ReadingBookDetailPage.tsx";
 import SearchPage from "@/pages/SearchPage.tsx";
-import MyPage from "@/pages/MyPage.tsx";
+import MyPage from "@/pages/myPage/MyPage.tsx";
 
 const AppRoutes = () => {
   return (
