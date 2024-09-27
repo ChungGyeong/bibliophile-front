@@ -1,22 +1,11 @@
 import React, { useEffect, useState } from "react";
 import TagItem from "./tagItem";
 import { translateCategoryToEnglish, translateCategoryToKorea } from "@/types/translator.ts";
-
-const TAGS = [
-  "GENERAL_WORKS",
-  "PHILOSOPHY",
-  "RELIGION",
-  "SOCIAL_SCIENCES",
-  "NATURAL_SCIENCES",
-  "TECHNOLOGY",
-  "ARTS",
-  "LANGUAGE",
-  "LITERATURE",
-  "HISTORY",
-];
+import { TAGS } from "@/constants/constants.ts";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 interface TagItemListProps {
-  layoutType: "signSelect" | "mypageSelect" | "mySelect";
+  layoutType: "signSelect" | "bookSelect" | "mypageSelect" | "mySelect";
   tags: Set<string>;
   setTags: (selectedTags: Set<string>) => void;
 }
@@ -60,6 +49,29 @@ const TagItemList: React.FC<TagItemListProps> = ({ layoutType, tags, setTags }) 
                 />
               );
             })}
+          </div>
+        );
+      case "bookSelect":
+        return (
+          <div>
+            <div className="flex justify-between w-full items-center mb-[10px]">
+              <p className="text-sm font-medium">태그 골라 보기</p>
+              <p className="text-xs font-light">최대 3개까지 선택 가능</p>
+            </div>
+            <Swiper slidesPerView={4.2} className="h-11">
+              {TAGS.map((tag, index) => {
+                const koreanTag = translateCategoryToKorea(tag);
+                return (
+                  <SwiperSlide key={index}>
+                    <TagItem
+                      label={koreanTag}
+                      selected={selectedTags.has(tag)}
+                      onClick={() => handleTagClick(koreanTag)}
+                    />
+                  </SwiperSlide>
+                );
+              })}
+            </Swiper>
           </div>
         );
       case "mypageSelect":
