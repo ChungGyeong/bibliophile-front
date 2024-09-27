@@ -38,7 +38,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({ options, defaultOption, onSelect 
   };
 
   return (
-    <div className="relative w-full z-10" ref={selectBoxRef}>
+    <div className="relative w-full bg-white z-20" ref={selectBoxRef}>
       <div
         className={`h-9 px-[10px] flex justify-between items-center border border-gray ${isOpen ? "rounded-t-[5px] rounded-b-none" : "rounded-[5px]"} box-border`}
         onClick={handleClickDropDown}
