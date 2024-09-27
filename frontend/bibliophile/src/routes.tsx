@@ -22,10 +22,14 @@ const AppRoutes = () => {
       <Route path="/login" element={<DefaultLayout page={<LoginPage />} />} />
       <Route path="/signup" element={<DefaultLayout page={<SignupPage />} />} />
       <Route path="/" element={<PageLayout page={<HomePage />} />} />
-      {/* <Route path="/mybook" element={<MyBookLayout page={<MyBookPage />} />} /> */}
-      <Route path="/mybook/reading" element={<MyBookLayout page={<MyBookReadingPage />} />} />
-      <Route path="/mybook/finish" element={<MyBookLayout page={<MyBookFinishPage />} />} />
-      <Route path="/mybook/like" element={<MyBookLayout page={<MyBookLikePage />} />} />
+
+      <Route path="/mybook">
+        <Route path="reading" element={<MyBookLayout page={<MyBookReadingPage />} />} />
+        <Route path="finish" element={<MyBookLayout page={<MyBookFinishPage />} />} />
+        <Route path="like" element={<MyBookLayout page={<MyBookLikePage />} />} />
+      </Route>
+
+      <Route path="/books" element={<PageLayout page={<BookSuggestionPage />} />} />
       <Route path="/books/:bookId" element={<PageLayout page={<BookDetailPage />} />} />
       <Route path="/memo/:memoId" element={<PageLayout page={<MemoPage />} />} />
       <Route path="/report/:reportId" element={<PageLayout page={<ReportPage />} />} />

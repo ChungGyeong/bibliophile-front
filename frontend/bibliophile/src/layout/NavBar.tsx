@@ -14,13 +14,13 @@ const NavBar: React.FC<NavBarProps> = ({ activeNav, onNavChange }) => {
       name: "나의 책장",
       icon: "fi fi-tr-story-book text-gray",
       activeIcon: "fi fi-sr-story-book",
-      route: "/",
+      route: "/mybook/reading",
     },
     {
       name: "추천 책",
       icon: "fi fi-rr-books text-gray",
       activeIcon: "fi fi-br-books",
-      route: "/",
+      route: "/books",
     },
     {
       name: "홈",
