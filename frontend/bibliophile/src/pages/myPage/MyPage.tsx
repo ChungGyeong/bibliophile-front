@@ -5,6 +5,8 @@ import InputBox from "@/components/common/InputBox.tsx";
 import Button from "@/components/common/Button.tsx";
 import Modal from "@/components/common/Modal.tsx";
 import AccountManagement from "@/pages/myPage/AccountManagement.tsx";
+import ProfileImageUploader from "@/pages/myPage/ProfileImageUploader.tsx";
+import UserInfoField from "@/pages/myPage/UserInfoField.tsx";
 
 const user: UsersResponse = {
   userId: 12345,
@@ -110,20 +112,13 @@ const MyPage: React.FC = () => {
       )}
       {isEdit ? (
         <div>
-          <div>
-            <img
-              className="w-[120px] h-[120px] rounded-md object-cover mt-10 mb-2.5"
-              onClick={handleClickProfileImage}
-              src={inputs.profileImage}
-              alt={`${user.nickname}의 프로필 이미지`}
-            />
-            <input
-              type="file"
-              ref={fileInputRef}
-              style={{ display: "none" }} // input 숨기기
-              onChange={handleChangeImageFiles}
-            />
-          </div>
+          <ProfileImageUploader
+            handleClickProfileImage={handleClickProfileImage}
+            profileImage={inputs.profileImage}
+            nickname={user.nickname}
+            fileInputRef={fileInputRef}
+            handleChangeImageFiles={handleChangeImageFiles}
+          />
           <div className="w-[120px] h-[28px]">
             <InputBox
               type="bold"
@@ -144,33 +139,21 @@ const MyPage: React.FC = () => {
         </div>
       )}
 
-      <div
-        className={`w-full flex flex-col justify-center items-start rounded-[5px] p-5 ${isEdit ? "bg-light-gray" : "bg-light-yellow"}`}
-      >
-        <div>
-          <span className="font-medium text-base text-center">이메일: </span>
-          <span className="font-regular text-base text-center">{user.email}</span>
-        </div>
-        <div className={`h-[1px] w-full my-1  ${isEdit ? "bg-gray" : "bg-yellow"}`}></div>
-        <div>
-          <span className="font-medium text-base text-center">연결된 소셜 계정: </span>
-          <span className="font-regular text-base text-center">{user.oauthServerType}</span>
-        </div>
-      </div>
+      <UserInfoField
+        isEdit={isEdit}
+        firstTitle="이메일: "
+        firstContent={user.email}
+        secondTitle="연결된 소셜 계정: "
+        secondContent={user.oauthServerType}
+      />
 
-      <div
-        className={`w-full flex flex-col justify-center items-start rounded-[5px] p-5 ${isEdit ? "bg-light-gray" : "bg-light-yellow"}`}
-      >
-        <div>
-          <span className="font-medium text-base text-center">성별: </span>
-          <span>{user.gender === "MAN" ? "남성" : "여성"}</span>
-        </div>
-        <div className={`h-[1px] w-full my-1  ${isEdit ? "bg-gray" : "bg-yellow"}`}></div>
-        <div>
-          <span className="font-medium text-base text-center">생일: </span>
-          <span className="font-regular text-base text-center">{user.birthday}</span>
-        </div>
-      </div>
+      <UserInfoField
+        isEdit={isEdit}
+        firstTitle="성별: "
+        firstContent={user.gender === "MAN" ? "남성" : "여성"}
+        secondTitle="생일: "
+        secondContent={user.birthday}
+      />
 
       <TagItemList
         layoutType={isEdit ? "mypageSelect" : "mySelect"}
