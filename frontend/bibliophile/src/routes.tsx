@@ -12,9 +12,9 @@ import ReportPage from "./pages/ReportPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import SignupPage from "@/pages/SignupPage.tsx";
 import ReadingBookDetailPage from "@/pages/readingbookdetailpage/ReadingBookDetailPage.tsx";
-import SearchPage from "@/pages/SearchPage.tsx";
+import SearchPage from "@/pages/searchPage/SearchPage.tsx";
 import MyPage from "@/pages/myPage/MyPage.tsx";
-import BookSuggestionPage from "@/pages/BookSuggestionPage.tsx";
+import BarcodePage from "@/pages/searchPage/BarcodePage.tsx";
 
 const AppRoutes = () => {
   return (
@@ -35,6 +35,7 @@ const AppRoutes = () => {
       <Route path="/report/:reportId" element={<PageLayout page={<ReportPage />} />} />
       <Route path="/reading/:myBookId" element={<PageLayout page={<ReadingBookDetailPage />} />} />
       <Route path="/search" element={<PageLayout page={<SearchPage />} />} />
+      <Route path="/barcode" element={<PageLayout page={<BarcodePage />} />} />
       <Route path="/mypage" element={<PageLayout page={<MyPage />} />} />
     </Routes>
   );
