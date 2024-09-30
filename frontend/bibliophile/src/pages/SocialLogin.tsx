@@ -2,17 +2,21 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "@/redux/userSlice.ts";
 import { AppDispatch, RootState } from "@/redux/store.ts";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-const KakaoLogin = () => {
+const SocialLogin = () => {
   const { isLoggedIn } = useSelector((state: RootState) => state.user);
   const dispatch: AppDispatch = useDispatch();
-  const navigate = useNavigate(); // useNavigate 훅 사용
+
+  const { provider } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get("code");
+
     if (code) {
-      dispatch(login({ oauthServerType: "KAKAO", code }));
+      console.log(provider!.toUpperCase(), code);
+      dispatch(login({ oauthServerType: provider!.toUpperCase(), code }));
     }
   }, [dispatch]);
 
@@ -25,10 +29,10 @@ const KakaoLogin = () => {
   return (
     !isLoggedIn && (
       <div className="w-screen h-screen overflow-hidden flex justify-center items-center">
-        <p>로딩 중..</p>
+        <img src="/images/loading.gif" alt="loading" />
       </div>
     )
   );
 };
 
-export default KakaoLogin;
+export default SocialLogin;

@@ -16,13 +16,15 @@ import SearchPage from "@/pages/searchPage/SearchPage.tsx";
 import MyPage from "@/pages/myPage/MyPage.tsx";
 import BarcodePage from "@/pages/searchPage/BarcodePage.tsx";
 import BookSuggestionPage from "@/pages/BookSuggestionPage.tsx";
-import KakaoLogin from "@/pages/oauth/KakaoLogin.tsx";
+import SocialLogin from "@/pages/SocialLogin.tsx";
 
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/login" element={<DefaultLayout page={<LoginPage />} />} />
-      <Route path="/login/kakao" element={<KakaoLogin />} />
+      <Route path="/login">
+        <Route index element={<DefaultLayout page={<LoginPage />} />} />
+        <Route path=":provider" element={<SocialLogin />} />
+      </Route>
 
       <Route path="/signup" element={<DefaultLayout page={<SignupPage />} />} />
       <Route path="/" element={<PageLayout page={<HomePage />} />} />
