@@ -1,8 +1,10 @@
 export interface UserType {
+  isLoggedIn: boolean;
   loading: boolean;
   error: string | null;
   isNicknameExist: boolean;
-  data: UsersResponse;
+  isFirst: boolean;
+  user: UsersResponse;
 }
 
 export interface UsersResponse {
