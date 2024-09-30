@@ -1,12 +1,15 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { UserType } from "@/types/user.ts";
 import { createCheckNickname } from "@/api/users.ts";
+import { socialLogin } from "@/api/outh.ts";
 
 const initialState: UserType = {
+  isLoggedIn: false,
   loading: false,
   error: null,
   isNicknameExist: false,
-  data: {
+  isFirst: false,
+  user: {
     userId: 0,
     email: "",
     nickname: "",
@@ -18,6 +21,13 @@ const initialState: UserType = {
   },
 };
 
+export const login = createAsyncThunk(
+  "user/login",
+  async ({ oauthServerType, code }: { oauthServerType: string; code: string }) => {
+    return await socialLogin(oauthServerType, code);
+  }
+);
+
 export const checkNicknameDuplication = createAsyncThunk(
   "user/createCheckNickname",
   async (nickName: string) => {
@@ -25,16 +35,23 @@ export const checkNicknameDuplication = createAsyncThunk(
   }
 );
 
-// Promise
-// API 호출 할 때 결과값으로 Promise 객체
-// pending, fulfilled, rejected
-
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {},
   extraReducers: builder => {
     builder
+      .addCase(login.pending, state => {
+        state.isLoggedIn = true;
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.user.email = action.payload.data.email;
+        state.user.oauthServerType = action.payload.data.oauthServerType;
+        state.isFirst = action.payload.data.isFirst;
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.error = action.error.message || "Social Login failed";
+      })
       .addCase(checkNicknameDuplication.fulfilled, (state, action) => {
         state.isNicknameExist = action.payload.data.exist;
       })
