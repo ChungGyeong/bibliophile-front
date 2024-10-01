@@ -1,32 +1,50 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@/components/common/Button.tsx";
 import InputBox from "@/components/common/InputBox.tsx";
 import SelectBox from "@/components/common/SelectBox.tsx";
 import TagItemList from "@/components/tagItem/tagItemList.tsx";
-import { ClassificationType, UsersResponse } from "@/types/user.ts";
+import { ClassificationType, UsersRequest } from "@/types/user.ts";
 import DatePicker from "@/components/common/DatePicker.tsx";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store.ts";
+import { signup } from "@/redux/userSlice.ts";
+import { useNavigate } from "react-router-dom";
 import { formatDateToString } from "@/utils/calDate.ts";
 
 const SignupPage: React.FC = () => {
-  const [inputs, setInputs] = useState<UsersResponse>({
-    userId: 0,
-    email: "",
+  const dispatch: AppDispatch = useDispatch();
+  const { user, loading } = useSelector((state: RootState) => state.user);
+
+  const [inputs, setInputs] = useState<UsersRequest>({
     nickname: "",
     gender: "MAN",
     birthday: "",
     classification: [],
     profileImage: "",
-    oauthServerType: "KAKAO",
+    email: user.email,
+    oauthServerType: user.oauthServerType,
   });
+
+  useEffect(() => {
+    if (user) {
+      setInputs(prev => ({
+        ...prev,
+        email: user.email,
+        oauthServerType: user.oauthServerType,
+      }));
+    }
+  }, [user]);
 
   const [isValid, setIsValid] = useState({
     nicknameLength: false,
     nicknameExist: false,
   });
 
+  const navigate = useNavigate();
+
   const handleChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newNickname = e.target.value;
-    setInputs((prev: UsersResponse) => ({ ...prev, nickname: newNickname }));
+    setInputs(prev => ({ ...prev, nickname: newNickname }));
 
     const validationResult = validationNickname(newNickname);
 
@@ -37,13 +55,18 @@ const SignupPage: React.FC = () => {
   };
 
   const handleChangeGender = (value: string) => {
-    setInputs((prev: UsersResponse) => ({ ...prev, gender: value === "남성" ? "MAN" : "WOMAN " }));
+    setInputs(prev => ({
+      ...prev,
+      gender: value === "남성" ? "MAN" : "WOMAN",
+    }));
   };
 
   const handleChangeBirthday = (date: Date | undefined) => {
-    setInputs((prev: UsersResponse) => ({
+    setInputs(prev => ({
       ...prev,
       birthday: date ? formatDateToString(date) : "",
+      // TODO: 날짜 텍스트로 입력 가능하도록 수정, 캘린더 UI 수정
+      // birthday: "1998-12-28",
     }));
   };
 
@@ -63,14 +86,23 @@ const SignupPage: React.FC = () => {
       ].includes(tag)
     ) as ClassificationType[];
 
-    setInputs((prev: UsersResponse) => ({
+    setInputs(prev => ({
       ...prev,
       classification: validClassifications,
     }));
   };
 
   const handleClickSignup = () => {
-    // TODO: 회원가입 API 호출
+    const userData = {
+      ...inputs,
+      email: user.email,
+      oauthServerType: user.oauthServerType,
+    };
+
+    dispatch(signup(userData));
+
+    if (loading) return <img src="/images/loading.gif" alt="로딩중..." />;
+    else navigate("/");
   };
 
   const validationNickname = (nickname: string) => {
@@ -78,7 +110,6 @@ const SignupPage: React.FC = () => {
       return "length";
     }
 
-    //TODO: 닉네임 중복 확인 API 연결
     const existingNicknames = ["박옥순", "김영호", "백현숙"];
     if (existingNicknames.includes(nickname)) {
       return "exist";
