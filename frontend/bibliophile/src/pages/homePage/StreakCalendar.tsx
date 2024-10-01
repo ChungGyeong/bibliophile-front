@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
+import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import "react-day-picker/style.css";
 
@@ -17,7 +18,7 @@ const defaultStyle: React.CSSProperties = {
   borderRadius: "50%",
   fontSize: "0px",
   pointerEvents: "none",
-  width: "25px", // 날짜 셀 크기 조정
+  width: "25px",
   height: "25px",
 };
 
@@ -67,9 +68,12 @@ const StreakCalendar: React.FC = () => {
     </button>
   );
 
+  const formatCaption = (month: Date) => {
+    return format(month, "yyyy년 M월", { locale: ko });
+  };
+
   return (
     <div className="mt-5 w-full flex justify-center mt-5 w-full flex justify-center border-2 border-gray-300 rounded-md p-1">
-      {/* 기존의 inline style을 Tailwind CSS로 변환 */}
       <div className="transform scale-90 max-w-[300px] mx-auto">
         <DayPicker
           locale={ko}
@@ -85,19 +89,19 @@ const StreakCalendar: React.FC = () => {
             orange: {
               backgroundColor: "#FFA644",
               borderRadius: "50%",
-              width: "25px", // 날짜 셀 크기 줄이기
+              width: "25px",
               height: "25px",
             },
             green: {
               backgroundColor: "#C5D887",
               borderRadius: "50%",
-              width: "25px", // 날짜 셀 크기 줄이기
+              width: "25px",
               height: "25px",
             },
             yellow: {
               backgroundColor: "#FFD66C",
               borderRadius: "50%",
-              width: "25px", // 날짜 셀 크기 줄이기
+              width: "25px",
               height: "25px",
             },
           }}
@@ -107,6 +111,9 @@ const StreakCalendar: React.FC = () => {
               backgroundColor: "transparent",
               border: "none",
             },
+          }}
+          formatters={{
+            formatCaption,
           }}
           components={{
             PreviousMonthButton: PreviousButton,

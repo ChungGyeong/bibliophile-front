@@ -54,8 +54,8 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <div className="h-screen overflow-y-auto pb-[65px] mt-4 m-[-5.5%]">
-      <div className="m-[5.5%]">
+    <div>
+      <div>
         <FoxHouse foxId={1} level={2} foxType="BABY" foxStatus="GOOD" feedCount={8} exp={70} />
 
         <div className="my-[50px]">
@@ -95,7 +95,7 @@ const HomePage: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex flex-col items-center bg-gray-green rounded-t-lg w-[100%]">
+      <div className="flex flex-col items-center bg-gray-green -mx-[5.5%] pb-[100px] -mb-[100px] mt-5 rounded-t-[10px]">
         <p className="text-black text-xl font-medium font-semibold self-start m-5">통계</p>
         <div className="w-5/6 h-[240px] shadow-custom bg-white rounded-lg p-3 mb-5">
           <p className="text-black text-lg font-normal mb-2">분야별통계</p>
