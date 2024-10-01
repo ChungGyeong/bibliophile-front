@@ -5,7 +5,7 @@ import { AppDispatch, RootState } from "@/redux/store.ts";
 import { useNavigate, useParams } from "react-router-dom";
 
 const SocialLogin = () => {
-  const { isLoggedIn } = useSelector((state: RootState) => state.user);
+  const { isLoggedIn, isFirst } = useSelector((state: RootState) => state.user);
   const dispatch: AppDispatch = useDispatch();
 
   const { provider } = useParams();
@@ -15,16 +15,17 @@ const SocialLogin = () => {
     const code = new URL(window.location.href).searchParams.get("code");
 
     if (code) {
-      console.log(provider!.toUpperCase(), code);
       dispatch(login({ oauthServerType: provider!.toUpperCase(), code }));
     }
-  }, [dispatch]);
+  }, [dispatch, provider]);
 
   useEffect(() => {
-    if (isLoggedIn) {
+    if (isLoggedIn && isFirst) {
       navigate("/signup");
+    } else if (isLoggedIn && !isFirst) {
+      navigate("/");
     }
-  }, [isLoggedIn, navigate]);
+  }, [isLoggedIn, isFirst, navigate]);
 
   return (
     !isLoggedIn && (

@@ -2,7 +2,7 @@ import { clientInstance } from "@/libs/http-clients.ts";
 import { AxiosError } from "axios";
 
 export const getRefreshToken = () => {
-  return clientInstance.post("/api/oauth/refresh");
+  return clientInstance.post("/oauth/refresh");
 };
 
 export const socialLogin = (oauthServerType: string, code: string) => {

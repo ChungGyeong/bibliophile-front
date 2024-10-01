@@ -7,11 +7,21 @@ export interface UserType {
   user: UsersResponse;
 }
 
+export interface UsersRequest {
+  nickname: string;
+  email: string;
+  gender: "MAN" | "WOMAN";
+  birthday: string;
+  classification: ClassificationType[];
+  profileImage: string;
+  oauthServerType: "KAKAO" | "GOOGLE" | "NAVER";
+}
+
 export interface UsersResponse {
   userId: number;
   email: string;
   nickname: string;
-  gender: "MAN" | "WOMAN ";
+  gender: "MAN" | "WOMAN";
   birthday: string;
   classification: ClassificationType[];
   profileImage: string;
