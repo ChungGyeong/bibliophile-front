@@ -1,7 +1,7 @@
 export interface UserType {
   isLoggedIn: boolean;
   loading: boolean;
-  error: string | null;
+  error: string | undefined;
   isNicknameExist: boolean;
   isFirst: boolean;
   user: UsersResponse;

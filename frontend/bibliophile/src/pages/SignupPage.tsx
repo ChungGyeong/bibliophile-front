@@ -14,7 +14,7 @@ import { GENDER_OPTIONS, TAGS } from "@/constants/constants.ts";
 
 const SignupPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { user, loading, isNicknameExist } = useSelector((state: RootState) => state.user);
+  const { user, isNicknameExist, error, loading } = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
 
   const [inputs, setInputs] = useState<UsersRequest>({
@@ -29,15 +29,10 @@ const SignupPage: React.FC = () => {
 
   const [validationString, setValidationString] = useState("");
 
-  useEffect(() => {
-    if (user) {
-      setInputs(prev => ({
-        ...prev,
-        email: user.email,
-        oauthServerType: user.oauthServerType,
-      }));
-    }
-  }, [user]);
+  const isFormValid = useMemo(
+    () => inputs.nickname && inputs.gender && inputs.birthday,
+    [inputs.nickname, inputs.gender, inputs.birthday]
+  );
 
   const handleChangeNickname = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const newNickname = e.target.value;
@@ -57,7 +52,7 @@ const SignupPage: React.FC = () => {
     const month = inputValue.slice(4, 6);
     const day = inputValue.slice(6, 8);
 
-    inputValue = [year, month, day].filter(Boolean).join(".");
+    inputValue = [year, month, day].filter(Boolean).join("-");
 
     setInputs(prev => ({
       ...prev,
@@ -93,16 +88,16 @@ const SignupPage: React.FC = () => {
       alert("로그인부터 해주세요!");
       return;
     }
-    const userData = {
-      ...inputs,
-      email: user.email,
-      oauthServerType: user.oauthServerType,
-    };
 
-    dispatch(signup(userData));
+    dispatch(signup(inputs));
 
-    if (!loading) navigate("/");
-  }, [inputs, user, dispatch, loading, navigate]);
+    if (error !== undefined) {
+      alert(error);
+    } else if (!loading) {
+      alert("회원가입 성공!");
+      navigate("/");
+    }
+  }, [inputs, user, dispatch, navigate]);
 
   const validationNickname = useCallback(
     (nickname: string) => {
@@ -132,10 +127,15 @@ const SignupPage: React.FC = () => {
     debouncedCheckNickname(inputs.nickname);
   }, [inputs.nickname, validationNickname, debouncedCheckNickname]);
 
-  const isFormValid = useMemo(
-    () => inputs.nickname && inputs.gender && inputs.birthday,
-    [inputs.nickname, inputs.gender, inputs.birthday]
-  );
+  useEffect(() => {
+    if (user) {
+      setInputs(prev => ({
+        ...prev,
+        email: user.email,
+        oauthServerType: user.oauthServerType,
+      }));
+    }
+  }, [user]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen gap-8">
@@ -173,7 +173,7 @@ const SignupPage: React.FC = () => {
           <InputBox
             value={inputs.birthday}
             handleChangeInput={handleChangeBirthday}
-            placeholder="yyyy.mm.dd 형식으로 입력해주세요."
+            placeholder="YYYYMMDD 형식으로 입력해주세요."
           />
         }
       />

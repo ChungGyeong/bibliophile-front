@@ -6,7 +6,7 @@ import { socialLogin } from "@/api/outh.ts";
 const initialState: UserType = {
   isLoggedIn: false,
   loading: false,
-  error: null,
+  error: undefined,
   isNicknameExist: false,
   isFirst: true,
   user: {
@@ -46,36 +46,44 @@ const userSlice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(login.fulfilled, (state, action) => {
-        state.user.email = action.payload.data.data.email;
-        state.user.oauthServerType = action.payload.data.data.oauthServerType;
-        state.isFirst = action.payload.data.data.isFirst;
+        const { email, oauthServerType, isFirst } = action.payload.data.data;
+        state.user.email = email;
+        state.user.oauthServerType = oauthServerType;
+        state.isFirst = isFirst;
         state.isLoggedIn = true;
-        console.log(action.payload.data.data);
+        state.error = undefined;
       })
       .addCase(login.rejected, (state, action) => {
-        state.error = action.error.message || "Social Login failed";
+        state.error = action.error.message;
       })
       .addCase(checkNicknameDuplication.fulfilled, (state, action) => {
         state.isNicknameExist = action.payload.data.data.exist;
+        state.error = undefined;
       })
       .addCase(checkNicknameDuplication.rejected, (state, action) => {
         state.isNicknameExist = false;
-        state.error = action.error.message || "Nickname check failed";
+        state.error = action.error.message;
       })
       .addCase(signup.pending, state => {
         state.loading = true;
       })
       .addCase(signup.fulfilled, (state, action) => {
-        state.user.userId = action.payload.data.userId;
-        state.user.birthday = action.payload.data.birthday;
-        state.user.classification = action.payload.data.classification;
-        state.user.gender = action.payload.data.gender;
-        state.user.nickname = action.payload.data.nickname;
-        state.user.profileImage = action.payload.data.profileImage;
+        const { userId, birthday, classification, gender, nickname, profileImage } =
+          action.payload.data;
+        state.user = {
+          ...state.user,
+          userId,
+          birthday,
+          classification,
+          gender,
+          nickname,
+          profileImage,
+        };
         state.loading = false;
+        state.error = undefined;
       })
       .addCase(signup.rejected, (state, action) => {
-        state.error = action.error.message || "Signup failed";
+        state.error = action.error.message;
       });
   },
 });
