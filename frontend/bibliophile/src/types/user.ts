@@ -29,7 +29,9 @@ export interface UsersResponse {
 }
 
 export interface NicknameResponse {
-  exist: boolean;
+  data: {
+    exist: boolean;
+  };
 }
 
 export type ClassificationType =
