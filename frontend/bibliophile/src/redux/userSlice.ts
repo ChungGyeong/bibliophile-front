@@ -30,8 +30,8 @@ export const login = createAsyncThunk(
 
 export const checkNicknameDuplication = createAsyncThunk(
   "user/createCheckNickname",
-  async (nickName: string) => {
-    return await createCheckNickname(nickName);
+  async (nickname: string) => {
+    return await createCheckNickname(nickname);
   }
 );
 
@@ -50,12 +50,13 @@ const userSlice = createSlice({
         state.user.oauthServerType = action.payload.data.data.oauthServerType;
         state.isFirst = action.payload.data.data.isFirst;
         state.isLoggedIn = true;
+        console.log(action.payload.data.data);
       })
       .addCase(login.rejected, (state, action) => {
         state.error = action.error.message || "Social Login failed";
       })
       .addCase(checkNicknameDuplication.fulfilled, (state, action) => {
-        state.isNicknameExist = action.payload.data.exist;
+        state.isNicknameExist = action.payload.data.data.exist;
       })
       .addCase(checkNicknameDuplication.rejected, (state, action) => {
         state.isNicknameExist = false;
@@ -74,7 +75,7 @@ const userSlice = createSlice({
         state.loading = false;
       })
       .addCase(signup.rejected, (state, action) => {
-        state.error = action.error.message || "Social Login failed";
+        state.error = action.error.message || "Signup failed";
       });
   },
 });

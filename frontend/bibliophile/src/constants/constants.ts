@@ -1,3 +1,5 @@
+export const GENDER_OPTIONS = ["남성", "여성"];
+
 export const TAGS = [
   "GENERAL_WORKS",
   "PHILOSOPHY",
