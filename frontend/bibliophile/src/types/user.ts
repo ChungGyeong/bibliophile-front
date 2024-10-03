@@ -1,13 +1,13 @@
-export interface UserType {
-  isLoggedIn: boolean;
-  loading: boolean;
-  error: string | undefined;
-  isNicknameExist: boolean;
-  isFirst: boolean;
-  user: UsersResponse;
+export interface UserStateType {
+  isLoggedIn: boolean,
+  loading: boolean,
+  error: string | undefined,
+  isNicknameExist: boolean,
+  isFirst: boolean,
+  user: UsersResponse,
 }
 
-export interface UsersRequest {
+export interface SignupRequest {
   nickname: string;
   email: string;
   gender: "MAN" | "WOMAN";
@@ -29,19 +29,17 @@ export interface UsersResponse {
 }
 
 export interface NicknameResponse {
-  data: {
     exist: boolean;
-  };
 }
 
 export type ClassificationType =
-  | "GENERAL_WORKS"
-  | "PHILOSOPHY"
-  | "RELIGION"
-  | "SOCIAL_SCIENCES"
-  | "NATURAL_SCIENCES"
-  | "TECHNOLOGY"
-  | "ARTS"
-  | "LANGUAGE"
-  | "LITERATURE"
-  | "HISTORY";
+    "ECONOMICS" |
+    "COMICS" |
+    "SOCIETY" |
+    "LOVE" |
+    "FICTION" |
+    "TRAVEL" |
+    "IT_SCIENCE" |
+    "ARTS" |
+    "LANGUAGE" |
+    "HISTORY"
