@@ -1,10 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { userReducer } from "@/redux/userSlice.ts";
+import { bookReducer } from "@/redux/bookSlice.ts";
 
 const store = configureStore({
   reducer: {
     user: userReducer,
-    // memo: memoReudcer,
+    book: bookReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

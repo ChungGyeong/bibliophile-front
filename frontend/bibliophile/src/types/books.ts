@@ -1,13 +1,19 @@
-interface SearchResponse {
+export interface BookStateType {
+  loading: boolean;
+  error: string | undefined;
+  book: BookResponse;
+}
+
+export interface BookResponse {
   bookId: number;
   contents: string;
   isbn: string;
   kdc: string;
   title: string;
   authors: string;
-  page_number: string;
+  pageNumber: number;
   thumbnail: string;
   publisher: string;
-  isBookmarked: boolean;
   readingStatus: "UNREAD" | "READING" | "READ";
+  isBookmarked: boolean;
 }
