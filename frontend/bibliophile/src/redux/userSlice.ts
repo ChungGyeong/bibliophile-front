@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { UsersRequest, UserType } from "@/types/user.ts";
 import { createCheckNickname, createUser } from "@/api/users.ts";
 import { socialLogin } from "@/api/outh.ts";
+import {SignupRequest, UserStateType} from "@/types/user.ts";
 
-const initialState: UserType = {
+const initialState  : UserStateType = {
   isLoggedIn: false,
   loading: false,
   error: undefined,
@@ -24,19 +24,22 @@ const initialState: UserType = {
 export const login = createAsyncThunk(
   "user/login",
   async ({ oauthServerType, code }: { oauthServerType: string; code: string }) => {
-    return await socialLogin(oauthServerType, code);
+    const response = await socialLogin(oauthServerType, code);
+    return response.data
   }
 );
 
 export const checkNicknameDuplication = createAsyncThunk(
   "user/createCheckNickname",
   async (nickname: string) => {
-    return await createCheckNickname(nickname);
+    const response = await createCheckNickname(nickname);
+    return response.data
   }
 );
 
-export const signup = createAsyncThunk("user/signup", async (user: UsersRequest) => {
-  return await createUser(user);
+export const signup = createAsyncThunk("user/signup", async (user: SignupRequest) => {
+  const response = await createUser(user);
+  return response.data;
 });
 
 const userSlice = createSlice({
@@ -46,7 +49,7 @@ const userSlice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(login.fulfilled, (state, action) => {
-        const { email, oauthServerType, isFirst } = action.payload.data.data;
+        const { email, oauthServerType, isFirst } = action.payload.data;
         state.user.email = email;
         state.user.oauthServerType = oauthServerType;
         state.isFirst = isFirst;
@@ -57,7 +60,7 @@ const userSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(checkNicknameDuplication.fulfilled, (state, action) => {
-        state.isNicknameExist = action.payload.data.data.exist;
+        state.isNicknameExist = action.payload.data.exist;
         state.error = undefined;
       })
       .addCase(checkNicknameDuplication.rejected, (state, action) => {
@@ -70,6 +73,7 @@ const userSlice = createSlice({
       .addCase(signup.fulfilled, (state, action) => {
         const { userId, birthday, classification, gender, nickname, profileImage } =
           action.payload.data;
+
         state.user = {
           ...state.user,
           userId,

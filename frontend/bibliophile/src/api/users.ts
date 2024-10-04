@@ -1,9 +1,9 @@
-import { NicknameResponse, UsersRequest, UsersResponse } from "@/types/user.ts";
+import {NicknameResponse, SignupRequest, UsersResponse} from "@/types/user.ts";
 import { clientInstance } from "@/libs/http-clients.ts";
 
 export const createCheckNickname = async (nickname: string) => {
   return await clientInstance
-    .post<NicknameResponse>("/users/check-nickname", {
+    .post<ApiResponseType<NicknameResponse>>("/users/check-nickname", {
       nickname: nickname,
     })
     .then(response => {
@@ -14,9 +14,9 @@ export const createCheckNickname = async (nickname: string) => {
     });
 };
 
-export const createUser = async (user: UsersRequest) => {
+export const createUser = async (user: SignupRequest) => {
   return await clientInstance
-    .post<UsersResponse>("/users/signup", user)
+    .post<ApiResponseType<UsersResponse>>("/users/signup", user)
     .then(response => {
       return response;
     })
