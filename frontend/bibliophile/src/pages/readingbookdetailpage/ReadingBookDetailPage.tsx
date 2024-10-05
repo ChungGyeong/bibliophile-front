@@ -9,7 +9,9 @@ import BottomSheetPage from "../../components/bottomSheet/BottomSheetPage";
 import BottomSheetMemo from "../../components/bottomSheet/BottomSheetMemo";
 import BottomSheetReview from "../../components/bottomSheet/BottomSheetReivew";
 import Modal from "../../components/common/Modal";
-
+import { useDispatch, useSelector } from "react-redux";
+import { loadMyMemoList } from "@/redux/memoSlice.ts";
+import { AppDispatch, RootState } from "@/redux/store.ts";
 // TODO: API 명세 수정되면 바뀔 가능성 있음 (bookReviewId, reviewId 어떻게 주는지 issue)
 interface ReadingBookDetailResponse {
   bookId: number;
@@ -68,7 +70,7 @@ interface BookReviewResponse {
 
 const ReadingBookDetailPage: React.FC = () => {
   const [bookDetail, setBookDetail] = useState<ReadingBookDetailResponse | null>(null);
-  const [memos, setMemos] = useState<MemoResponse[]>([]);
+  // const [memos, setMemos] = useState<MemoResponse[]>([]);
   const [review, setReview] = useState<BookReviewResponse | null>(null);
   const [report, setReport] = useState<BookReportResponse | null>(null);
   const [isPageOpen, setIsPageOpen] = useState(false);
@@ -76,7 +78,10 @@ const ReadingBookDetailPage: React.FC = () => {
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [isReviewOpen, setIsReviewOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const dispatch: AppDispatch = useDispatch();
 
+  const memos = useSelector((state: RootState) => state.memo.myMemoList.data);
+  const loading = useSelector((state: RootState) => state.memo.loading);
   useEffect(() => {
     // TODO: 추후 API 호출로 변경
     const dummyBookDetail: ReadingBookDetailResponse = {
@@ -98,42 +103,43 @@ const ReadingBookDetailPage: React.FC = () => {
     };
     setBookDetail(dummyBookDetail);
 
-    const dummyMemos: MemoResponse[] = [
-      {
-        memoId: 1,
-        content: "메모 내용이 여기에 들어갑니다.",
-        memoPage: 20,
-        createdDate: "2024-02-18 07:53:23.795698",
-        lastModifyDate: "2024-02-18 07:53:23.795698",
-        memoImgList: [
-          {
-            imgUrl: "https://example.com/memo_image1.jpg",
-            createdDate: "2024-02-18 07:53:23.795698",
-            lastModifyDate: "2024-02-18 07:53:23.795698",
-          },
-          {
-            imgUrl: "https://example.com/memo_image2.jpg",
-            createdDate: "2024-02-18 07:53:23.795698",
-            lastModifyDate: "2024-02-18 07:53:23.795698",
-          },
-        ],
-      },
-      {
-        memoId: 2,
-        content: "또 다른 메모 내용이 여기에 들어갑니다.",
-        memoPage: 50,
-        createdDate: "2024-02-19 08:23:11.124567",
-        lastModifyDate: "2024-02-19 08:23:11.124567",
-        memoImgList: [
-          {
-            imgUrl: "https://example.com/memo_image3.jpg",
-            createdDate: "2024-02-19 08:23:11.124567",
-            lastModifyDate: "2024-02-19 08:23:11.124567",
-          },
-        ],
-      },
-    ];
-    setMemos(dummyMemos);
+    dispatch(loadMyMemoList(41));
+    // const dummyMemos: MemoResponse[] = [
+    //   {
+    //     memoId: 1,
+    //     content: "메모 내용이 여기에 들어갑니다.",
+    //     memoPage: 20,
+    //     createdDate: "2024-02-18 07:53:23.795698",
+    //     lastModifyDate: "2024-02-18 07:53:23.795698",
+    //     memoImgList: [
+    //       {
+    //         imgUrl: "https://example.com/memo_image1.jpg",
+    //         createdDate: "2024-02-18 07:53:23.795698",
+    //         lastModifyDate: "2024-02-18 07:53:23.795698",
+    //       },
+    //       {
+    //         imgUrl: "https://example.com/memo_image2.jpg",
+    //         createdDate: "2024-02-18 07:53:23.795698",
+    //         lastModifyDate: "2024-02-18 07:53:23.795698",
+    //       },
+    //     ],
+    //   },
+    //   {
+    //     memoId: 2,
+    //     content: "또 다른 메모 내용이 여기에 들어갑니다.",
+    //     memoPage: 50,
+    //     createdDate: "2024-02-19 08:23:11.124567",
+    //     lastModifyDate: "2024-02-19 08:23:11.124567",
+    //     memoImgList: [
+    //       {
+    //         imgUrl: "https://example.com/memo_image3.jpg",
+    //         createdDate: "2024-02-19 08:23:11.124567",
+    //         lastModifyDate: "2024-02-19 08:23:11.124567",
+    //       },
+    //     ],
+    //   },
+    // ];
+    // setMemos(dummyMemos);
 
     const dummyReview: BookReviewResponse | null = {
       reviewId: 1,
@@ -177,6 +183,7 @@ const ReadingBookDetailPage: React.FC = () => {
   };
 
   const handleReviewBottomSheetToggle = () => {
+    dispatch(loadMyMemoList(41));
     setIsReviewOpen(!isReviewOpen);
   };
 
@@ -195,6 +202,11 @@ const ReadingBookDetailPage: React.FC = () => {
   if (!bookDetail) {
     return <div></div>;
   }
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  console.log(loading, memos);
 
   return (
     <div>
@@ -216,7 +228,12 @@ const ReadingBookDetailPage: React.FC = () => {
 
         {isMemoOpen && (
           <BottomSheet height={90} handleCloseBottomSheet={handleMemoBottomSheetToggle}>
-            <BottomSheetMemo onClose={handleMemoBottomSheetToggle} label="메모" mode="작성하기" />
+            <BottomSheetMemo
+              onClose={handleMemoBottomSheetToggle}
+              label="메모"
+              mode="작성하기"
+              myBookId={41}
+            />
           </BottomSheet>
         )}
 
@@ -341,7 +358,7 @@ const ReadingBookDetailPage: React.FC = () => {
                 id={memo.memoId}
                 type="memo"
                 content={memo.content}
-                imgUrl={memo.memoImgList[0]?.imgUrl || ""}
+                imgUrl={memo.memoImgUrlList[0]}
                 createdDate={memo.createdDate}
                 memoPage={memo.memoPage}
               />
