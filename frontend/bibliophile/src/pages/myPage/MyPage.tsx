@@ -116,8 +116,8 @@ const MyPage: React.FC = () => {
       ) : (
         <div>
           <img
-            className="w-[120px] h-[120px] rounded-md object-cover mt-10 mb-2.5"
-            src={user.profileImage}
+            className="w-[120px] h-[120px] rounded-md object-cover mt-10 mb-2.5 border-common"
+            src={user.profileImage ? user.profileImage : '/images/no-image.svg'}
             alt={`${user.nickname}의 프로필 이미지`}
           />
           <p className="font-medium text-lg text-center m-auto">{user.nickname}</p>
