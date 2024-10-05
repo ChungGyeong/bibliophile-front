@@ -3,19 +3,14 @@ import React, { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { ClassificationType } from '@/types/user';
-import { translateTagToKorea } from '@/utils/translator';
 import TagItem from "@/components/tagItem/tagItem.tsx";
+import { KOR_CLASSIFICATION} from "@/constants/constants.ts";
 
 interface TagItemListProps {
   layoutType: 'signSelect' | 'bookSelect' | 'mypageSelect' | 'mySelect';
   tags: ClassificationType[];
   setTags: (selectedTags: ClassificationType[]) => void;
 }
-
-const TAGS: ClassificationType[] = [
-  "ECONOMICS", "COMICS", "SOCIETY", "LOVE", "FICTION",
-  "TRAVEL", "IT_SCIENCE", "ARTS", "LANGUAGE", "HISTORY"
-];
 
 const TagItemList: React.FC<TagItemListProps> = ({ layoutType, tags, setTags }) => {
   const [selectedTags, setSelectedTags] = useState<ClassificationType[]>(tags);
@@ -35,12 +30,12 @@ const TagItemList: React.FC<TagItemListProps> = ({ layoutType, tags, setTags }) 
   };
 
   const renderTags = () => {
-    return TAGS.map((tag) => (
+    return KOR_CLASSIFICATION.map((tag) => (
         <TagItem
             key={tag}
-            label={translateTagToKorea(tag)}
-            selected={selectedTags.includes(tag)}
-            handleClickTag={() => handleClickTag(tag)}
+            label={tag}
+            selected={selectedTags.includes(tag as ClassificationType)}
+            handleClickTag={() => handleClickTag(tag as ClassificationType)}
         />
     ));
   };
@@ -61,12 +56,12 @@ const TagItemList: React.FC<TagItemListProps> = ({ layoutType, tags, setTags }) 
                 <p className="text-xs font-light">최대 3개까지 선택 가능</p>
               </div>
               <Swiper slidesPerView={4.2} className="h-11">
-                {TAGS.map((tag) => (
+                {KOR_CLASSIFICATION.map((tag) => (
                     <SwiperSlide key={tag}>
                       <TagItem
-                          label={translateTagToKorea(tag)}
-                          selected={selectedTags.includes(tag)}
-                          handleClickTag={() => handleClickTag(tag)}
+                          label={tag}
+                          selected={selectedTags.includes(tag as ClassificationType)}
+                          handleClickTag={() => handleClickTag(tag as ClassificationType)}
                       />
                     </SwiperSlide>
                 ))}
@@ -95,7 +90,6 @@ const TagItemList: React.FC<TagItemListProps> = ({ layoutType, tags, setTags }) 
         );
     }
   };
-
 
   useEffect(() => {
     setTags(selectedTags);
