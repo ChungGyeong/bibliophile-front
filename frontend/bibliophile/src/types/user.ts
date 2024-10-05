@@ -1,10 +1,10 @@
 export interface UserStateType {
-  isLoggedIn: boolean,
-  loading: boolean,
-  error: string | undefined,
-  isNicknameExist: boolean,
-  isFirst: boolean,
-  user: UsersResponse,
+  isLoggedIn: boolean;
+  loading: boolean;
+  error: string | undefined;
+  isNicknameExist: boolean;
+  isFirst: boolean;
+  user: UsersResponse;
 }
 
 export interface SignupRequest {
@@ -29,17 +29,23 @@ export interface UsersResponse {
 }
 
 export interface NicknameResponse {
-    exist: boolean;
+  exist: boolean;
+}
+
+export interface UpdateUserRequest {
+  nickname: string;
+  classification: ClassificationType[];
+  profileImage: string;
 }
 
 export type ClassificationType =
-    "ECONOMICS" |
-    "COMICS" |
-    "SOCIETY" |
-    "LOVE" |
-    "FICTION" |
-    "TRAVEL" |
-    "IT_SCIENCE" |
-    "ARTS" |
-    "LANGUAGE" |
-    "HISTORY"
+  | "ECONOMICS"
+  | "COMICS"
+  | "SOCIETY"
+  | "LOVE"
+  | "FICTION"
+  | "TRAVEL"
+  | "IT_SCIENCE"
+  | "ARTS"
+  | "LANGUAGE"
+  | "HISTORY";

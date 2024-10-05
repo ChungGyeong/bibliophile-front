@@ -9,7 +9,8 @@ import ProfileImageUploader from "@/pages/myPage/ProfileImageUploader.tsx";
 import UserInfoField from "@/pages/myPage/UserInfoField.tsx";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store.ts";
-import { loadUser } from "@/redux/userSlice.ts";
+import { editUser, loadUser } from "@/redux/userSlice.ts";
+import { translateTagToEnglish } from "@/utils/translator.ts";
 
 const MyPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -51,6 +52,20 @@ const MyPage: React.FC = () => {
 
   const handleClickButton = () => {
     setIsEdit(!isEdit);
+
+    if (!isEdit) return;
+
+    dispatch(
+      editUser({
+        nickname: inputs.nickname,
+        classification: inputs.classification.map(classification => {
+          return translateTagToEnglish(classification);
+        }),
+        profileImage: inputs.profileImage,
+      })
+    ).then(() => {
+      dispatch(loadUser());
+    });
   };
 
   const handleClickLogout = () => {

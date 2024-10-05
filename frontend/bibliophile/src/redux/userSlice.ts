@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createCheckNickname, createUser, getUser } from "@/api/users.ts";
+import { createCheckNickname, createUser, getUser, updateUser } from "@/api/users.ts";
 import { socialLogin } from "@/api/outh.ts";
-import { SignupRequest, UserStateType } from "@/types/user.ts";
+import { SignupRequest, UpdateUserRequest, UserStateType } from "@/types/user.ts";
 
 const initialState: UserStateType = {
   isLoggedIn: false,
@@ -47,7 +47,12 @@ export const loadUser = createAsyncThunk("user/loadUser", async () => {
   return response.data;
 });
 
-const userSlice = createSlice({
+export const editUser = createAsyncThunk("user/editUser", async (user: UpdateUserRequest) => {
+  const response = await updateUser(user);
+  return response.data;
+});
+
+export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {},
@@ -100,8 +105,16 @@ const userSlice = createSlice({
       .addCase(loadUser.fulfilled, (state, action) => {
         state.user = action.payload.data;
         state.loading = false;
+        state.error = undefined;
       })
       .addCase(loadUser.rejected, (state, action) => {
+        state.error = action.error.message;
+      })
+      .addCase(editUser.fulfilled, (state, action) => {
+        state.user = action.payload.data;
+        state.error = undefined;
+      })
+      .addCase(editUser.rejected, (state, action) => {
         state.error = action.error.message;
       });
   },
