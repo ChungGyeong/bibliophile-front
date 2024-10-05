@@ -3,6 +3,7 @@ import { userReducer } from "@/redux/userSlice.ts";
 import { memoReducer } from "@/redux/memoSlice.ts";
 import { imageReducer } from "@/redux/imageSlice.ts";
 import { reportReducer } from "@/redux/reportSlice";
+import { reviewReducer } from "@/redux/reviewSlice";
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     memo: memoReducer,
     image: imageReducer,
     report: reportReducer,
+    review: reviewReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
