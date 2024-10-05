@@ -9,7 +9,7 @@ import ProfileImageUploader from "@/pages/myPage/ProfileImageUploader.tsx";
 import UserInfoField from "@/pages/myPage/UserInfoField.tsx";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store.ts";
-import { editUser, loadUser } from "@/redux/userSlice.ts";
+import { editUser, loadUser, removeUser } from "@/redux/userSlice.ts";
 import { translateTagToEnglish } from "@/utils/translator.ts";
 
 const MyPage: React.FC = () => {
@@ -73,7 +73,7 @@ const MyPage: React.FC = () => {
   };
 
   const handleClickDeleteMember = () => {
-    setIsOpenDeleteMemberModal(!isOpenDeleteMemberModal);
+    dispatch(removeUser());
   };
 
   useEffect(() => {
@@ -103,8 +103,12 @@ const MyPage: React.FC = () => {
         <Modal
           title="정말 탈퇴 하시겠어요?"
           isOpen={isOpenDeleteMemberModal}
-          handleClickClose={handleClickDeleteMember}
-          handleClickConfirm={() => {}}
+          handleClickClose={() => {
+            setIsOpenDeleteMemberModal(!isOpenDeleteMemberModal);
+          }}
+          handleClickConfirm={() => {
+            handleClickDeleteMember();
+          }}
         />
       )}
       {isEdit ? (
@@ -163,7 +167,9 @@ const MyPage: React.FC = () => {
       {!isEdit && (
         <AccountManagement
           handleClickLogout={handleClickLogout}
-          handleClickDeleteMember={handleClickDeleteMember}
+          handleClickDeleteMember={() => {
+            setIsOpenDeleteMemberModal(!isOpenDeleteMemberModal);
+          }}
         />
       )}
     </div>

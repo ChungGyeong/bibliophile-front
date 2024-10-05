@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createCheckNickname, createUser, getUser, updateUser } from "@/api/users.ts";
+import { createCheckNickname, createUser, deleteUser, getUser, updateUser } from "@/api/users.ts";
 import { socialLogin } from "@/api/outh.ts";
 import { SignupRequest, UpdateUserRequest, UserStateType } from "@/types/user.ts";
 
@@ -49,6 +49,11 @@ export const loadUser = createAsyncThunk("user/loadUser", async () => {
 
 export const editUser = createAsyncThunk("user/editUser", async (user: UpdateUserRequest) => {
   const response = await updateUser(user);
+  return response.data;
+});
+
+export const removeUser = createAsyncThunk("user/removeUser", async () => {
+  const response = await deleteUser();
   return response.data;
 });
 
@@ -110,11 +115,26 @@ export const userSlice = createSlice({
       .addCase(loadUser.rejected, (state, action) => {
         state.error = action.error.message;
       })
+      .addCase(editUser.pending, state => {
+        state.loading = true;
+      })
       .addCase(editUser.fulfilled, (state, action) => {
         state.user = action.payload.data;
+        state.loading = false;
         state.error = undefined;
       })
       .addCase(editUser.rejected, (state, action) => {
+        state.error = action.error.message;
+      })
+      .addCase(removeUser.pending, state => {
+        state.loading = true;
+      })
+      .addCase(removeUser.fulfilled, (state, action) => {
+        state.user = action.payload.data;
+        state.error = undefined;
+        state.loading = false;
+      })
+      .addCase(removeUser.rejected, (state, action) => {
         state.error = action.error.message;
       });
   },
