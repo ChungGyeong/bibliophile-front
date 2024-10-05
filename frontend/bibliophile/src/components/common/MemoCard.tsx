@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-
+import noImage from "@/assets/NoImage.png";
 interface CardProps {
   type: "report" | "memo";
   id: number;
@@ -14,7 +14,7 @@ const MemoCard: React.FC<CardProps> = ({ type, id, content, imgUrl, createdDate,
   const navigate = useNavigate();
 
   const formatDate = (date: string) => {
-    return date.substring(0, 16);
+    return date.substring(0, 10);
   };
 
   const handleMemoCardClick = () => {
@@ -30,8 +30,12 @@ const MemoCard: React.FC<CardProps> = ({ type, id, content, imgUrl, createdDate,
       onClick={handleMemoCardClick}
       className="h-[140px] p-[10px] shadow-custom active:shadow-custom-inner border rounded-[5px] flex items-center"
     >
-      <div className="h-[120px] w-[120px] bg-gray flex-shrink-0">
-        <img src={imgUrl} alt="thumbnail" />
+      <div className="h-[120px] w-[120px] bg-white flex-shrink-0">
+        {imgUrl ? (
+          <img src={imgUrl} alt="thumbnail" className="h-full w-full object-cover" />
+        ) : (
+          <img src={noImage} alt="thumbnail" className="h-full w-full object-cover" />
+        )}
       </div>
 
       <div className="h-[120px] ml-[10px] flex-grow flex-grow flex flex-col justify-between">

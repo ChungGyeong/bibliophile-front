@@ -38,7 +38,7 @@ const AppRoutes = () => {
       <Route path="/books" element={<PageLayout page={<BookSuggestionPage />} />} />
       <Route path="/books/:bookId" element={<PageLayout page={<BookDetailPage />} />} />
       <Route path="/memo/:memoId" element={<PageLayout page={<MemoPage />} />} />
-      <Route path="/report/:reportId" element={<PageLayout page={<ReportPage />} />} />
+      <Route path="/report/:bookReportId" element={<PageLayout page={<ReportPage />} />} />
       <Route path="/reading/:myBookId" element={<PageLayout page={<ReadingBookDetailPage />} />} />
       <Route path="/search" element={<PageLayout page={<SearchPage />} />} />
       <Route path="/barcode" element={<PageLayout page={<BarcodePage />} />} />
