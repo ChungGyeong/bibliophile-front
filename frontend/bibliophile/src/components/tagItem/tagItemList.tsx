@@ -20,7 +20,7 @@ const TAGS: ClassificationType[] = [
 const TagItemList: React.FC<TagItemListProps> = ({ layoutType, tags, setTags }) => {
   const [selectedTags, setSelectedTags] = useState<ClassificationType[]>(tags);
 
-  const handleTagClick = (tag: ClassificationType) => {
+  const handleClickTag = (tag: ClassificationType) => {
     setSelectedTags(prevSelected => {
       if (prevSelected.includes(tag)) {
         return prevSelected.filter(t => t !== tag);
@@ -40,7 +40,7 @@ const TagItemList: React.FC<TagItemListProps> = ({ layoutType, tags, setTags }) 
             key={tag}
             label={translateTagToKorea(tag)}
             selected={selectedTags.includes(tag)}
-            onClick={() => handleTagClick(tag)}
+            handleClickTag={() => handleClickTag(tag)}
         />
     ));
   };
@@ -66,7 +66,7 @@ const TagItemList: React.FC<TagItemListProps> = ({ layoutType, tags, setTags }) 
                       <TagItem
                           label={translateTagToKorea(tag)}
                           selected={selectedTags.includes(tag)}
-                          onClick={() => handleTagClick(tag)}
+                          handleClickTag={() => handleClickTag(tag)}
                       />
                     </SwiperSlide>
                 ))}
@@ -89,7 +89,6 @@ const TagItemList: React.FC<TagItemListProps> = ({ layoutType, tags, setTags }) 
                       key={tag}
                       label={tag}
                       selected={true}
-                      onClick={() => handleTagClick(tag)}
                   />
               ))}
             </div>

@@ -58,7 +58,6 @@ const MyPage: React.FC = () => {
 
   const handleClickButton = () => {
     setIsEdit(!isEdit);
-    console.log(inputs);
   };
 
   const handleClickLogout = () => {
