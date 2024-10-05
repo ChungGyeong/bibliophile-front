@@ -35,43 +35,30 @@ const SignupPage: React.FC = () => {
     [inputs.nickname, inputs.gender, inputs.birthday]
   );
 
-  const handleChangeNickname = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const newNickname = e.target.value;
-    setInputs(prev => ({ ...prev, nickname: newNickname }));
+  const handleChangeInput = useCallback((name: keyof SignupRequest, value: string) => {
+    setInputs(prev => ({ ...prev, [name]: value }));
   }, []);
 
-  const handleChangeGender = useCallback((value: string) => {
-    setInputs(prev => ({
-      ...prev,
-      gender: value === "남성" ? "MAN" : "WOMAN",
-    }));
-  }, []);
+  const handleChangeGender = useCallback(
+    (value: string) => {
+      handleChangeInput("gender", value === "남성" ? "MAN" : "WOMAN");
+    },
+    [handleChangeInput]
+  );
 
-  const handleChangeBirthday = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    let inputValue = e.target.value.replace(/\D/g, "");
-    const year = inputValue.slice(0, 4);
-    const month = inputValue.slice(4, 6);
-    const day = inputValue.slice(6, 8);
+  const handleChangeBirthday = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      let inputValue = e.target.value.replace(/\D/g, "");
+      const year = inputValue.slice(0, 4);
+      const month = inputValue.slice(4, 6);
+      const day = inputValue.slice(6, 8);
 
-    inputValue = [year, month, day].filter(Boolean).join("-");
+      inputValue = [year, month, day].filter(Boolean).join("-");
 
-    setInputs(prev => ({
-      ...prev,
-      birthday: inputValue,
-    }));
-    const parsedDate = parse(inputValue, "yyyy.MM.dd", new Date());
-
-    const minDate = new Date(1900, 0, 1);
-    const today = new Date();
-
-    if (isValid(parsedDate) && (isBefore(parsedDate, minDate) || isBefore(today, parsedDate))) {
-      alert("생년월일을 1900.01.01 이상, 오늘 날짜 이하로 입력해주세요.");
-      setInputs(prev => ({
-        ...prev,
-        birthday: "",
-      }));
-    }
-  }, []);
+      handleChangeInput("birthday", inputValue);
+    },
+    [handleChangeInput]
+  );
 
   const handleClickSignup = useCallback(() => {
     if (!user.email) {
@@ -80,13 +67,30 @@ const SignupPage: React.FC = () => {
       return;
     }
 
-    inputs.classification = inputs.classification.map(classification => {
-      return translateTagToEnglish(classification);
-    });
+    const parsedDate = parse(inputs.birthday, "yyyy-MM-dd", new Date());
+    const minDate = new Date(1900, 0, 1);
+    const today = new Date();
 
-    dispatch(signup(inputs));
+    if (!isValid(parsedDate)) {
+      alert("생년월일을 올바른 형식(yyyyMMdd)으로 입력해주세요.");
+      setInputs(prev => ({ ...prev, birthday: "" }));
+      return;
+    }
 
-    if (typeof error !== undefined) {
+    if (isValid(parsedDate) && (isBefore(parsedDate, minDate) || isBefore(today, parsedDate))) {
+      alert("생년월일을 1900.01.01 이상, 오늘 날짜 이하로 입력해주세요.");
+      setInputs(prev => ({ ...prev, birthday: "" }));
+      return;
+    }
+
+    const signupData = {
+      ...inputs,
+      classification: inputs.classification.map(translateTagToEnglish),
+    };
+
+    dispatch(signup(signupData));
+
+    if (error !== undefined) {
       alert("회원가입에 실패했습니다. ㅠㅠ");
       setInputs(prev => ({
         ...prev,
@@ -95,14 +99,12 @@ const SignupPage: React.FC = () => {
         birthday: "",
         classification: [],
         profileImage: "",
-        email: user.email,
-        oauthServerType: user.oauthServerType,
       }));
     } else if (!loading) {
       alert("회원가입 성공!");
       navigate("/");
     }
-  }, [inputs, user, dispatch, navigate]);
+  }, [inputs, user, dispatch, navigate, error, loading]);
 
   const validationNickname = useCallback(
     (nickname: string) => {
@@ -150,7 +152,7 @@ const SignupPage: React.FC = () => {
         component={
           <InputBox
             value={inputs.nickname}
-            handleChangeInput={handleChangeNickname}
+            handleChangeInput={e => handleChangeInput("nickname", e.target.value)}
             placeholder="닉네임을 입력해주세요"
             noticeMessage={
               validationString === "length"
@@ -201,11 +203,11 @@ const SignupPage: React.FC = () => {
 const InputField: React.FC<{
   label: string;
   component?: React.ReactNode;
-}> = ({ label, component }) => (
+}> = React.memo(({ label, component }) => (
   <div className="flex w-full justify-between items-center">
     <p className="w-1/3 font-medium text-base">{label}</p>
     {component}
   </div>
-);
+));
 
 export default SignupPage;
