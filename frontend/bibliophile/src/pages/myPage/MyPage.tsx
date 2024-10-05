@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store.ts";
 import { editUser, loadUser, removeUser } from "@/redux/userSlice.ts";
 import { translateTagToEnglish } from "@/utils/translator.ts";
+import { useNavigate } from "react-router-dom";
 
 const MyPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -31,6 +32,7 @@ const MyPage: React.FC = () => {
   const [isOpenDeleteMemberModal, setIsOpenDeleteMemberModal] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const navigate = useNavigate();
 
   const handleClickProfileImage = () => {
     if (fileInputRef.current) {
@@ -74,6 +76,7 @@ const MyPage: React.FC = () => {
 
   const handleClickDeleteMember = () => {
     dispatch(removeUser());
+    navigate("/login");
   };
 
   useEffect(() => {
