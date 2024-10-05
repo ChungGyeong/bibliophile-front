@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { ReviewType, CreateData } from "@/types/review.ts";
-import { getMyReview, createReview, deleteReview } from "@/api/review";
+import { ReviewType, CreateData, UpdateReviewData } from "@/types/review.ts";
+import { getMyReview, createReview, deleteReview, updateReview } from "@/api/review";
 
 const initialState: ReviewType = {
   loading: true,
@@ -37,6 +37,13 @@ export const removeReview = createAsyncThunk(
   }
 );
 
+export const editReview = createAsyncThunk(
+  "review/updateReview",
+  async ({reviewId, updateData}: {reviewId:number; updateData: UpdateReviewData}) => {
+    return await updateReview(reviewId, updateData);
+  }
+)
+
 const reviewSlice = createSlice({
   name: "review",
   initialState,
@@ -69,6 +76,18 @@ const reviewSlice = createSlice({
       })
       .addCase(removeReview.rejected, (state, action) => {
         state.error = action.error.message || "Review delete failed";
+      })
+
+      .addCase(editReview.fulfilled, (state, action) => {
+        const { content, star } = action.payload.data;
+        state.data = {
+          ...state.data,
+          content,
+          star,
+        };
+      })
+      .addCase(editReview.rejected, (state, action) => {
+        state.error = action.error.message || "Review update failed";
       })
   },
 });

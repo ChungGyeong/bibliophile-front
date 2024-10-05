@@ -34,16 +34,6 @@ interface ReadingBookDetailResponse {
   lastModifyDate: string;
 }
 
-interface BookReviewResponse {
-  reviewId: number;
-  content: string;
-  star: number;
-  nickname: string;
-  isHost: true;
-  createdDate: string;
-  lastModifyDate: string;
-}
-
 const ReadingBookDetailPage: React.FC = () => {
   const [bookDetail, setBookDetail] = useState<ReadingBookDetailResponse | null>(null);
   const [isPageOpen, setIsPageOpen] = useState(false);
@@ -115,6 +105,10 @@ const ReadingBookDetailPage: React.FC = () => {
     if (bookDetail) {
       setBookDetail(prev => prev && { ...prev, readingStatus: "READ" });
     }
+  };
+
+  const reloadfuction = async () => {
+    await dispatch(loadMyReview(Number(myBookId)));
   };
 
   if (!bookDetail) {
@@ -223,10 +217,12 @@ const ReadingBookDetailPage: React.FC = () => {
             <div>
               <h2 className="font-semibold text-[18px] mb-[10px]">리뷰</h2>
               <ReviewCard
+                reviewId={review.reviewId}
                 content={review.content}
                 star={review.star}
                 nickname={review.nickname}
                 type="item"
+                reload={reloadfuction}
               />
             </div>
           ) : (

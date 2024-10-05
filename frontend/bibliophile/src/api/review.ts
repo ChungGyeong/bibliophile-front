@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { clientInstance } from "@/libs/http-clients.ts";
-import { CreateData } from "@/types/review";
+import { CreateData, UpdateReviewData } from "@/types/review";
 
 export const getMyReview = async (myBookId: number) => {
   try {
@@ -30,6 +30,17 @@ export const deleteReview = async (reviewId: number) => {
   } catch (error) {
     if (error instanceof AxiosError) {
       throw new Error(error.response?.data.message || "리뷰 삭제를 하던 중 오류가 발생했습니다.");
+    }
+    throw new Error("알 수 없는 오류가 발생했습니다.");
+  }
+}
+
+export const updateReview = async (reviewId: number, updateData: UpdateReviewData) => {
+  try {
+    return await clientInstance.patch(`/reviews/${reviewId}`, updateData);
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      throw new Error(error.response?.data.message || "리뷰를 수정하던 중 오류가 발생했습니다.");
     }
     throw new Error("알 수 없는 오류가 발생했습니다.");
   }

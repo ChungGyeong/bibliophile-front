@@ -19,3 +19,8 @@ export interface CreateData {
   star: number;
   bookId: number;
 }
+
+export interface UpdateReviewData {
+  content: string;
+  star: number;
+}

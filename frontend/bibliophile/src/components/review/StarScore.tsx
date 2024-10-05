@@ -4,9 +4,10 @@ interface StarScoreProps {
   score?: number;
   onChangeScore?: (score: number) => void;
   mode: "read" | "write";
+  mini?: boolean;
 }
 
-const StarScore: React.FC<StarScoreProps> = ({ score = 0, onChangeScore, mode }) => {
+const StarScore: React.FC<StarScoreProps> = ({ score = 0, onChangeScore, mode, mini = false }) => {
   const [currentScore, setCurrentScore] = useState(score);
 
   const handleStarClick = (newScore: number) => {
@@ -17,7 +18,9 @@ const StarScore: React.FC<StarScoreProps> = ({ score = 0, onChangeScore, mode })
   };
 
   return (
-    <div className={`flex items-center ${mode === "write" ? "space-x-[10px]" : "space-x-[6px]"}`}>
+    <div
+      className={`flex items-center ${mode === "write" ? (mini ? "space-x-[6px]" : "space-x-[10px]") : "space-x-[6px]"}`}
+    >
       {[1, 2, 3, 4, 5].map(star =>
         mode === "read" ? (
           <i
@@ -28,7 +31,7 @@ const StarScore: React.FC<StarScoreProps> = ({ score = 0, onChangeScore, mode })
           <button
             key={star}
             onClick={() => handleStarClick(star)}
-            className={`${currentScore >= star ? "text-orange" : "text-gray"} flex items-center text-[30px]`}
+            className={`${currentScore >= star ? "text-orange" : "text-gray"} flex items-center ${mini ? "text-[16px]" : "text-[30px]"}`}
           >
             <i className="fi fi-sr-star" />
           </button>
