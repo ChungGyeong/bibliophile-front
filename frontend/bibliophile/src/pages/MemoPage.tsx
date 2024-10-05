@@ -4,6 +4,7 @@ import { loadMemo, removeMemo } from "@/redux/memoSlice";
 import { AppDispatch, RootState } from "@/redux/store.ts";
 import { useNavigate, useParams } from "react-router-dom";
 import BottomSheetMemo from "@/components/bottomSheet/BottomSheetMemo";
+import BottomSheet from "@/components/bottomSheet/BottomSheet";
 import Modal from "react-modal";
 import CustomModal from "@/components/common/Modal";
 
@@ -163,15 +164,17 @@ const MemoPage: React.FC = () => {
         overlayClassName="fixed inset-0 bg-black bg-opacity-50"
       >
         <div className="bg-white rounded-t-lg shadow-lg w-full h-[90%] overflow-auto">
-          <BottomSheetMemo
-            label="메모"
-            mode="수정하기"
-            memoId={memoId}
-            content={data?.data?.content}
-            memoPage={data?.data?.memoPage}
-            memoImgList={data?.data?.memoImgUrlList}
-            onClose={handleModalClose}
-          />
+          <BottomSheet height={90} handleCloseBottomSheet={() => setIsModalOpen(false)}>
+            <BottomSheetMemo
+              label="메모"
+              mode="수정하기"
+              memoId={memoId}
+              content={data?.data?.content}
+              memoPage={data?.data?.memoPage}
+              memoImgList={data?.data?.memoImgUrlList}
+              onClose={handleModalClose}
+            />
+          </BottomSheet>
         </div>
       </Modal>
     </div>

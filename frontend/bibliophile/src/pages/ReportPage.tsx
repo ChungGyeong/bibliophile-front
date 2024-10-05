@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { loadReport, removeReport } from "@/redux/reportSlice";
+import { AppDispatch, RootState } from "@/redux/store.ts";
 import BottomSheetMemo from "@/components/bottomSheet/BottomSheetMemo";
+import BottomSheet from "@/components/bottomSheet/BottomSheet";
 import Modal from "react-modal";
+import CustomModal from "@/components/common/Modal";
 import {
   Carousel,
   CarouselContent,
@@ -9,42 +14,35 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 
-const data = {
-  bookReportId: 1,
-  content:
-    "행정각부의 설치·조직과 직무범위는 법률로 정한다. 법관이 중대한 심신상의 장해로 직무를 수행할 수 없을 때에는 법률이 정하는 바에 의하여 퇴직하게 할 수 있다. \n 국가는 건전한 소비행위를 계도하고 생산품의 품질향상을 촉구하기 위한 소비자보호운동을 법률이 정하는 바에 의하여 보장한다. \n 국무총리 또는 행정각부의 장은 소관사무에 관하여 법률이나 대통령령의 위임 또는 직권으로 총리령 또는 부령을 발할 수 있다.모든 국민은 법 앞에 평등하다. 누구든지 성별·종교 또는 사회적 신분에 의하여 정치적·경제적·사회적·문화적 생활의 모든 영역에 있어서 차별을 받지 아니한다.",
-  imgUrl: "string",
-  isHost: true,
-  bookReportImgList: [
-    {
-      imgUrl:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZ31kw4e5HGBiNACrH0HqtYgMsr9L8vL-CCg&s",
-      createdDate: "2024-02-18 07:53:23.795698",
-      lastModifyDate: "2024-02-18 07:53:23.795698",
-    },
-    {
-      imgUrl:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRg79hCHNtmiTI72ahhw8zeb6y9ICYILM60oA&s",
-      createdDate: "2024-02-18 07:53:23.795698",
-      lastModifyDate: "2024-02-18 07:53:23.795698",
-    },
-    {
-      imgUrl:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZ31kw4e5HGBiNACrH0HqtYgMsr9L8vL-CCg&s",
-      createdDate: "2024-02-18 07:53:23.795698",
-      lastModifyDate: "2024-02-18 07:53:23.795698",
-    },
-  ],
-  createdDate: "2024-02-18 07:53:23.795698",
-  lastModifyDate: "2024-02-18 07:53:23.795698",
-  timeStamp: "2024-02-18 07:53:23.795698",
-};
-
 const ReportPage: React.FC = () => {
+  const { bookReportId } = useParams<{ bookReportId: string }>();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCustomModalOpen, setIsCustomModalOpen] = useState(false);
   const [api, setApi] = useState<CarouselApi | null>(null);
   const navigate = useNavigate();
+  const dispatch: AppDispatch = useDispatch();
+
+  const { data, loading } = useSelector((state: RootState) => state.report);
+
+  const fetchReportData = () => {
+    if (bookReportId) {
+      dispatch(loadReport(Number(bookReportId)));
+    }
+  };
+
+  useEffect(() => {
+    fetchReportData();
+  }, [bookReportId]);
+
+  useEffect(() => {
+    if (loading) {
+      console.log("로딩 중...");
+    } else {
+      console.log("로딩 완료");
+      console.log(data);
+    }
+  }, [loading]);
 
   const handleDotClick = (index: number) => {
     api?.scrollTo(index);
@@ -62,29 +60,66 @@ const ReportPage: React.FC = () => {
     navigate(-1);
   };
 
+  const handleModalClose = () => {
+    fetchReportData();
+    setIsModalOpen(false);
+  };
+
   const handleClickPencil = () => {
     setIsModalOpen(true);
   };
 
+  const handleClickTrash = () => {
+    setIsCustomModalOpen(true);
+  };
+
+  const handleModalToggle = () => {
+    setIsCustomModalOpen(prev => !prev);
+  };
+
+  const handleDeleteConfirm = async () => {
+    setIsModalOpen(false);
+    dispatch(removeReport(Number(bookReportId)));
+    navigate(-1);
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="mt-2">
+      {isCustomModalOpen && (
+        <CustomModal
+          isOpen={isCustomModalOpen}
+          handleClickClose={handleModalToggle}
+          title="정말로 삭제하시겠습니까?"
+          handleClickConfirm={handleDeleteConfirm}
+        />
+      )}
+
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center" onClick={handleClickBack}>
           <i className="fi fi-rr-angle-left text-xl pt-2 me-2"></i>
           <p className="font-medium text-xl ml-2 font-semibold pt-1">독후감</p>
         </div>
-        <button onClick={handleClickPencil} className="pt-2">
-          <i className="fi fi-sr-pencil text-orange text-xl pt-2"></i>
-        </button>
+        <div>
+          <button onClick={handleClickPencil} className="pt-2">
+            <i className="fi fi-sr-pencil text-orange text-xl pt-2"></i>
+          </button>
+          <button onClick={handleClickTrash} className="pt-2">
+            <i className="fi fi-rr-trash text-orange text-xl pt-2 ml-3"></i>
+          </button>
+        </div>
       </div>
 
       <Carousel className="w-full" setApi={setApi}>
         <CarouselContent>
-          {data.bookReportImgList.map((image, index) => (
+          {data.data.bookReportImgUrlList.map((image, index) => (
             <CarouselItem key={index}>
               <div className="w-full text-center">
                 <img
-                  src={image.imgUrl}
+                  src={image}
                   alt={`사진 ${index + 1}`}
                   className="w-full h-64 object-cover rounded-lg"
                 />
@@ -95,7 +130,7 @@ const ReportPage: React.FC = () => {
       </Carousel>
 
       <div className="flex justify-center mt-4 space-x-2">
-        {data.bookReportImgList.map((_, index) => (
+        {data.data.bookReportImgUrlList.map((_, index) => (
           <div
             key={index}
             onClick={() => handleDotClick(index)}
@@ -105,9 +140,9 @@ const ReportPage: React.FC = () => {
           ></div>
         ))}
       </div>
-      <p className="font-light text-lg leading-7 pt-4 whitespace-pre-line">{data.content}</p>
+      <p className="font-light text-lg leading-7 pt-4 whitespace-pre-line">{data.data.content}</p>
       <p className="font-light text-sm text-medium-gray pt-2 text-right">
-        {data.createdDate.split(" ")[0]}
+        {data.data.createdDate.split("T")[0]}
       </p>
 
       <Modal
@@ -118,13 +153,16 @@ const ReportPage: React.FC = () => {
         overlayClassName="fixed inset-0 bg-black bg-opacity-50"
       >
         <div className="bg-white rounded-t-lg shadow-lg w-full h-[90%] overflow-auto">
-          <BottomSheetMemo
-            label="독후감"
-            mode="수정하기"
-            content={data.content}
-            memoImgList={data.bookReportImgList}
-            onClose={() => setIsModalOpen(false)}
-          />
+          <BottomSheet height={90} handleCloseBottomSheet={() => setIsModalOpen(false)}>
+            <BottomSheetMemo
+              label="독후감"
+              mode="수정하기"
+              bookReportId={bookReportId}
+              content={data.data.content}
+              memoImgList={data.data.bookReportImgUrlList}
+              onClose={handleModalClose}
+            />
+          </BottomSheet>
         </div>
       </Modal>
     </div>
