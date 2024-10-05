@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { loadMyMemoList } from "@/redux/memoSlice.ts";
 import { loadMyReport } from "@/redux/reportSlice.ts";
 import { AppDispatch, RootState } from "@/redux/store.ts";
+import { useParams } from "react-router-dom";
 // TODO: API 명세 수정되면 바뀔 가능성 있음 (bookReviewId, reviewId 어떻게 주는지 issue)
 interface ReadingBookDetailResponse {
   bookId: number;
@@ -64,6 +65,7 @@ const ReadingBookDetailPage: React.FC = () => {
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [isReviewOpen, setIsReviewOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { myBookId } = useParams<{ myBookId: string }>();
   const dispatch: AppDispatch = useDispatch();
 
   const memos = useSelector((state: RootState) => state.memo.myMemoList.data);
@@ -92,8 +94,8 @@ const ReadingBookDetailPage: React.FC = () => {
     };
     setBookDetail(dummyBookDetail);
 
-    dispatch(loadMyMemoList(41));
-    dispatch(loadMyReport(41));
+    dispatch(loadMyMemoList(Number(myBookId)));
+    dispatch(loadMyReport(Number(myBookId)));
 
     const dummyReview: BookReviewResponse | null = {
       reviewId: 1,
@@ -116,12 +118,12 @@ const ReadingBookDetailPage: React.FC = () => {
   };
 
   const handleReportBottomSheetToggle = () => {
-    dispatch(loadMyReport(41));
+    dispatch(loadMyReport(Number(myBookId)));
     setIsReportOpen(!isReportOpen);
   };
 
   const handleReviewBottomSheetToggle = () => {
-    dispatch(loadMyMemoList(41));
+    dispatch(loadMyMemoList(Number(myBookId)));
     setIsReviewOpen(!isReviewOpen);
   };
 
@@ -169,7 +171,7 @@ const ReadingBookDetailPage: React.FC = () => {
               onClose={handleMemoBottomSheetToggle}
               label="메모"
               mode="작성하기"
-              myBookId={41}
+              myBookId={Number(myBookId)}
             />
           </BottomSheet>
         )}
@@ -180,7 +182,7 @@ const ReadingBookDetailPage: React.FC = () => {
               onClose={handleReportBottomSheetToggle}
               label="독후감"
               mode="작성하기"
-              myBookId={41}
+              myBookId={Number(myBookId)}
             />
           </BottomSheet>
         )}
