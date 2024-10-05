@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import { ClassificationType, UsersResponse } from "@/types/user.ts";
 import TagItemList from "@/components/tagItem/tagItemList.tsx";
 import InputBox from "@/components/common/InputBox.tsx";
@@ -7,20 +7,14 @@ import Modal from "@/components/common/Modal.tsx";
 import AccountManagement from "@/pages/myPage/AccountManagement.tsx";
 import ProfileImageUploader from "@/pages/myPage/ProfileImageUploader.tsx";
 import UserInfoField from "@/pages/myPage/UserInfoField.tsx";
-
-const user: UsersResponse = {
-  userId: 12345,
-  email: "example@example.com",
-  nickname: "빌리",
-  gender: "MAN",
-  birthday: "1990-05-20",
-  classification: ["LITERATURE", "PHILOSOPHY", "ARTS"],
-  profileImage:
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSjC7La64XiIZjifQW3gNvr6LwDE4vI_iCvQ&s",
-  oauthServerType: "KAKAO",
-};
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch, RootState} from "@/redux/store.ts";
+import {loadUser} from "@/redux/userSlice.ts";
 
 const MyPage: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { user,  loading } = useSelector((state: RootState) => state.user);
+
   const [isEdit, setIsEdit] = useState(false);
   const [inputs, setInputs] = useState<UsersResponse>({
     userId: user.userId,
@@ -55,27 +49,12 @@ const MyPage: React.FC = () => {
     setInputs((prev: UsersResponse) => ({ ...prev, nickname: e.target.value }));
   };
 
-  const handleChangeClassification = (selectedTags: Set<string>) => {
-    const validClassifications: ClassificationType[] = Array.from(selectedTags).filter(tag =>
-      [
-        "GENERAL_WORKS",
-        "PHILOSOPHY",
-        "RELIGION",
-        "SOCIAL_SCIENCES",
-        "NATURAL_SCIENCES",
-        "TECHNOLOGY",
-        "ARTS",
-        "LANGUAGE",
-        "LITERATURE",
-        "HISTORY",
-      ].includes(tag)
-    ) as ClassificationType[];
-
-    setInputs((prev: UsersResponse) => ({
+  const handleChangeClassification = useCallback((selectedClassification: ClassificationType[]) => {
+    setInputs(prev => ({
       ...prev,
-      classification: validClassifications,
+      classification: selectedClassification,
     }));
-  };
+  }, []);
 
   const handleClickButton = () => {
     setIsEdit(!isEdit);
@@ -89,6 +68,12 @@ const MyPage: React.FC = () => {
   const handleClickDeleteMember = () => {
     setIsOpenDeleteMemberModal(!isOpenDeleteMemberModal);
   };
+
+  useEffect(() => {
+    dispatch(loadUser())
+  }, []);
+
+  if(loading ) return <img src="/images/loading.gif"  alt="로딩 중..."/>
 
   return (
     <div
@@ -157,7 +142,7 @@ const MyPage: React.FC = () => {
 
       <TagItemList
         layoutType={isEdit ? "mypageSelect" : "mySelect"}
-        tags={new Set(user.classification)}
+        tags={user.classification}
         setTags={handleChangeClassification}
       />
       <div></div>

@@ -22,5 +22,16 @@ export const createUser = async (user: SignupRequest) => {
     })
     .catch(error => {
       throw error;
-    });
+  });
 };
+
+export const getUser = async  () => {
+  return await clientInstance
+      .get<ApiResponseType<UsersResponse>>("/users")
+      .then(response => {
+        return response;
+      })
+      .catch(error => {
+        throw error;
+      });
+}

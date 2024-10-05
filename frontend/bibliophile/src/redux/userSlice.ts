@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createCheckNickname, createUser } from "@/api/users.ts";
+import {createCheckNickname, createUser, getUser} from "@/api/users.ts";
 import { socialLogin } from "@/api/outh.ts";
 import {SignupRequest, UserStateType} from "@/types/user.ts";
 
@@ -41,6 +41,11 @@ export const signup = createAsyncThunk("user/signup", async (user: SignupRequest
   const response = await createUser(user);
   return response.data;
 });
+
+export const loadUser = createAsyncThunk("user/loadUser", async () => {
+  const response = await getUser();
+  return response.data;
+})
 
 const userSlice = createSlice({
   name: "user",
@@ -88,7 +93,17 @@ const userSlice = createSlice({
       })
       .addCase(signup.rejected, (state, action) => {
         state.error = action.error.message;
-      });
+      })
+        .addCase(loadUser.pending, (state) => {
+          state.loading = true;
+        })
+        .addCase(loadUser.fulfilled, (state, action) => {
+          state.user = action.payload.data;
+          state.loading = false;
+        })
+        .addCase(loadUser.rejected, (state, action) => {
+          state.error = action.error.message;
+        })
   },
 });
 

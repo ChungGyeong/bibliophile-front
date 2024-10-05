@@ -20,7 +20,6 @@ const TAGS: ClassificationType[] = [
 const TagItemList: React.FC<TagItemListProps> = ({ layoutType, tags, setTags }) => {
   const [selectedTags, setSelectedTags] = useState<ClassificationType[]>(tags);
 
-
   const handleTagClick = (tag: ClassificationType) => {
     setSelectedTags(prevSelected => {
       if (prevSelected.includes(tag)) {
@@ -85,10 +84,10 @@ const TagItemList: React.FC<TagItemListProps> = ({ layoutType, tags, setTags }) 
         return (
             <div className="w-full h-[100px] bg-light-yellow flex-shrink-0 p-[10px] rounded-[5px]">
               <p className="font-medium text-base leading-normal mx-[5px] mb-2">관심사</p>
-              {Array.from(selectedTags).map((tag) => (
+              {selectedTags.map((tag) => (
                   <TagItem
                       key={tag}
-                      label={translateTagToKorea(tag)}
+                      label={tag}
                       selected={true}
                       onClick={() => handleTagClick(tag)}
                   />
