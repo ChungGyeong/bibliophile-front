@@ -1,5 +1,5 @@
-import React, {useCallback, useEffect, useRef, useState} from "react";
-import { ClassificationType, UsersResponse } from "@/types/user.ts";
+import React, { useEffect, useRef, useState } from "react";
+import { UsersResponse } from "@/types/user.ts";
 import TagItemList from "@/components/tagItem/tagItemList.tsx";
 import InputBox from "@/components/common/InputBox.tsx";
 import Button from "@/components/common/Button.tsx";
@@ -7,13 +7,13 @@ import Modal from "@/components/common/Modal.tsx";
 import AccountManagement from "@/pages/myPage/AccountManagement.tsx";
 import ProfileImageUploader from "@/pages/myPage/ProfileImageUploader.tsx";
 import UserInfoField from "@/pages/myPage/UserInfoField.tsx";
-import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch, RootState} from "@/redux/store.ts";
-import {loadUser} from "@/redux/userSlice.ts";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store.ts";
+import { loadUser } from "@/redux/userSlice.ts";
 
 const MyPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { user,  loading } = useSelector((state: RootState) => state.user);
+  const { user, loading } = useSelector((state: RootState) => state.user);
 
   const [isEdit, setIsEdit] = useState(false);
   const [inputs, setInputs] = useState<UsersResponse>({
@@ -49,13 +49,6 @@ const MyPage: React.FC = () => {
     setInputs((prev: UsersResponse) => ({ ...prev, nickname: e.target.value }));
   };
 
-  const handleChangeClassification = useCallback((selectedClassification: ClassificationType[]) => {
-    setInputs(prev => ({
-      ...prev,
-      classification: selectedClassification,
-    }));
-  }, []);
-
   const handleClickButton = () => {
     setIsEdit(!isEdit);
   };
@@ -69,10 +62,10 @@ const MyPage: React.FC = () => {
   };
 
   useEffect(() => {
-    dispatch(loadUser())
+    dispatch(loadUser());
   }, []);
 
-  if(loading ) return <img src="/images/loading.gif"  alt="로딩 중..."/>
+  if (loading) return <img src="/images/loading.gif" alt="로딩 중..." />;
 
   return (
     <div
@@ -116,7 +109,7 @@ const MyPage: React.FC = () => {
         <div>
           <img
             className="w-[120px] h-[120px] rounded-md object-cover mt-10 mb-2.5 border-common"
-            src={user.profileImage ? user.profileImage : '/images/no-image.svg'}
+            src={user.profileImage ? user.profileImage : "/images/no-image.svg"}
             alt={`${user.nickname}의 프로필 이미지`}
           />
           <p className="font-medium text-lg text-center m-auto">{user.nickname}</p>
@@ -141,10 +134,9 @@ const MyPage: React.FC = () => {
 
       <TagItemList
         layoutType={isEdit ? "mypageSelect" : "mySelect"}
-        tags={user.classification}
-        setTags={handleChangeClassification}
+        tags={inputs.classification.length === 0 ? user.classification : inputs.classification}
+        setTags={newTags => setInputs({ ...inputs, classification: newTags })}
       />
-      <div></div>
 
       <Button label={isEdit ? "저장하기" : "프로필 편집"} handleClickButton={handleClickButton} />
 
