@@ -1,18 +1,33 @@
 import React, { useState } from "react";
 import StarScore from "@/components/review/StarScore.tsx";
 import Modal from "@/components/common/Modal.tsx";
+import { useDispatch } from "react-redux";
+import { removeReview, editReview } from "@/redux/reviewSlice";
+import { AppDispatch } from "@/redux/store.ts";
 
 interface ReviewCardProps {
+  reviewId: number;
   content: string;
   star: number;
   nickname: string;
   type: "list" | "item";
+  reload?: () => void;
 }
 
-const ReviewCard: React.FC<ReviewCardProps> = ({ content, star, nickname, type }) => {
+const ReviewCard: React.FC<ReviewCardProps> = ({
+  reviewId,
+  content,
+  star,
+  nickname,
+  type,
+  reload,
+}) => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isLong, setIsLong] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+  const [score, setScore] = useState(star);
+  const dispatch: AppDispatch = useDispatch();
+
   // @ts-ignore
   // TODO: 수정 내용 API 요청 시 사용
   const [editedContent, setEditedContent] = useState(content);
@@ -25,18 +40,27 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ content, star, nickname, type }
     setIsEdit(prev => !prev);
   };
 
-  const handleChangeContent = () => {
-    setEditedContent(content);
+  const handleChangeContent = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setEditedContent(e.target.value);
   };
 
-  const handleClickSaveButton = () => {
+  const handleClickSaveButton = async () => {
+    const updateData = {
+      content: editedContent,
+      star: score,
+    };
+    await dispatch(editReview({ reviewId, updateData }));
+    await reload?.();
     setIsEdit(false);
-    // TODO: 리뷰 수정 API 요청
   };
 
   const handleClickDeleteButton = () => {
-    // TODO: 리뷰 삭제 API 요청
+    dispatch(removeReview(reviewId));
     setIsOpenModal(!isOpenModal);
+  };
+
+  const handleScoreChange = (newScore: number) => {
+    setScore(newScore);
   };
 
   const renderListType = () => {
@@ -71,13 +95,14 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ content, star, nickname, type }
         className="border-common flex flex-col items-center p-3 gap-2.5"
       >
         <div className="flex gap-1 w-full justify-between">
-          <StarScore mode="read" score={star} />
+          <StarScore mode="write" score={star} onChangeScore={handleScoreChange} mini={true} />
           <i className="fi fi-rr-check text-orange" onClick={handleClickSaveButton}></i>
         </div>
         <textarea
           className="border-common text-xs w-full p-2 outline-none focus:border-[1.5px]"
           placeholder="100자 이내로 작성해주세요."
           onChange={handleChangeContent}
+          value={editedContent}
         />
       </div>
     ) : (
@@ -97,7 +122,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ content, star, nickname, type }
           <StarScore mode="read" score={star} />
           <div>
             <i className="fi fi-rr-pencil mr-2" onClick={handleClickEditButton}></i>
-            <i className="fi fi-rr-trash" onClick={handleClickDeleteButton}></i>
+            <i className="fi fi-rr-trash" onClick={() => setIsOpenModal(true)}></i>
           </div>
         </div>
         <p className="text-xs font-light text-left w-full">{content}</p>

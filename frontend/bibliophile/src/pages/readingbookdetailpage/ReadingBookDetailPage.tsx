@@ -12,6 +12,7 @@ import Modal from "../../components/common/Modal";
 import { useDispatch, useSelector } from "react-redux";
 import { loadMyMemoList } from "@/redux/memoSlice.ts";
 import { loadMyReport } from "@/redux/reportSlice.ts";
+import { loadMyReview } from "@/redux/reviewSlice";
 import { AppDispatch, RootState } from "@/redux/store.ts";
 import { useParams } from "react-router-dom";
 // TODO: API 명세 수정되면 바뀔 가능성 있음 (bookReviewId, reviewId 어떻게 주는지 issue)
@@ -33,33 +34,8 @@ interface ReadingBookDetailResponse {
   lastModifyDate: string;
 }
 
-interface BookReportResponse {
-  bookReportId: number;
-  content: string;
-  imgUrl: string;
-  isHost: boolean;
-  bookReportImgList: Array<{
-    imgUrl: string;
-    createdDate: string;
-    lastModifyDate: string;
-  }>;
-  createdDate: string;
-  lastModifyDate: string;
-}
-
-interface BookReviewResponse {
-  reviewId: number;
-  content: string;
-  star: number;
-  nickname: string;
-  isHost: true;
-  createdDate: string;
-  lastModifyDate: string;
-}
-
 const ReadingBookDetailPage: React.FC = () => {
   const [bookDetail, setBookDetail] = useState<ReadingBookDetailResponse | null>(null);
-  const [review, setReview] = useState<BookReviewResponse | null>(null);
   const [isPageOpen, setIsPageOpen] = useState(false);
   const [isMemoOpen, setIsMemoOpen] = useState(false);
   const [isReportOpen, setIsReportOpen] = useState(false);
@@ -72,11 +48,12 @@ const ReadingBookDetailPage: React.FC = () => {
   const memoLoading = useSelector((state: RootState) => state.memo.loading);
   const report = useSelector((state: RootState) => state.report.data.data);
   const reportLoading = useSelector((state: RootState) => state.report.loading);
-
+  const review = useSelector((state: RootState) => state.review.data.data);
+  const reviewLoading = useSelector((state: RootState) => state.review.loading);
   useEffect(() => {
     // TODO: 추후 API 호출로 변경
     const dummyBookDetail: ReadingBookDetailResponse = {
-      bookId: 1,
+      bookId: 8007,
       myBookId: 1,
       totalPage: 100,
       readingPage: 20,
@@ -96,17 +73,7 @@ const ReadingBookDetailPage: React.FC = () => {
 
     dispatch(loadMyMemoList(Number(myBookId)));
     dispatch(loadMyReport(Number(myBookId)));
-
-    const dummyReview: BookReviewResponse | null = {
-      reviewId: 1,
-      content: "리뷰 내용이 여기에 들어갑니다.",
-      star: 4,
-      nickname: "사용자",
-      isHost: true,
-      createdDate: "2024-02-18 07:53:23.795698",
-      lastModifyDate: "2024-02-18 07:53:23.795698",
-    };
-    setReview(dummyReview);
+    dispatch(loadMyReview(Number(myBookId)));
   }, []);
 
   const handlePageBottomSheetToggle = () => {
@@ -114,6 +81,7 @@ const ReadingBookDetailPage: React.FC = () => {
   };
 
   const handleMemoBottomSheetToggle = () => {
+    dispatch(loadMyMemoList(Number(myBookId)));
     setIsMemoOpen(!isMemoOpen);
   };
 
@@ -123,7 +91,7 @@ const ReadingBookDetailPage: React.FC = () => {
   };
 
   const handleReviewBottomSheetToggle = () => {
-    dispatch(loadMyMemoList(Number(myBookId)));
+    dispatch(loadMyReview(Number(myBookId)));
     setIsReviewOpen(!isReviewOpen);
   };
 
@@ -139,11 +107,15 @@ const ReadingBookDetailPage: React.FC = () => {
     }
   };
 
+  const reloadfuction = async () => {
+    await dispatch(loadMyReview(Number(myBookId)));
+  };
+
   if (!bookDetail) {
     return <div></div>;
   }
 
-  if (memoLoading || reportLoading) {
+  if (memoLoading || reportLoading || reviewLoading) {
     return <div>Loading...</div>;
   }
 
@@ -189,7 +161,11 @@ const ReadingBookDetailPage: React.FC = () => {
 
         {isReviewOpen && (
           <BottomSheet height={700} handleCloseBottomSheet={handleReviewBottomSheetToggle}>
-            <BottomSheetReview />
+            <BottomSheetReview
+              bookId={bookDetail.bookId}
+              thumbnail={bookDetail.thumbnail}
+              onClose={handleReviewBottomSheetToggle}
+            />
           </BottomSheet>
         )}
       </div>
@@ -241,10 +217,12 @@ const ReadingBookDetailPage: React.FC = () => {
             <div>
               <h2 className="font-semibold text-[18px] mb-[10px]">리뷰</h2>
               <ReviewCard
+                reviewId={review.reviewId}
                 content={review.content}
                 star={review.star}
                 nickname={review.nickname}
                 type="item"
+                reload={reloadfuction}
               />
             </div>
           ) : (
