@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import {createCheckNickname, createUser, getUser} from "@/api/users.ts";
+import { createCheckNickname, createUser, getUser } from "@/api/users.ts";
 import { socialLogin } from "@/api/outh.ts";
-import {SignupRequest, UserStateType} from "@/types/user.ts";
+import { SignupRequest, UserStateType } from "@/types/user.ts";
 
-const initialState  : UserStateType = {
+const initialState: UserStateType = {
   isLoggedIn: false,
   loading: false,
   error: undefined,
@@ -25,7 +25,7 @@ export const login = createAsyncThunk(
   "user/login",
   async ({ oauthServerType, code }: { oauthServerType: string; code: string }) => {
     const response = await socialLogin(oauthServerType, code);
-    return response.data
+    return response.data;
   }
 );
 
@@ -33,7 +33,7 @@ export const checkNicknameDuplication = createAsyncThunk(
   "user/createCheckNickname",
   async (nickname: string) => {
     const response = await createCheckNickname(nickname);
-    return response.data
+    return response.data;
   }
 );
 
@@ -45,7 +45,7 @@ export const signup = createAsyncThunk("user/signup", async (user: SignupRequest
 export const loadUser = createAsyncThunk("user/loadUser", async () => {
   const response = await getUser();
   return response.data;
-})
+});
 
 const userSlice = createSlice({
   name: "user",
@@ -94,16 +94,16 @@ const userSlice = createSlice({
       .addCase(signup.rejected, (state, action) => {
         state.error = action.error.message;
       })
-        .addCase(loadUser.pending, (state) => {
-          state.loading = true;
-        })
-        .addCase(loadUser.fulfilled, (state, action) => {
-          state.user = action.payload.data;
-          state.loading = false;
-        })
-        .addCase(loadUser.rejected, (state, action) => {
-          state.error = action.error.message;
-        })
+      .addCase(loadUser.pending, state => {
+        state.loading = true;
+      })
+      .addCase(loadUser.fulfilled, (state, action) => {
+        state.user = action.payload.data;
+        state.loading = false;
+      })
+      .addCase(loadUser.rejected, (state, action) => {
+        state.error = action.error.message;
+      });
   },
 });
 

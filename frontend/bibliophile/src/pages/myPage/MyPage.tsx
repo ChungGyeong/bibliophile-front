@@ -65,7 +65,12 @@ const MyPage: React.FC = () => {
     dispatch(loadUser());
   }, []);
 
-  if (loading) return <img src="/images/loading.gif" alt="로딩 중..." />;
+  if (loading)
+    return (
+      <div className="w-full">
+        <img src="/images/loading.gif" alt="로딩 중..." className="m-auto mt-[50%]" />
+      </div>
+    );
 
   return (
     <div
