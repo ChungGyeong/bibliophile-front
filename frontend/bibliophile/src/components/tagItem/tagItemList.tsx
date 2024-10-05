@@ -34,22 +34,6 @@ const TagItemList: React.FC<TagItemListProps> = React.memo(({ layoutType, tags, 
     ));
   };
 
-  const renderSwiperTags = () => {
-    return (
-      <Swiper slidesPerView={4.2} className="h-11">
-        {TAGS.map(tag => (
-          <SwiperSlide key={tag}>
-            <TagItem
-              label={translateTagToKorea(tag)}
-              selected={selectedTags.includes(tag)}
-              onClick={() => handleTagClick(tag)}
-            />
-          </SwiperSlide>
-        ))}
-      </Swiper>
-    );
-  };
-
   const renderLayout = () => {
     switch (layoutType) {
       case "signSelect":
