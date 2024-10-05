@@ -12,6 +12,7 @@ const reverseTranslationMap = Object.fromEntries(
 export const translateTagToKorea = (englishTerm: string) => {
   return reverseTranslationMap[englishTerm];
 };
+
 export const translateTagToEnglish = (koreanTerm: string) => {
   return translationMap[koreanTerm] as ClassificationType;
 };

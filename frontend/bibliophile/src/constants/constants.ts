@@ -1,18 +1,29 @@
 export const GENDER_OPTIONS = ["남성", "여성"];
 
-export const KOR_CLASSIFICATION = ["경제", "만화", "사회", "역사", "사랑", "예술", "소설", "여행", "언어", "IT/과학"]
+export const KOR_CLASSIFICATION = [
+  "경제",
+  "만화",
+  "사회",
+  "역사",
+  "사랑",
+  "예술",
+  "소설",
+  "여행",
+  "언어",
+  "IT/과학",
+];
 
 export const ENG_CLASSIFICATION = [
   "ECONOMICS",
   "COMICS",
   "SOCIETY",
+  "HISTORY",
   "LOVE",
+  "ARTS",
   "FICTION",
   "TRAVEL",
-  "IT_SCIENCE",
-  "ARTS",
   "LANGUAGE",
-  "HISTORY"
+  "IT_SCIENCE",
 ];
 
 export const POPULAR_BOOKS_BY_AGE_AND_GENDER = [

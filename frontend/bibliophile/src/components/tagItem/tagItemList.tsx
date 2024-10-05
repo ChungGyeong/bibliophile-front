@@ -18,8 +18,7 @@ const TagItemList: React.FC<TagItemListProps> = React.memo(({ layoutType, tags, 
       if (newTags.length < 1) alert("관심사는 1개 이상 선택해주세요!");
       else setTags([...newTags]);
     } else if (tags.length < 3) {
-      if (tags.length < 1) alert("관심사는 1개 이상 선택해주세요!");
-      else setTags([...tags, tag]);
+      setTags([...tags, tag]);
     } else alert("관심사는 3개 이하로 선택해주세요!");
   };
 
