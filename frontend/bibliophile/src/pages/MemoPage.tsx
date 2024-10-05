@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { loadMemo, removeMemo } from "@/redux/memoSlice";
+import { AppDispatch, RootState } from "@/redux/store.ts";
+import { useNavigate, useParams } from "react-router-dom";
 import BottomSheetMemo from "@/components/bottomSheet/BottomSheetMemo";
 import Modal from "react-modal";
+import CustomModal from "@/components/common/Modal";
+
 import {
   Carousel,
   CarouselContent,
@@ -9,33 +14,39 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 
-const data = {
-  memoId: 1,
-  content: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-  memoPage: 100,
-  createdDate: "2024-02-18 07:53:23.795698",
-  lastModifyDate: "2024-02-18 07:53:23.795698",
-  memoImgList: [
-    {
-      imgUrl:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZ31kw4e5HGBiNACrH0HqtYgMsr9L8vL-CCg&s",
-      createdDate: "2024-02-18 07:53:23.795698",
-      lastModifyDate: "2024-02-18 07:53:23.795698",
-    },
-    {
-      imgUrl:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRg79hCHNtmiTI72ahhw8zeb6y9ICYILM60oA&s",
-      createdDate: "2024-02-18 07:53:23.795698",
-      lastModifyDate: "2024-02-18 07:53:23.795698",
-    },
-  ],
-};
-
 const MemoPage: React.FC = () => {
+  const { memoId } = useParams<{ memoId: string }>();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCustomModalOpen, setIsCustomModalOpen] = useState(false);
   const [api, setApi] = useState<CarouselApi | null>(null);
   const navigate = useNavigate();
+  const dispatch: AppDispatch = useDispatch();
+
+  const { data, loading } = useSelector((state: RootState) => state.memo);
+
+  const fetchMemoData = () => {
+    if (memoId) {
+      dispatch(loadMemo(Number(memoId)));
+    }
+  };
+
+  useEffect(() => {
+    fetchMemoData();
+  }, [memoId]);
+
+  useEffect(() => {
+    if (loading) {
+      console.log("로딩 중...");
+    } else {
+      console.log("로딩 완료");
+    }
+  }, [loading]);
+
+  const handleModalClose = () => {
+    fetchMemoData();
+    setIsModalOpen(false);
+  };
 
   const handleDotClick = (index: number) => {
     api?.scrollTo(index);
@@ -57,49 +68,91 @@ const MemoPage: React.FC = () => {
     setIsModalOpen(true);
   };
 
+  const handleClickTrash = () => {
+    setIsCustomModalOpen(true);
+  };
+
+  const handleModalToggle = () => {
+    setIsCustomModalOpen(prev => !prev);
+  };
+
+  const handleDeleteConfirm = async () => {
+    setIsModalOpen(false);
+    dispatch(removeMemo(Number(memoId)));
+    navigate(-1);
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="mt-2">
+      {isCustomModalOpen && (
+        <CustomModal
+          isOpen={isCustomModalOpen}
+          handleClickClose={handleModalToggle}
+          title="정말로 삭제하시겠습니까?"
+          handleClickConfirm={handleDeleteConfirm}
+        />
+      )}
+
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center" onClick={handleClickBack}>
           <i className="fi fi-rr-angle-left text-xl pt-2 me-2"></i>
           <p className="font-medium text-xl ml-2 font-semibold pt-1">메모</p>
         </div>
-        <button onClick={handleClickPencil} className="pt-2">
-          <i className="fi fi-sr-pencil text-orange text-xl pt-2"></i>
-        </button>
+        <div>
+          <button onClick={handleClickPencil} className="pt-2">
+            <i className="fi fi-sr-pencil text-orange text-xl pt-2"></i>
+          </button>
+          <button onClick={handleClickTrash} className="pt-2">
+            <i className="fi fi-rr-trash text-orange text-xl pt-2 ml-3"></i>
+          </button>
+        </div>
       </div>
 
       <Carousel className="w-full" setApi={setApi}>
         <CarouselContent>
-          {data.memoImgList.map((image, index) => (
-            <CarouselItem key={index}>
-              <div className="w-full text-center">
-                <img
-                  src={image.imgUrl}
-                  alt={`사진 ${index + 1}`}
-                  className="w-full h-64 object-cover rounded-lg"
-                />
-              </div>
-            </CarouselItem>
-          ))}
+          {data?.data?.memoImgUrlList && Array.isArray(data.data.memoImgUrlList) ? (
+            data.data.memoImgUrlList.map((imgUrl, index) => (
+              <CarouselItem key={index}>
+                <div className="w-full text-center">
+                  <img
+                    src={imgUrl}
+                    alt={`사진 ${index + 1}`}
+                    className="w-full h-64 object-cover rounded-lg"
+                  />
+                </div>
+              </CarouselItem>
+            ))
+          ) : (
+            <div>No Images Available</div>
+          )}
         </CarouselContent>
       </Carousel>
 
       <div className="flex justify-center mt-4 space-x-2">
-        {data.memoImgList.map((_, index) => (
-          <div
-            key={index}
-            onClick={() => handleDotClick(index)}
-            className={`w-2 h-2 rounded-full cursor-pointer ${
-              currentImageIndex === index ? "bg-orange" : "bg-soft-gray"
-            }`}
-          ></div>
-        ))}
+        {data?.data?.memoImgUrlList &&
+          data.data.memoImgUrlList.map((_, index) => (
+            <div
+              key={index}
+              onClick={() => handleDotClick(index)}
+              className={`w-2 h-2 rounded-full cursor-pointer ${
+                currentImageIndex === index ? "bg-orange" : "bg-soft-gray"
+              }`}
+            ></div>
+          ))}
       </div>
-      <p className="font-regular text-lg pt-2">... {data.memoPage}p</p>
-      <p className="font-light text-lg  leading-7 pt-2 whitespace-pre-line">{data.content}</p>
-      <p className="font-light text-sm  text-medium-gray pt-2 text-right">
-        {data.createdDate.split(" ")[0]}
+
+      <p className="font-regular text-lg pt-2">
+        {data?.data?.memoPage ? `${data.data.memoPage}p` : "페이지 정보 없음"}
+      </p>
+      <p className="font-light text-base leading-7 pt-2 whitespace-pre-line">
+        {data?.data?.content || "내용 없음"}
+      </p>
+      <p className="font-light text-sm text-medium-gray pt-2 text-right">
+        {data?.data?.createdDate ? data.data.createdDate.split("T")[0] : "날짜 정보 없음"}
       </p>
 
       <Modal
@@ -112,11 +165,12 @@ const MemoPage: React.FC = () => {
         <div className="bg-white rounded-t-lg shadow-lg w-full h-[90%] overflow-auto">
           <BottomSheetMemo
             label="메모"
-            mode="작성하기"
-            content={data.content}
-            memoPage={data.memoPage}
-            memoImgList={data.memoImgList}
-            onClose={() => setIsModalOpen(false)}
+            mode="수정하기"
+            memoId={memoId}
+            content={data?.data?.content}
+            memoPage={data?.data?.memoPage}
+            memoImgList={data?.data?.memoImgUrlList}
+            onClose={handleModalClose}
           />
         </div>
       </Modal>
