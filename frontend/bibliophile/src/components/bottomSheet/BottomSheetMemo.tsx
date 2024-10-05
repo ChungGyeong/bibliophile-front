@@ -1,34 +1,42 @@
 import React, { useRef, useState } from "react";
-import BottomSheet from "./BottomSheet";
 import Button from "../common/Button";
-
-interface MemoImage {
-  imgUrl: string;
-  createdDate: string;
-  lastModifyDate: string;
-}
+import { useDispatch } from "react-redux";
+import { editMemo, addMemo } from "@/redux/memoSlice";
+import { editReport, addReport } from "@/redux/reportSlice";
+import { addImage } from "@/redux/imageSlice";
+import { AppDispatch } from "@/redux/store.ts";
 
 interface BottomSheetMemoProps {
   onClose: () => void;
+  myBookId?: number;
+  memoId?: number;
+  bookReportId?: number;
   label: string;
   mode: string;
   content?: string;
   memoPage?: number;
-  memoImgList?: MemoImage[];
+  memoImgList?: string[];
 }
 
 const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
   onClose,
+  myBookId = 0,
+  memoId = 0,
+  bookReportId = 0,
   label,
   mode,
   content = "",
-  memoPage = null,
+  memoPage = 0,
   memoImgList = [],
 }) => {
   const [memo, setMemo] = useState<string>(content);
-  const [page, setPage] = useState<number | null>(memoPage);
-  const [images, setImages] = useState<MemoImage[]>(memoImgList);
+  const [page, setPage] = useState<number>(memoPage);
+  const [existingImages, setExistingImages] = useState<string[]>(memoImgList);
+  const [newImages, setNewImages] = useState<string[]>([]);
+  const [filesToUpload, setFilesToUpload] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const dispatch: AppDispatch = useDispatch();
 
   const handleMemoChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMemo(e.target.value);
@@ -38,23 +46,76 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
     setPage(Number(e.target.value));
   };
 
-  const handleButtonClick = () => {
-    alert(`입력값: ${memo}, ${page}, ${images}`);
+  const handleButtonClick = async () => {
+    const formData = new FormData();
+
+    if (filesToUpload.length > 0) {
+      filesToUpload.forEach(file => formData.append("files", file));
+    }
+
+    let uploadedImageUrls: string[] = [];
+
+    if (filesToUpload.length > 0) {
+      const result = await dispatch(addImage(formData));
+      if (result.payload && Array.isArray(result.payload.data)) {
+        uploadedImageUrls = result.payload.data.map(item => item.url);
+      } else {
+        console.error("Error: Payload data is not an array or undefined", result.payload);
+        return;
+      }
+    }
+
+    const finalImages = [...existingImages, ...uploadedImageUrls];
+
+    if (label === "메모") {
+      if (mode === "작성하기") {
+        const createData = {
+          myBookId: myBookId,
+          memoPage: page,
+          content: memo,
+          memoImgUrl: finalImages,
+        };
+        await dispatch(addMemo(createData));
+      } else {
+        const updateData = {
+          memoPage: page,
+          content: memo,
+          memoImgUrl: finalImages,
+        };
+        await dispatch(editMemo({ memoId, updateData }));
+      }
+    } else {
+      if (mode === "작성하기") {
+        const createData = {
+          myBookId: myBookId,
+          content: memo,
+          ImgUrl: finalImages,
+        };
+        await dispatch(addReport(createData));
+      } else {
+        const updateData = {
+          content: memo,
+          bookReportImgUrl: finalImages,
+        };
+        await dispatch(editReport({ bookReportId, updateData }));
+      }
+    }
+
     onClose();
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      const fileArray = Array.from(e.target.files).map(file => ({
-        imgUrl: URL.createObjectURL(file),
-        createdDate: "",
-        lastModifyDate: "",
-      }));
-      if (images.length >= 3) {
+      const fileArray = Array.from(e.target.files);
+
+      if (existingImages.length + newImages.length + fileArray.length > 3) {
         alert("이미지는 3개까지 업로드 할 수 있습니다.");
         return;
       }
-      setImages(prevImages => [...prevImages, ...fileArray]);
+
+      const previewUrls = fileArray.map(file => URL.createObjectURL(file));
+      setNewImages(prev => [...prev, ...previewUrls]);
+      setFilesToUpload(prev => [...prev, ...fileArray]);
       e.target.value = "";
     }
   };
@@ -65,8 +126,13 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
     }
   };
 
-  const handleImageDelete = (index: number) => {
-    setImages(prevImages => prevImages.filter((_, i) => i !== index));
+  const handleImageDelete = (index: number, isExisting: boolean) => {
+    if (isExisting) {
+      setExistingImages(prevImages => prevImages.filter((_, i) => i !== index));
+    } else {
+      setNewImages(prevImages => prevImages.filter((_, i) => i !== index));
+      setFilesToUpload(prevFiles => prevFiles.filter((_, i) => i !== index));
+    }
   };
 
   const getPlaceholder = (label: string): string => {
@@ -79,63 +145,75 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
   };
 
   const getHeightByLabel = (label: string): string => {
-    return label === "메모" ? "h-[290px]" : "h-[340px]";
+    return label === "메모" ? "h-1/3" : "h-1/2";
   };
 
   return (
-    <BottomSheet height={90} handleCloseBottomSheet={onClose}>
-      <div className="flex flex-col items-center justify-center m-[5%] h-full">
-        <p className="font-bold text-xl leading-normal mb-[10%]">
-          {label} {mode}
-        </p>
-        <textarea
-          value={memo}
-          onChange={handleMemoChange}
-          placeholder={getPlaceholder(label)}
-          className={`w-[90%] ${getHeightByLabel(label)} border-2 border-gray-300 p-2 rounded-md outline-none mb-7 font-light text-xs`}
+    <div className="flex flex-col items-center justify-center m-[5%] h-full pb-[75px]">
+      <p className="font-bold text-xl leading-normal mb-[10%]">
+        {label} {mode}
+      </p>
+      <textarea
+        value={memo}
+        onChange={handleMemoChange}
+        placeholder={getPlaceholder(label)}
+        className={`w-[90%] ${getHeightByLabel(label)} border-2 border-gray-300 p-2 rounded-md outline-none mb-6 font-light text-xs`}
+      />
+      {label === "메모" && (
+        <input
+          type="text"
+          placeholder="페이지를 입력해주세요"
+          className="w-[80%] border-b-2 border-gray focus:border-black outline-none text-gray-500 text-sm py-3 mb-6"
+          value={page ?? 0}
+          onChange={handlePageChange}
         />
-        {label === "메모" && (
+      )}
+      <div className="flex justify-start items-center w-[90%] h-[10%] my-3">
+        <div
+          onClick={handleIconClick}
+          className="me-4 aspect-square h-full border-2 border-gray-300 p-2 rounded-md outline-none mb-5 flex items-center justify-center"
+        >
+          <i className="m-0 p-0 fi fi-rr-add-image text-2xl pt-2"></i>
           <input
-            type="text"
-            placeholder="페이지를 입력해주세요"
-            className="w-[80%] border-b-2 border-gray focus:border-black outline-none text-gray-500 text-sm py-3 mb-7"
-            value={page ?? 0}
-            onChange={handlePageChange}
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            className="hidden"
           />
-        )}
-        <div className="flex justify-start items-center w-[90%] h-[10%] my-5">
-          <div
-            onClick={handleIconClick}
-            className="me-4 aspect-square h-full border-2 border-gray-300 p-2 rounded-md outline-none mb-5 flex items-center justify-center"
-          >
-            <i className="m-0 p-0 fi fi-rr-add-image text-2xl pt-2"></i>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="hidden"
-            />
-          </div>
-
-          {images.map((image, index) => (
-            <div
-              key={index}
-              className="me-4 aspect-square h-full border-2 border-gray-300 rounded-md outline-none mb-5 flex items-center justify-center relative overflow-hidden"
-            >
-              <button
-                onClick={() => handleImageDelete(index)}
-                className="absolute top-0 right-0 w-[20px] h-[20px] flex items-center justify-center text-xs"
-              >
-                <i className="fi fi-rr-cross-small color-white text-xl pt-2 text-white [text-shadow:_2px_2px_6px_rgb(0_0_0_/_0.1)]"></i>
-              </button>
-              <img src={image.imgUrl} alt="이미지" className="w-full h-full object-cover" />
-            </div>
-          ))}
         </div>
-        <Button label="작성 완료" handleClickButton={handleButtonClick} />
+
+        {existingImages.map((image, index) => (
+          <div
+            key={index}
+            className="me-4 aspect-square h-full border-2 border-gray-300 rounded-md outline-none mb-5 flex items-center justify-center relative overflow-hidden"
+          >
+            <button
+              onClick={() => handleImageDelete(index, true)}
+              className="absolute top-0 right-0 w-[20px] h-[20px] flex items-center justify-center text-xs"
+            >
+              <i className="fi fi-rr-cross-small color-white text-xl pt-2 text-white [text-shadow:_2px_2px_6px_rgb(0_0_0_/_0.1)]"></i>
+            </button>
+            <img src={image} alt="이미지" className="w-full h-full object-cover" />
+          </div>
+        ))}
+        {newImages.map((image, index) => (
+          <div
+            key={index}
+            className="me-4 aspect-square h-full border-2 border-gray-300 rounded-md outline-none mb-5 flex items-center justify-center relative overflow-hidden"
+          >
+            <button
+              onClick={() => handleImageDelete(index, false)}
+              className="absolute top-0 right-0 w-[20px] h-[20px] flex items-center justify-center text-xs"
+            >
+              <i className="fi fi-rr-cross-small color-white text-xl pt-2 text-white [text-shadow:_2px_2px_6px_rgb(0_0_0_/_0.1)]"></i>
+            </button>
+            <img src={image} alt="이미지" className="w-full h-full object-cover" />
+          </div>
+        ))}
       </div>
-    </BottomSheet>
+      <Button label="작성 완료" handleClickButton={handleButtonClick} />
+    </div>
   );
 };
 
