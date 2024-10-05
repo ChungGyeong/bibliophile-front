@@ -1,5 +1,5 @@
-import React, { useRef, useState } from "react";
-import { ClassificationType, UsersResponse } from "@/types/user.ts";
+import React, { useEffect, useRef, useState } from "react";
+import { UsersResponse } from "@/types/user.ts";
 import TagItemList from "@/components/tagItem/tagItemList.tsx";
 import InputBox from "@/components/common/InputBox.tsx";
 import Button from "@/components/common/Button.tsx";
@@ -7,20 +7,15 @@ import Modal from "@/components/common/Modal.tsx";
 import AccountManagement from "@/pages/myPage/AccountManagement.tsx";
 import ProfileImageUploader from "@/pages/myPage/ProfileImageUploader.tsx";
 import UserInfoField from "@/pages/myPage/UserInfoField.tsx";
-
-const user: UsersResponse = {
-  userId: 12345,
-  email: "example@example.com",
-  nickname: "빌리",
-  gender: "MAN",
-  birthday: "1990-05-20",
-  classification: ["LITERATURE", "PHILOSOPHY", "ARTS"],
-  profileImage:
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSjC7La64XiIZjifQW3gNvr6LwDE4vI_iCvQ&s",
-  oauthServerType: "KAKAO",
-};
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store.ts";
+import { editUser, loadUser, removeUser } from "@/redux/userSlice.ts";
+import { translateTagToEnglish } from "@/utils/translator.ts";
 
 const MyPage: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { user, loading } = useSelector((state: RootState) => state.user);
+
   const [isEdit, setIsEdit] = useState(false);
   const [inputs, setInputs] = useState<UsersResponse>({
     userId: user.userId,
@@ -55,31 +50,22 @@ const MyPage: React.FC = () => {
     setInputs((prev: UsersResponse) => ({ ...prev, nickname: e.target.value }));
   };
 
-  const handleChangeClassification = (selectedTags: Set<string>) => {
-    const validClassifications: ClassificationType[] = Array.from(selectedTags).filter(tag =>
-      [
-        "GENERAL_WORKS",
-        "PHILOSOPHY",
-        "RELIGION",
-        "SOCIAL_SCIENCES",
-        "NATURAL_SCIENCES",
-        "TECHNOLOGY",
-        "ARTS",
-        "LANGUAGE",
-        "LITERATURE",
-        "HISTORY",
-      ].includes(tag)
-    ) as ClassificationType[];
-
-    setInputs((prev: UsersResponse) => ({
-      ...prev,
-      classification: validClassifications,
-    }));
-  };
-
   const handleClickButton = () => {
     setIsEdit(!isEdit);
-    console.log(inputs);
+
+    if (!isEdit) return;
+
+    dispatch(
+      editUser({
+        nickname: inputs.nickname,
+        classification: inputs.classification.map(classification => {
+          return translateTagToEnglish(classification);
+        }),
+        profileImage: inputs.profileImage,
+      })
+    ).then(() => {
+      dispatch(loadUser());
+    });
   };
 
   const handleClickLogout = () => {
@@ -87,8 +73,19 @@ const MyPage: React.FC = () => {
   };
 
   const handleClickDeleteMember = () => {
-    setIsOpenDeleteMemberModal(!isOpenDeleteMemberModal);
+    dispatch(removeUser());
   };
+
+  useEffect(() => {
+    dispatch(loadUser());
+  }, []);
+
+  if (loading)
+    return (
+      <div className="w-full">
+        <img src="/images/loading.gif" alt="로딩 중..." className="m-auto mt-[50%]" />
+      </div>
+    );
 
   return (
     <div
@@ -106,8 +103,12 @@ const MyPage: React.FC = () => {
         <Modal
           title="정말 탈퇴 하시겠어요?"
           isOpen={isOpenDeleteMemberModal}
-          handleClickClose={handleClickDeleteMember}
-          handleClickConfirm={() => {}}
+          handleClickClose={() => {
+            setIsOpenDeleteMemberModal(!isOpenDeleteMemberModal);
+          }}
+          handleClickConfirm={() => {
+            handleClickDeleteMember();
+          }}
         />
       )}
       {isEdit ? (
@@ -131,8 +132,8 @@ const MyPage: React.FC = () => {
       ) : (
         <div>
           <img
-            className="w-[120px] h-[120px] rounded-md object-cover mt-10 mb-2.5"
-            src={user.profileImage}
+            className="w-[120px] h-[120px] rounded-md object-cover mt-10 mb-2.5 border-common"
+            src={user.profileImage ? user.profileImage : "/images/no-image.svg"}
             alt={`${user.nickname}의 프로필 이미지`}
           />
           <p className="font-medium text-lg text-center m-auto">{user.nickname}</p>
@@ -157,17 +158,18 @@ const MyPage: React.FC = () => {
 
       <TagItemList
         layoutType={isEdit ? "mypageSelect" : "mySelect"}
-        tags={new Set(user.classification)}
-        setTags={handleChangeClassification}
+        tags={inputs.classification.length === 0 ? user.classification : inputs.classification}
+        setTags={newTags => setInputs({ ...inputs, classification: newTags })}
       />
-      <div></div>
 
       <Button label={isEdit ? "저장하기" : "프로필 편집"} handleClickButton={handleClickButton} />
 
       {!isEdit && (
         <AccountManagement
           handleClickLogout={handleClickLogout}
-          handleClickDeleteMember={handleClickDeleteMember}
+          handleClickDeleteMember={() => {
+            setIsOpenDeleteMemberModal(!isOpenDeleteMemberModal);
+          }}
         />
       )}
     </div>

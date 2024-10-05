@@ -1,56 +1,35 @@
-import React, { useState, useEffect } from "react";
-
+import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { ClassificationType } from "@/types/user";
-import { translateTagToKorea } from "@/utils/translator";
 import TagItem from "@/components/tagItem/tagItem.tsx";
+import { KOR_CLASSIFICATION } from "@/constants/constants.ts";
 
 interface TagItemListProps {
   layoutType: "signSelect" | "bookSelect" | "mypageSelect" | "mySelect";
   tags: ClassificationType[];
-  setTags: (selectedTags: ClassificationType[]) => void;
+  setTags: (tags: ClassificationType[]) => void;
 }
 
-const TAGS: ClassificationType[] = [
-  "ECONOMICS",
-  "COMICS",
-  "SOCIETY",
-  "LOVE",
-  "FICTION",
-  "TRAVEL",
-  "IT_SCIENCE",
-  "ARTS",
-  "LANGUAGE",
-  "HISTORY",
-];
-
-const TagItemList: React.FC<TagItemListProps> = ({ layoutType, tags, setTags }) => {
-  const [selectedTags, setSelectedTags] = useState<ClassificationType[]>(
-    tags.length > 0 ? tags : []
-  );
-
+const TagItemList: React.FC<TagItemListProps> = React.memo(({ layoutType, tags, setTags }) => {
   const handleTagClick = (tag: ClassificationType) => {
-    setSelectedTags(prevSelected => {
-      if (prevSelected.includes(tag)) {
-        return prevSelected.filter(t => t !== tag);
-      } else {
-        if (prevSelected.length >= 3) {
-          alert("최대 3개의 태그만 선택할 수 있습니다.");
-          return prevSelected;
-        }
-        return [...prevSelected, tag];
-      }
-    });
+    if (tags.includes(tag)) {
+      let newTags = tags.filter(t => t !== tag);
+      if (newTags.length < 1) alert("관심사는 1개 이상 선택해주세요!");
+      else setTags([...newTags]);
+    } else if (tags.length < 3) {
+      if (tags.length < 1) alert("관심사는 1개 이상 선택해주세요!");
+      else setTags([...tags, tag]);
+    } else alert("관심사는 3개 이하로 선택해주세요!");
   };
 
   const renderTags = () => {
-    return TAGS.map(tag => (
+    return KOR_CLASSIFICATION.map(tag => (
       <TagItem
         key={tag}
-        label={translateTagToKorea(tag)}
-        selected={selectedTags.includes(tag)}
-        onClick={() => handleTagClick(tag)}
+        label={tag}
+        selected={tags.includes(tag as ClassificationType)}
+        handleClickTag={() => handleTagClick(tag as ClassificationType)}
       />
     ));
   };
@@ -86,7 +65,17 @@ const TagItemList: React.FC<TagItemListProps> = ({ layoutType, tags, setTags }) 
               <p className="text-sm font-medium">태그 골라 보기</p>
               <p className="text-xs font-light">최대 3개까지 선택 가능</p>
             </div>
-            {renderSwiperTags()}
+            <Swiper slidesPerView={4.2} className="h-11">
+              {KOR_CLASSIFICATION.map(tag => (
+                <SwiperSlide key={tag}>
+                  <TagItem
+                    label={tag}
+                    selected={tags.includes(tag as ClassificationType)}
+                    handleClickTag={() => handleTagClick(tag as ClassificationType)}
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
           </div>
         );
       case "mypageSelect":
@@ -100,24 +89,22 @@ const TagItemList: React.FC<TagItemListProps> = ({ layoutType, tags, setTags }) 
         return (
           <div className="w-full h-[100px] bg-light-yellow flex-shrink-0 p-[10px] rounded-[5px]">
             <p className="font-medium text-base leading-normal mx-[5px] mb-2">관심사</p>
-            {Array.from(selectedTags).map(tag => (
+            {tags.map(tag => (
               <TagItem
                 key={tag}
-                label={translateTagToKorea(tag)}
+                label={tag}
                 selected={true}
-                onClick={() => handleTagClick(tag)}
+                handleClickTag={() => handleTagClick(tag)}
               />
             ))}
           </div>
         );
+      default:
+        return null;
     }
   };
 
-  useEffect(() => {
-    setTags(selectedTags);
-  }, [selectedTags]);
-
   return renderLayout();
-};
+});
 
 export default TagItemList;
