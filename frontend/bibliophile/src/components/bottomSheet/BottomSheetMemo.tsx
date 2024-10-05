@@ -2,13 +2,15 @@ import React, { useRef, useState } from "react";
 import Button from "../common/Button";
 import { useDispatch } from "react-redux";
 import { editMemo, addMemo } from "@/redux/memoSlice";
+import { editReport, addReport } from "@/redux/reportSlice";
 import { addImage } from "@/redux/imageSlice";
 import { AppDispatch } from "@/redux/store.ts";
 
 interface BottomSheetMemoProps {
   onClose: () => void;
   myBookId?: number;
-  memoId: number;
+  memoId?: number;
+  bookReportId?: number;
   label: string;
   mode: string;
   content?: string;
@@ -18,16 +20,17 @@ interface BottomSheetMemoProps {
 
 const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
   onClose,
-  myBookId,
-  memoId,
+  myBookId = 0,
+  memoId = 0,
+  bookReportId = 0,
   label,
   mode,
   content = "",
-  memoPage = null,
+  memoPage = 0,
   memoImgList = [],
 }) => {
   const [memo, setMemo] = useState<string>(content);
-  const [page, setPage] = useState<number | null>(memoPage);
+  const [page, setPage] = useState<number>(memoPage);
   const [existingImages, setExistingImages] = useState<string[]>(memoImgList);
   const [newImages, setNewImages] = useState<string[]>([]);
   const [filesToUpload, setFilesToUpload] = useState<File[]>([]);
@@ -44,8 +47,6 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
   };
 
   const handleButtonClick = async () => {
-    console.log(`입력값: ${memo}, ${page}, ${existingImages}  ${newImages}`);
-
     const formData = new FormData();
 
     if (filesToUpload.length > 0) {
@@ -66,21 +67,38 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
 
     const finalImages = [...existingImages, ...uploadedImageUrls];
 
-    if (mode === "작성하기") {
-      const createData = {
-        myBookId: myBookId,
-        memoPage: page,
-        content: memo,
-        memoImgUrl: finalImages,
-      };
-      await dispatch(addMemo(createData));
+    if (label === "메모") {
+      if (mode === "작성하기") {
+        const createData = {
+          myBookId: myBookId,
+          memoPage: page,
+          content: memo,
+          memoImgUrl: finalImages,
+        };
+        await dispatch(addMemo(createData));
+      } else {
+        const updateData = {
+          memoPage: page,
+          content: memo,
+          memoImgUrl: finalImages,
+        };
+        await dispatch(editMemo({ memoId, updateData }));
+      }
     } else {
-      const updateData = {
-        memoPage: page,
-        content: memo,
-        memoImgUrl: finalImages,
-      };
-      await dispatch(editMemo({ memoId, updateData }));
+      if (mode === "작성하기") {
+        const createData = {
+          myBookId: myBookId,
+          content: memo,
+          ImgUrl: finalImages,
+        };
+        await dispatch(addReport(createData));
+      } else {
+        const updateData = {
+          content: memo,
+          bookReportImgUrl: finalImages,
+        };
+        await dispatch(editReport({ bookReportId, updateData }));
+      }
     }
 
     onClose();
@@ -127,11 +145,11 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
   };
 
   const getHeightByLabel = (label: string): string => {
-    return label === "메모" ? "h-1/3" : "h-[340px]";
+    return label === "메모" ? "h-1/3" : "h-1/2";
   };
 
   return (
-    <div className="flex flex-col items-center justify-center m-[5%] h-full pb-[50px]">
+    <div className="flex flex-col items-center justify-center m-[5%] h-full pb-[75px]">
       <p className="font-bold text-xl leading-normal mb-[10%]">
         {label} {mode}
       </p>
@@ -139,18 +157,18 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
         value={memo}
         onChange={handleMemoChange}
         placeholder={getPlaceholder(label)}
-        className={`w-[90%] ${getHeightByLabel(label)} border-2 border-gray-300 p-2 rounded-md outline-none mb-7 font-light text-xs`}
+        className={`w-[90%] ${getHeightByLabel(label)} border-2 border-gray-300 p-2 rounded-md outline-none mb-6 font-light text-xs`}
       />
       {label === "메모" && (
         <input
           type="text"
           placeholder="페이지를 입력해주세요"
-          className="w-[80%] border-b-2 border-gray focus:border-black outline-none text-gray-500 text-sm py-3 mb-7"
+          className="w-[80%] border-b-2 border-gray focus:border-black outline-none text-gray-500 text-sm py-3 mb-6"
           value={page ?? 0}
           onChange={handlePageChange}
         />
       )}
-      <div className="flex justify-start items-center w-[90%] h-[10%] my-5">
+      <div className="flex justify-start items-center w-[90%] h-[10%] my-3">
         <div
           onClick={handleIconClick}
           className="me-4 aspect-square h-full border-2 border-gray-300 p-2 rounded-md outline-none mb-5 flex items-center justify-center"

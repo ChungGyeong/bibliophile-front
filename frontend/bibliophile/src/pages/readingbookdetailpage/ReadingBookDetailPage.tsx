@@ -11,7 +11,9 @@ import BottomSheetReview from "../../components/bottomSheet/BottomSheetReivew";
 import Modal from "../../components/common/Modal";
 import { useDispatch, useSelector } from "react-redux";
 import { loadMyMemoList } from "@/redux/memoSlice.ts";
+import { loadMyReport } from "@/redux/reportSlice.ts";
 import { AppDispatch, RootState } from "@/redux/store.ts";
+import { useParams } from "react-router-dom";
 // TODO: API 명세 수정되면 바뀔 가능성 있음 (bookReviewId, reviewId 어떻게 주는지 issue)
 interface ReadingBookDetailResponse {
   bookId: number;
@@ -29,19 +31,6 @@ interface ReadingBookDetailResponse {
   completionReadingTime: string;
   createdDate: string;
   lastModifyDate: string;
-}
-
-interface MemoResponse {
-  memoId: number;
-  content: string;
-  memoPage: number;
-  createdDate: string;
-  lastModifyDate: string;
-  memoImgList: Array<{
-    imgUrl: string;
-    createdDate: string;
-    lastModifyDate: string;
-  }>;
 }
 
 interface BookReportResponse {
@@ -70,18 +59,20 @@ interface BookReviewResponse {
 
 const ReadingBookDetailPage: React.FC = () => {
   const [bookDetail, setBookDetail] = useState<ReadingBookDetailResponse | null>(null);
-  // const [memos, setMemos] = useState<MemoResponse[]>([]);
   const [review, setReview] = useState<BookReviewResponse | null>(null);
-  const [report, setReport] = useState<BookReportResponse | null>(null);
   const [isPageOpen, setIsPageOpen] = useState(false);
   const [isMemoOpen, setIsMemoOpen] = useState(false);
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [isReviewOpen, setIsReviewOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { myBookId } = useParams<{ myBookId: string }>();
   const dispatch: AppDispatch = useDispatch();
 
   const memos = useSelector((state: RootState) => state.memo.myMemoList.data);
-  const loading = useSelector((state: RootState) => state.memo.loading);
+  const memoLoading = useSelector((state: RootState) => state.memo.loading);
+  const report = useSelector((state: RootState) => state.report.data.data);
+  const reportLoading = useSelector((state: RootState) => state.report.loading);
+
   useEffect(() => {
     // TODO: 추후 API 호출로 변경
     const dummyBookDetail: ReadingBookDetailResponse = {
@@ -103,43 +94,8 @@ const ReadingBookDetailPage: React.FC = () => {
     };
     setBookDetail(dummyBookDetail);
 
-    dispatch(loadMyMemoList(41));
-    // const dummyMemos: MemoResponse[] = [
-    //   {
-    //     memoId: 1,
-    //     content: "메모 내용이 여기에 들어갑니다.",
-    //     memoPage: 20,
-    //     createdDate: "2024-02-18 07:53:23.795698",
-    //     lastModifyDate: "2024-02-18 07:53:23.795698",
-    //     memoImgList: [
-    //       {
-    //         imgUrl: "https://example.com/memo_image1.jpg",
-    //         createdDate: "2024-02-18 07:53:23.795698",
-    //         lastModifyDate: "2024-02-18 07:53:23.795698",
-    //       },
-    //       {
-    //         imgUrl: "https://example.com/memo_image2.jpg",
-    //         createdDate: "2024-02-18 07:53:23.795698",
-    //         lastModifyDate: "2024-02-18 07:53:23.795698",
-    //       },
-    //     ],
-    //   },
-    //   {
-    //     memoId: 2,
-    //     content: "또 다른 메모 내용이 여기에 들어갑니다.",
-    //     memoPage: 50,
-    //     createdDate: "2024-02-19 08:23:11.124567",
-    //     lastModifyDate: "2024-02-19 08:23:11.124567",
-    //     memoImgList: [
-    //       {
-    //         imgUrl: "https://example.com/memo_image3.jpg",
-    //         createdDate: "2024-02-19 08:23:11.124567",
-    //         lastModifyDate: "2024-02-19 08:23:11.124567",
-    //       },
-    //     ],
-    //   },
-    // ];
-    // setMemos(dummyMemos);
+    dispatch(loadMyMemoList(Number(myBookId)));
+    dispatch(loadMyReport(Number(myBookId)));
 
     const dummyReview: BookReviewResponse | null = {
       reviewId: 1,
@@ -151,23 +107,6 @@ const ReadingBookDetailPage: React.FC = () => {
       lastModifyDate: "2024-02-18 07:53:23.795698",
     };
     setReview(dummyReview);
-
-    const dummyBookReport: BookReportResponse | null = {
-      bookReportId: 1,
-      content: "독후감 내용이 여기에 들어갑니다.",
-      imgUrl: "https://example.com/report_image.jpg",
-      isHost: true,
-      bookReportImgList: [
-        {
-          imgUrl: "https://example.com/report_image.jpg",
-          createdDate: "2024-02-18 07:53:23.795698",
-          lastModifyDate: "2024-02-18 07:53:23.795698",
-        },
-      ],
-      createdDate: "2024-02-18 07:53:23.795698",
-      lastModifyDate: "2024-02-18 07:53:23.795698",
-    };
-    setReport(dummyBookReport);
   }, []);
 
   const handlePageBottomSheetToggle = () => {
@@ -179,11 +118,12 @@ const ReadingBookDetailPage: React.FC = () => {
   };
 
   const handleReportBottomSheetToggle = () => {
+    dispatch(loadMyReport(Number(myBookId)));
     setIsReportOpen(!isReportOpen);
   };
 
   const handleReviewBottomSheetToggle = () => {
-    dispatch(loadMyMemoList(41));
+    dispatch(loadMyMemoList(Number(myBookId)));
     setIsReviewOpen(!isReviewOpen);
   };
 
@@ -203,10 +143,9 @@ const ReadingBookDetailPage: React.FC = () => {
     return <div></div>;
   }
 
-  if (loading) {
+  if (memoLoading || reportLoading) {
     return <div>Loading...</div>;
   }
-  console.log(loading, memos);
 
   return (
     <div>
@@ -232,7 +171,7 @@ const ReadingBookDetailPage: React.FC = () => {
               onClose={handleMemoBottomSheetToggle}
               label="메모"
               mode="작성하기"
-              myBookId={41}
+              myBookId={Number(myBookId)}
             />
           </BottomSheet>
         )}
@@ -243,6 +182,7 @@ const ReadingBookDetailPage: React.FC = () => {
               onClose={handleReportBottomSheetToggle}
               label="독후감"
               mode="작성하기"
+              myBookId={Number(myBookId)}
             />
           </BottomSheet>
         )}
@@ -325,7 +265,7 @@ const ReadingBookDetailPage: React.FC = () => {
                 id={report.bookReportId}
                 type="report"
                 content={report.content}
-                imgUrl={report.imgUrl}
+                imgUrl={report.bookReportImgUrlList[0]}
                 createdDate={report.createdDate}
               />
             </div>
