@@ -1,4 +1,3 @@
-import { first } from "lodash";
 import React from "react";
 
 interface ButtonProps {

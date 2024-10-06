@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { BookmarkStateType } from "@/types/bookmarks";
 import { getBookmarkList, createBookmark, deleteBookmark } from "@/api/bookmarks";
-import { stat } from "fs";
 
 const initialState: BookmarkStateType = {
   loading: false,

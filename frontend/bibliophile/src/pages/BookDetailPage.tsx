@@ -193,6 +193,10 @@ const BookDetailPage: React.FC = () => {
     </div>;
   }
 
+  if (myBookError) {
+    <div>Error: {myBookError}</div>;
+  }
+
   return (
     <div className="my-[40px]">
       {isModalOpen && (
