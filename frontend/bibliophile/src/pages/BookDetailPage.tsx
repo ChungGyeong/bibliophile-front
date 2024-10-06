@@ -10,7 +10,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store.ts";
 import { loadBookDetailByBookId } from "@/redux/bookSlice.ts";
 import { loadMyBookId, addMyBook } from "@/redux/myBookSlice";
-import loadingGif from "/images/loading.gif";
 
 interface ReviewDataResponse {
   reviewId: number;
@@ -190,7 +189,7 @@ const BookDetailPage: React.FC = () => {
 
   if (myBookLoading || bookLoading) {
     <div className="fixed inset-0 flex justify-center items-center">
-      <img src={loadingGif} alt="Loading..." />
+      <img src="/images/loading.gif" alt="Loading..." />
     </div>;
   }
 

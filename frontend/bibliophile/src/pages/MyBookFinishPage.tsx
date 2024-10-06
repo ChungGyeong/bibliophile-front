@@ -4,7 +4,6 @@ import { RootState, AppDispatch } from "@/redux/store";
 import { loadMyBookList } from "@/redux/myBookSlice";
 import BookCardItem from "../components/bookCard/BookCardItem";
 import BookCardGrid from "@/components/bookCard/BookCardGrid.tsx";
-import loadingGif from "/images/loading.gif";
 
 const MyBookFinishPage: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -17,7 +16,7 @@ const MyBookFinishPage: React.FC = () => {
   if (loading) {
     return (
       <div className="fixed inset-0 flex justify-center items-center">
-        <img src={loadingGif} alt="Loading..." />
+        <img src="/images/loading.gif" alt="Loading..." />
       </div>
     );
   }

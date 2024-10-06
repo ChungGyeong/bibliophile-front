@@ -3,7 +3,6 @@ import ReactApexChart from "react-apexcharts";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/redux/store";
 import { loadMyBookStatistics } from "@/redux/myBookStatisticsSlice";
-import loadingGif from "/images/loading.gif";
 
 type ChartOptions = {
   chart: {
@@ -155,7 +154,7 @@ const PieChart: React.FC = () => {
   if (loading) {
     return (
       <div className="fixed inset-0 flex justify-center items-center">
-        <img src={loadingGif} alt="Loading..." />
+        <img src="/images/loading.gif" alt="Loading..." />
       </div>
     );
   }

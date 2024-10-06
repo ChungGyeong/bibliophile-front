@@ -21,7 +21,6 @@ import {
 } from "@/redux/myBookSlice.ts";
 import { AppDispatch, RootState } from "@/redux/store.ts";
 import { useNavigate, useParams } from "react-router-dom";
-import loadingGif from "/public/images/loading.gif";
 
 const ReadingBookDetailPage: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -113,7 +112,7 @@ const ReadingBookDetailPage: React.FC = () => {
   if (loading) {
     return (
       <div className="fixed inset-0 flex justify-center items-center">
-        <img src={loadingGif} alt="Loading..." />
+        <img src="/images/loading.gif" alt="Loading..." />
       </div>
     );
   }
@@ -129,7 +128,7 @@ const ReadingBookDetailPage: React.FC = () => {
   if (memoLoading || reportLoading || reviewLoading) {
     return (
       <div className="fixed inset-0 flex justify-center items-center">
-        <img src={loadingGif} alt="Loading..." />
+        <img src="/images/loading.gif" alt="Loading..." />
       </div>
     );
   }

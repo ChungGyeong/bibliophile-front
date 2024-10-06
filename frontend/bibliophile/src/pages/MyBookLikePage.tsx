@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/redux/store";
 import { loadBookmarkList } from "@/redux/bookmarkSlice";
 import BookCardItem from "../components/bookCard/BookCardItem";
-import loadingGif from "/images/loading.gif";
 
 const MyBookLikePage: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -16,7 +15,7 @@ const MyBookLikePage: React.FC = () => {
   if (loading) {
     return (
       <div className="fixed inset-0 flex justify-center items-center">
-        <img src={loadingGif} alt="Loading..." />
+        <img src="/images/loading.gif" alt="Loading..." />
       </div>
     );
   }
