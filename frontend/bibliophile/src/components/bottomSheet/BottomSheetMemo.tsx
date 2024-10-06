@@ -97,7 +97,6 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
           content: memo,
           bookReportImgUrl: finalImages,
         };
-        console.log("독후감수정");
         await dispatch(editReport({ bookReportId, updateData }));
       }
     }
