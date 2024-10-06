@@ -15,7 +15,8 @@ const TagItemList: React.FC<TagItemListProps> = React.memo(({ layoutType, tags, 
   const handleTagClick = (tag: ClassificationType) => {
     if (tags.includes(tag)) {
       let newTags = tags.filter(t => t !== tag);
-      if (newTags.length < 1) alert("관심사는 1개 이상 선택해주세요!");
+      if (layoutType !== "bookSelect" && newTags.length < 1)
+        alert("관심사는 1개 이상 선택해주세요!");
       else setTags([...newTags]);
     } else if (tags.length < 3) {
       setTags([...tags, tag]);
