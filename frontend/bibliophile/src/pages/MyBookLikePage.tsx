@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/redux/store";
 import { loadBookmarkList } from "@/redux/bookmarkSlice";
 import BookCardItem from "../components/bookCard/BookCardItem";
-import loadingGif from "/public/images/loading.gif";
+import loadingGif from "/images/loading.gif";
 
 const MyBookLikePage: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -34,7 +34,7 @@ const MyBookLikePage: React.FC = () => {
               title={book.title}
               thumbnail={book.thumbnail}
               authors={book.authors}
-              completionReadingTime={book.lastModifyDate}
+              isBookmarked={true}
             />
           ))
         ) : (

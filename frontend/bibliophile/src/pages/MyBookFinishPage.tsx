@@ -4,7 +4,7 @@ import { RootState, AppDispatch } from "@/redux/store";
 import { loadMyBookList } from "@/redux/myBookSlice";
 import BookCardItem from "../components/bookCard/BookCardItem";
 import BookCardGrid from "@/components/bookCard/BookCardGrid.tsx";
-import loadingGif from "/public/images/loading.gif";
+import loadingGif from "/images/loading.gif";
 
 const MyBookFinishPage: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();

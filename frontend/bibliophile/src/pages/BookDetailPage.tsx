@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store.ts";
 import { loadBookDetailByBookId } from "@/redux/bookSlice.ts";
 import { loadMyBookId, addMyBook } from "@/redux/myBookSlice";
-import loadingGif from "/public/images/loading.gif";
+import loadingGif from "/images/loading.gif";
 
 interface ReviewDataResponse {
   reviewId: number;
