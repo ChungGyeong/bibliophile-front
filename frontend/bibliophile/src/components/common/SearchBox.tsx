@@ -5,24 +5,18 @@ import InputBox from "./InputBox";
 interface SearchBoxProps {
   value?: string;
   handleChangeSearchBox: ChangeEventHandler<HTMLInputElement>;
+  handleClickSearchIcon: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-const SearchBox: React.FC<SearchBoxProps> = ({ value = "", handleChangeSearchBox }) => {
+const SearchBox: React.FC<SearchBoxProps> = ({
+  value = "",
+  handleChangeSearchBox,
+  handleClickSearchIcon,
+}) => {
   const navigate = useNavigate();
 
-  const handleSearchIconClick = () => {
-    if (value) {
-      // TODO: API 호출
-    }
-  };
   const handleBarcodeIconClick = () => {
-    // TODO: 바코드 페이지로 이동
     navigate("/barcode");
-  };
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      handleSearchIconClick();
-    }
   };
 
   return (
@@ -33,11 +27,10 @@ const SearchBox: React.FC<SearchBoxProps> = ({ value = "", handleChangeSearchBox
           placeholder="검색어를 입력해주세요"
           value={value}
           handleChangeInput={handleChangeSearchBox}
-          onKeyDown={handleKeyDown}
         />
       </div>
 
-      <button onClick={handleSearchIconClick}>
+      <button onClick={handleClickSearchIcon}>
         <i className="fi fi-rr-search text-xl" />
       </button>
 

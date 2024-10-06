@@ -5,6 +5,10 @@ import { imageReducer } from "@/redux/imageSlice.ts";
 import { reportReducer } from "@/redux/reportSlice";
 import { reviewReducer } from "@/redux/reviewSlice";
 import { streakReducer } from "@/redux/streakSlice";
+import { bookReducer } from "@/redux/bookSlice.ts";
+import { myBookReducer } from "@/redux/myBookSlice.ts";
+import { myBookStatisticsReducer } from "@/redux/myBookStatisticsSlice.ts";
+import { bookmarkReducer } from "@/redux/bookmarkSlice.ts";
 
 const store = configureStore({
   reducer: {
@@ -14,6 +18,10 @@ const store = configureStore({
     report: reportReducer,
     review: reviewReducer,
     streak: streakReducer,
+    book: bookReducer,
+    myBook: myBookReducer,
+    myBookStatistics: myBookStatisticsReducer,
+    bookmark: bookmarkReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

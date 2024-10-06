@@ -36,14 +36,6 @@ const MemoPage: React.FC = () => {
     fetchMemoData();
   }, [memoId]);
 
-  useEffect(() => {
-    if (loading) {
-      console.log("로딩 중...");
-    } else {
-      console.log("로딩 완료");
-    }
-  }, [loading]);
-
   const handleModalClose = () => {
     fetchMemoData();
     setIsModalOpen(false);
@@ -115,27 +107,25 @@ const MemoPage: React.FC = () => {
 
       <Carousel className="w-full" setApi={setApi}>
         <CarouselContent>
-          {data?.data?.memoImgUrlList && Array.isArray(data.data.memoImgUrlList) ? (
-            data.data.memoImgUrlList.map((imgUrl, index) => (
-              <CarouselItem key={index}>
-                <div className="w-full text-center">
-                  <img
-                    src={imgUrl}
-                    alt={`사진 ${index + 1}`}
-                    className="w-full h-64 object-cover rounded-lg"
-                  />
-                </div>
-              </CarouselItem>
-            ))
-          ) : (
-            <div>No Images Available</div>
-          )}
+          {data?.memoImgUrlList && Array.isArray(data.memoImgUrlList)
+            ? data.memoImgUrlList.map((imgUrl, index) => (
+                <CarouselItem key={index}>
+                  <div className="w-full text-center">
+                    <img
+                      src={imgUrl}
+                      alt={`사진 ${index + 1}`}
+                      className="w-full h-64 object-cover rounded-lg"
+                    />
+                  </div>
+                </CarouselItem>
+              ))
+            : null}
         </CarouselContent>
       </Carousel>
 
       <div className="flex justify-center mt-4 space-x-2">
-        {data?.data?.memoImgUrlList &&
-          data.data.memoImgUrlList.map((_, index) => (
+        {data?.memoImgUrlList &&
+          data.memoImgUrlList.map((_, index) => (
             <div
               key={index}
               onClick={() => handleDotClick(index)}
@@ -147,13 +137,13 @@ const MemoPage: React.FC = () => {
       </div>
 
       <p className="font-regular text-lg pt-2">
-        {data?.data?.memoPage ? `${data.data.memoPage}p` : "페이지 정보 없음"}
+        {data?.memoPage ? `${data.memoPage}p` : "페이지 정보 없음"}
       </p>
       <p className="font-light text-base leading-7 pt-2 whitespace-pre-line">
-        {data?.data?.content || "내용 없음"}
+        {data?.content || "내용 없음"}
       </p>
       <p className="font-light text-sm text-medium-gray pt-2 text-right">
-        {data?.data?.createdDate ? data.data.createdDate.split("T")[0] : "날짜 정보 없음"}
+        {data?.createdDate ? data.createdDate.split("T")[0] : "날짜 정보 없음"}
       </p>
 
       <Modal
@@ -168,10 +158,10 @@ const MemoPage: React.FC = () => {
             <BottomSheetMemo
               label="메모"
               mode="수정하기"
-              memoId={memoId}
-              content={data?.data?.content}
-              memoPage={data?.data?.memoPage}
-              memoImgList={data?.data?.memoImgUrlList}
+              memoId={Number(memoId)}
+              content={data?.content}
+              memoPage={data?.memoPage}
+              memoImgList={data?.memoImgUrlList}
               onClose={handleModalClose}
             />
           </BottomSheet>

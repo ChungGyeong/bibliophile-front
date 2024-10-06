@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Button from "../../components/common/Button";
+import DoubleButton from "../../components/common/DoubleButton";
 import ProgressBar from "../../components/common/ProgressBar";
 import MemoCard from "../../components/common/MemoCard";
 import ReviewCard from "../../components/review/ReviewCard";
@@ -13,68 +13,45 @@ import { useDispatch, useSelector } from "react-redux";
 import { loadMyMemoList } from "@/redux/memoSlice.ts";
 import { loadMyReport } from "@/redux/reportSlice.ts";
 import { loadMyReview } from "@/redux/reviewSlice";
+import {
+  loadMyBook,
+  editMyBookStatus,
+  editReadingPage,
+  removeMyBook,
+} from "@/redux/myBookSlice.ts";
 import { AppDispatch, RootState } from "@/redux/store.ts";
-import { useParams } from "react-router-dom";
-// TODO: API 명세 수정되면 바뀔 가능성 있음 (bookReviewId, reviewId 어떻게 주는지 issue)
-interface ReadingBookDetailResponse {
-  bookId: number;
-  myBookId: number;
-  totalPage: number;
-  readingPage: number;
-  readingPercent: number;
-  totalReadingTime: string;
-  readingStatus: "READING" | "READ";
-  isBookmarked: boolean;
-  title: string;
-  thumbnail: string;
-  authors: string;
-  publisher: string;
-  completionReadingTime: string;
-  createdDate: string;
-  lastModifyDate: string;
-}
+import { useNavigate, useParams } from "react-router-dom";
 
 const ReadingBookDetailPage: React.FC = () => {
-  const [bookDetail, setBookDetail] = useState<ReadingBookDetailResponse | null>(null);
+  const dispatch: AppDispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { book, loading, error } = useSelector((state: RootState) => state.myBook);
+  const { myBookId } = useParams<{ myBookId: string }>();
+  const [modalType, setModalType] = useState<
+    "confirmReading" | "confirmRead" | "confirmDelete" | null
+  >(null);
+
   const [isPageOpen, setIsPageOpen] = useState(false);
   const [isMemoOpen, setIsMemoOpen] = useState(false);
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [isReviewOpen, setIsReviewOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const { myBookId } = useParams<{ myBookId: string }>();
-  const dispatch: AppDispatch = useDispatch();
 
-  const memos = useSelector((state: RootState) => state.memo.myMemoList.data);
+  const memos = useSelector((state: RootState) => state.memo.myMemoList);
   const memoLoading = useSelector((state: RootState) => state.memo.loading);
-  const report = useSelector((state: RootState) => state.report.data.data);
+  const report = useSelector((state: RootState) => state.report.data);
   const reportLoading = useSelector((state: RootState) => state.report.loading);
-  const review = useSelector((state: RootState) => state.review.data.data);
+  const review = useSelector((state: RootState) => state.review.data);
   const reviewLoading = useSelector((state: RootState) => state.review.loading);
-  useEffect(() => {
-    // TODO: 추후 API 호출로 변경
-    const dummyBookDetail: ReadingBookDetailResponse = {
-      bookId: 8007,
-      myBookId: 1,
-      totalPage: 100,
-      readingPage: 20,
-      readingPercent: 20,
-      totalReadingTime: "02:30:45",
-      readingStatus: "READING",
-      isBookmarked: true,
-      title: "열다섯에 곰이라니",
-      thumbnail: "https://image.yes24.com/Goods/116422051/XL",
-      authors: "추정경",
-      publisher: "다산책방",
-      completionReadingTime: "2024-02-18 07:53:23.795698",
-      createdDate: "2024-02-18 07:53:23.795698",
-      lastModifyDate: "2024-02-18 07:53:23.795698",
-    };
-    setBookDetail(dummyBookDetail);
 
-    dispatch(loadMyMemoList(Number(myBookId)));
-    dispatch(loadMyReport(Number(myBookId)));
-    dispatch(loadMyReview(Number(myBookId)));
-  }, []);
+  useEffect(() => {
+    if (myBookId) {
+      dispatch(loadMyBook(Number(myBookId)));
+      dispatch(loadMyMemoList(Number(myBookId)));
+      dispatch(loadMyReport(Number(myBookId)));
+      dispatch(loadMyReview(Number(myBookId)));
+    }
+  }, [dispatch, myBookId]);
 
   const handlePageBottomSheetToggle = () => {
     setIsPageOpen(!isPageOpen);
@@ -95,45 +72,93 @@ const ReadingBookDetailPage: React.FC = () => {
     setIsReviewOpen(!isReviewOpen);
   };
 
-  const handleModalToggle = () => {
-    setIsModalOpen(!isModalOpen);
+  const handleModalToggle = (type: "confirmReading" | "confirmRead" | "confirmDelete" | null) => {
+    setModalType(type);
   };
 
-  const handleConfirmReadingComplete = () => {
-    // TODO: 추후 API 호출로 readingStatus "READ"로 변경
-    setIsModalOpen(false);
-    if (bookDetail) {
-      setBookDetail(prev => prev && { ...prev, readingStatus: "READ" });
+  const handleConfirm = () => {
+    if (book) {
+      if (modalType === "confirmReading") {
+        dispatch(editMyBookStatus({ myBookId: book.myBookId, status: "READING" }));
+      } else if (modalType === "confirmRead") {
+        dispatch(editMyBookStatus({ myBookId: book.myBookId, status: "READ" }));
+      } else if (modalType === "confirmDelete") {
+        dispatch(removeMyBook(book.myBookId)).then(() => {
+          navigate("/mybook/reading", { replace: true });
+          setTimeout(() => {
+            window.location.reload();
+          });
+        });
+      }
     }
+    setModalType(null);
+  };
+
+  const handleReadingPageUpdate = (page: number) => {
+    if (book) {
+      dispatch(editReadingPage({ myBookId: book.myBookId, page }));
+    }
+  };
+
+  const handleSavePage = (page: number) => {
+    handleReadingPageUpdate(page);
+    setIsPageOpen(false);
   };
 
   const reloadfuction = async () => {
     await dispatch(loadMyReview(Number(myBookId)));
   };
 
-  if (!bookDetail) {
-    return <div></div>;
+  if (loading) {
+    return (
+      <div className="fixed inset-0 flex justify-center items-center">
+        <img src="/images/loading.gif" alt="Loading..." />
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div>error: {error}</div>;
+  }
+
+  if (!book) {
+    return <div>나의 책 정보가 없습니다</div>;
   }
 
   if (memoLoading || reportLoading || reviewLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="fixed inset-0 flex justify-center items-center">
+        <img src="/images/loading.gif" alt="Loading..." />
+      </div>
+    );
   }
 
   return (
     <div>
-      {isModalOpen && (
+      {modalType !== null && (
         <Modal
-          isOpen={isModalOpen}
-          handleClickClose={handleModalToggle}
-          title="정말 끝까지 다 요리했나요?"
-          handleClickConfirm={handleConfirmReadingComplete}
+          isOpen={modalType !== null}
+          handleClickClose={() => setModalType(null)}
+          title={
+            modalType === "confirmReading"
+              ? "정말 다시 요리하나요?"
+              : modalType === "confirmRead"
+                ? "정말 끝까지 다 요리했나요?"
+                : modalType === "confirmDelete"
+                  ? "정말 내 책장에서 삭제하나요?"
+                  : ""
+          }
+          handleClickConfirm={handleConfirm}
         />
       )}
 
       <div className="relative w-screen -left-[5.5%]">
         {isPageOpen && (
           <BottomSheet height={440} handleCloseBottomSheet={handlePageBottomSheetToggle}>
-            <BottomSheetPage />
+            <BottomSheetPage
+              onSave={(page: number) => handleSavePage(page)}
+              totalPage={book.totalPage}
+            />
           </BottomSheet>
         )}
 
@@ -162,24 +187,24 @@ const ReadingBookDetailPage: React.FC = () => {
         {isReviewOpen && (
           <BottomSheet height={700} handleCloseBottomSheet={handleReviewBottomSheetToggle}>
             <BottomSheetReview
-              bookId={bookDetail.bookId}
-              thumbnail={bookDetail.thumbnail}
+              bookId={book.bookId}
+              thumbnail={book.thumbnail}
               onClose={handleReviewBottomSheetToggle}
             />
           </BottomSheet>
         )}
       </div>
-      {bookDetail?.readingStatus === "READING" ? (
+      {book?.readingStatus === "READING" ? (
         <div>
           <div className="mb-[40px]">
             <BookInfo
-              bookId={bookDetail.bookId}
-              thumbnail={bookDetail.thumbnail}
-              title={bookDetail.title}
-              authors={bookDetail.authors}
-              publisher={bookDetail.publisher}
-              createDate={bookDetail.createdDate}
-              totalReadingTime={bookDetail.totalReadingTime}
+              bookId={book.bookId}
+              thumbnail={book.thumbnail}
+              title={book.title}
+              authors={book.authors}
+              publisher={book.publisher}
+              createDate={book.createdDate}
+              totalReadingTime={book.totalReadingTime}
             />
           </div>
 
@@ -191,29 +216,46 @@ const ReadingBookDetailPage: React.FC = () => {
                   클릭해서 페이지를 수정하세요!
                 </span>
                 <span className="font-medium text-[14px]" onClick={handlePageBottomSheetToggle}>
-                  {bookDetail.readingPage} / {bookDetail.totalPage} p
+                  {book.readingPage} / {book.totalPage} p
                 </span>
               </div>
-              <ProgressBar isThin={false} percent={bookDetail.readingPercent} />
+              <ProgressBar isThin={false} percent={book.readingPercent} />
             </div>
-            <Button label="끝까지 요리했어요!" handleClickButton={handleModalToggle} />
+            <DoubleButton
+              firstLabel="끝까지 요리했어요!"
+              secondLabel="책장에서 지우기"
+              onFirstClick={() => handleModalToggle("confirmRead")}
+              onSecondClick={() => handleModalToggle("confirmDelete")}
+            />
           </div>
         </div>
       ) : (
         <div>
           <div className="mb-[40px]">
             <BookInfo
-              bookId={bookDetail.bookId}
-              thumbnail={bookDetail.thumbnail}
-              title={bookDetail.title}
-              authors={bookDetail.authors}
-              publisher={bookDetail.publisher}
-              createDate={bookDetail.createdDate}
-              totalReadingTime={bookDetail.totalReadingTime}
+              bookId={book.bookId}
+              thumbnail={book.thumbnail}
+              title={book.title}
+              authors={book.authors}
+              publisher={book.publisher}
+              createDate={book.createdDate}
+              totalReadingTime={book.totalReadingTime}
             />
           </div>
 
-          {review ? (
+          <div>
+            <h2 className="font-semibold text-[18px] mb-[10px]">여우가 먹은 요리예요!</h2>
+            <div className="mb-[40px]">
+              <DoubleButton
+                firstLabel="다시 요리하기"
+                secondLabel="책장에서 지우기"
+                onFirstClick={() => handleModalToggle("confirmReading")}
+                onSecondClick={() => handleModalToggle("confirmDelete")}
+              />
+            </div>
+          </div>
+
+          {review && review.reviewId !== 0 ? (
             <div>
               <h2 className="font-semibold text-[18px] mb-[10px]">리뷰</h2>
               <ReviewCard
@@ -236,14 +278,19 @@ const ReadingBookDetailPage: React.FC = () => {
             </div>
           )}
 
-          {report ? (
+          {report && report.bookReportId !== 0 ? (
             <div className="mt-[40px]">
               <h2 className="font-semibold text-[18px] mb-[10px]">독후감</h2>
               <MemoCard
                 id={report.bookReportId}
                 type="report"
                 content={report.content}
-                imgUrl={report.bookReportImgUrlList[0]}
+                imgUrl={
+                  Array.isArray(report.bookReportImgUrlList) &&
+                  report.bookReportImgUrlList.length > 0
+                    ? report.bookReportImgUrlList[0]
+                    : ""
+                }
                 createdDate={report.createdDate}
               />
             </div>

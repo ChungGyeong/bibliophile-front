@@ -35,15 +35,6 @@ const ReportPage: React.FC = () => {
     fetchReportData();
   }, [bookReportId]);
 
-  useEffect(() => {
-    if (loading) {
-      console.log("로딩 중...");
-    } else {
-      console.log("로딩 완료");
-      console.log(data);
-    }
-  }, [loading]);
-
   const handleDotClick = (index: number) => {
     api?.scrollTo(index);
   };
@@ -115,34 +106,42 @@ const ReportPage: React.FC = () => {
 
       <Carousel className="w-full" setApi={setApi}>
         <CarouselContent>
-          {data.data.bookReportImgUrlList.map((image, index) => (
-            <CarouselItem key={index}>
-              <div className="w-full text-center">
-                <img
-                  src={image}
-                  alt={`사진 ${index + 1}`}
-                  className="w-full h-64 object-cover rounded-lg"
-                />
-              </div>
-            </CarouselItem>
-          ))}
+          {Array.isArray(data.bookReportImgUrlList) && data.bookReportImgUrlList.length > 0
+            ? data.bookReportImgUrlList.map((image, index) => (
+                <CarouselItem key={index}>
+                  <div className="w-full text-center">
+                    <img
+                      src={image}
+                      alt={`사진 ${index + 1}`}
+                      className="w-full h-64 object-cover rounded-lg"
+                    />
+                  </div>
+                </CarouselItem>
+              ))
+            : null}
         </CarouselContent>
       </Carousel>
 
-      <div className="flex justify-center mt-4 space-x-2">
-        {data.data.bookReportImgUrlList.map((_, index) => (
-          <div
-            key={index}
-            onClick={() => handleDotClick(index)}
-            className={`w-2 h-2 rounded-full cursor-pointer ${
-              currentImageIndex === index ? "bg-orange" : "bg-soft-gray"
-            }`}
-          ></div>
-        ))}
-      </div>
-      <p className="font-light text-lg leading-7 pt-4 whitespace-pre-line">{data.data.content}</p>
+      {Array.isArray(data.bookReportImgUrlList) && data.bookReportImgUrlList.length > 0 ? (
+        <div className="flex justify-center mt-4 space-x-2">
+          {data.bookReportImgUrlList.map((_, index) => (
+            <div
+              key={index}
+              onClick={() => handleDotClick(index)}
+              className={`w-2 h-2 rounded-full cursor-pointer ${
+                currentImageIndex === index ? "bg-orange" : "bg-soft-gray"
+              }`}
+            ></div>
+          ))}
+        </div>
+      ) : null}
+
+      <p className="font-light text-lg leading-7 pt-4 whitespace-pre-line">
+        {data.content || "No Content Available"}
+      </p>
+
       <p className="font-light text-sm text-medium-gray pt-2 text-right">
-        {data.data.createdDate.split("T")[0]}
+        {data.createdDate ? data.createdDate.split("T")[0] : "No Date Available"}
       </p>
 
       <Modal
@@ -157,9 +156,9 @@ const ReportPage: React.FC = () => {
             <BottomSheetMemo
               label="독후감"
               mode="수정하기"
-              bookReportId={bookReportId}
-              content={data.data.content}
-              memoImgList={data.data.bookReportImgUrlList}
+              bookReportId={Number(bookReportId)}
+              content={data.content}
+              memoImgList={data.bookReportImgUrlList}
               onClose={handleModalClose}
             />
           </BottomSheet>

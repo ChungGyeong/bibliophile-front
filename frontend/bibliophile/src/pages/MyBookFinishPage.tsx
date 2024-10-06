@@ -1,54 +1,46 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "@/redux/store";
+import { loadMyBookList } from "@/redux/myBookSlice";
 import BookCardItem from "../components/bookCard/BookCardItem";
 import BookCardGrid from "@/components/bookCard/BookCardGrid.tsx";
 
-// TODO: 추후 API로 불러오기
-const finishedBooks = [
-  {
-    myBookId: 1,
-    title: "책 먹는 여우",
-    authors: "프란치스카 비어만",
-    thumbnail: "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788934935018.jpg",
-    completionReadingTime: "2024-02-18",
-  },
-  {
-    myBookId: 1,
-    title: "책 먹는 여우",
-    authors: "프란치스카 비어만",
-    thumbnail: "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788934935018.jpg",
-    completionReadingTime: "2024-02-18",
-  },
-  {
-    myBookId: 1,
-    title: "책 먹는 여우",
-    authors: "프란치스카 비어만",
-    thumbnail: "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788934935018.jpg",
-    completionReadingTime: "2024-02-18",
-  },
-  {
-    myBookId: 1,
-    title: "책 먹는 여우",
-    authors: "프란치스카 비어만",
-    thumbnail: "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788934935018.jpg",
-    completionReadingTime: "2024-02-18",
-  },
-];
-
 const MyBookFinishPage: React.FC = () => {
+  const dispatch: AppDispatch = useDispatch();
+  const { bookList = [], loading, error } = useSelector((state: RootState) => state.myBook);
+
+  useEffect(() => {
+    dispatch(loadMyBookList({ status: "READ" }));
+  }, [dispatch]);
+
+  if (loading) {
+    return (
+      <div className="fixed inset-0 flex justify-center items-center">
+        <img src="/images/loading.gif" alt="Loading..." />
+      </div>
+    );
+  }
+
+  if (error) return <div>ERROR: {error}</div>;
+
   return (
     <div className="mt-[40px]">
-      <BookCardGrid>
-        {finishedBooks.map((book, idx) => (
-          <BookCardItem
-            key={idx}
-            bookId={book.myBookId}
-            title={book.title}
-            thumbnail={book.thumbnail}
-            authors={book.authors}
-            completionReadingTime={book.completionReadingTime}
-          />
-        ))}
-      </BookCardGrid>
+      {bookList.length > 0 ? (
+        <BookCardGrid>
+          {bookList.map((book, idx) => (
+            <BookCardItem
+              key={idx}
+              bookId={book.myBookId}
+              title={book.title}
+              thumbnail={book.thumbnail}
+              authors={book.authors}
+              completionReadingTime={book.completionReadingTime}
+            />
+          ))}
+        </BookCardGrid>
+      ) : (
+        <div>현재 다 읽은 책이 없습니다.</div>
+      )}
     </div>
   );
 };

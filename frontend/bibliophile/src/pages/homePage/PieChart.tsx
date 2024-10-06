@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "@/redux/store";
+import { loadMyBookStatistics } from "@/redux/myBookStatisticsSlice";
 
 type ChartOptions = {
   chart: {
@@ -46,14 +49,6 @@ type ChartOptions = {
     };
   };
 };
-
-const data = [
-  { kdc: "0", count: 3 },
-  { kdc: "1", count: 3 },
-  { kdc: "2", count: 2 },
-  { kdc: "9", count: 4 },
-  { kdc: "4", count: 5 },
-];
 
 const initialOptions: ChartOptions = {
   chart: {
@@ -104,44 +99,73 @@ const initialOptions: ChartOptions = {
 };
 
 const PieChart: React.FC = () => {
+  const dispatch: AppDispatch = useDispatch();
+  const { statisticList, loading, error } = useSelector(
+    (state: RootState) => state.myBookStatistics
+  );
   const [series, setSeries] = useState<number[]>([]);
   const [options, setOptions] = useState<ChartOptions>(initialOptions);
 
   useEffect(() => {
-    const newSeries = data.map(item => item.count);
-    const newLabels = data.map(item => {
-      switch (item.kdc) {
-        case "0":
-          return "총류";
-        case "1":
-          return "철학";
-        case "2":
-          return "종교";
-        case "3":
-          return "사회과학";
-        case "4":
-          return "자연과학";
-        case "5":
-          return "기술과학";
-        case "6":
-          return "예술";
-        case "7":
-          return "언어";
-        case "8":
-          return "문학";
-        case "9":
-          return "역사";
-        default:
-          return `기타`;
-      }
-    });
+    dispatch(loadMyBookStatistics());
+  }, [dispatch]);
 
-    setSeries(newSeries);
-    setOptions(prevOptions => ({
-      ...prevOptions,
-      labels: newLabels,
-    }));
-  }, []);
+  useEffect(() => {
+    if (!loading && !error && statisticList.length > 0) {
+      const sortedData = [...statisticList].sort((a, b) => b.count - a.count);
+      const topFiveData = sortedData.slice(0, 5);
+
+      const newSeries = topFiveData.map(item => item.count);
+      const newLabels = topFiveData.map(item => {
+        switch (item.kdc) {
+          case "0":
+            return "총류";
+          case "1":
+            return "철학";
+          case "2":
+            return "종교";
+          case "3":
+            return "사회과학";
+          case "4":
+            return "자연과학";
+          case "5":
+            return "기술과학";
+          case "6":
+            return "예술";
+          case "7":
+            return "언어";
+          case "8":
+            return "문학";
+          case "9":
+            return "역사";
+          default:
+            return `기타`;
+        }
+      });
+
+      setSeries(newSeries);
+      setOptions(prevOptions => ({
+        ...prevOptions,
+        labels: newLabels,
+      }));
+    }
+  }, [statisticList, loading, error]);
+
+  if (loading) {
+    return (
+      <div className="fixed inset-0 flex justify-center items-center">
+        <img src="/images/loading.gif" alt="Loading..." />
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div>에러 발생: {error}</div>;
+  }
+
+  if (series.length === 0) {
+    return <div>읽은 책이 없어 통계를 낼 수 없습니다.</div>;
+  }
 
   return (
     <div className="flex justify-center w-full h-full">
