@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Button from "../../components/common/Button";
 import DoubleButton from "../../components/common/DoubleButton";
 import ProgressBar from "../../components/common/ProgressBar";
 import MemoCard from "../../components/common/MemoCard";
@@ -34,12 +33,10 @@ const ReadingBookDetailPage: React.FC = () => {
     "confirmReading" | "confirmRead" | "confirmDelete" | null
   >(null);
 
-  // const [bookDetail, setBookDetail] = useState<ReadingBookDetailResponse | null>(null);
   const [isPageOpen, setIsPageOpen] = useState(false);
   const [isMemoOpen, setIsMemoOpen] = useState(false);
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [isReviewOpen, setIsReviewOpen] = useState(false);
-  // const [isModalOpen, setIsModalOpen] = useState(false);
 
   const memos = useSelector((state: RootState) => state.memo.myMemoList);
   const memoLoading = useSelector((state: RootState) => state.memo.loading);
@@ -225,20 +222,12 @@ const ReadingBookDetailPage: React.FC = () => {
               </div>
               <ProgressBar isThin={false} percent={book.readingPercent} />
             </div>
-            <div className="flex">
-              <div className="w-1/2 pr-2">
-                <DoubleButton
-                  label="끝까지 요리했어요!"
-                  handleClickButton={() => handleModalToggle("confirmRead")}
-                />
-              </div>
-              <div className="w-1/2 pl-2">
-                <DoubleButton
-                  label="책장에서 지우기"
-                  handleClickButton={() => handleModalToggle("confirmDelete")}
-                />
-              </div>
-            </div>
+            <DoubleButton
+              firstLabel="끝까지 요리했어요!"
+              secondLabel="책장에서 지우기"
+              onFirstClick={() => handleModalToggle("confirmRead")}
+              onSecondClick={() => handleModalToggle("confirmDelete")}
+            />
           </div>
         </div>
       ) : (
@@ -257,19 +246,13 @@ const ReadingBookDetailPage: React.FC = () => {
 
           <div>
             <h2 className="font-semibold text-[18px] mb-[10px]">여우가 먹은 요리예요!</h2>
-            <div className="mb-[40px] flex">
-              <div className="w-1/2 pr-2">
-                <DoubleButton
-                  label="다시 요리하기"
-                  handleClickButton={() => handleModalToggle("confirmReading")}
-                />
-              </div>
-              <div className="w-1/2 pl-2">
-                <DoubleButton
-                  label="책장에서 지우기"
-                  handleClickButton={() => handleModalToggle("confirmDelete")}
-                />
-              </div>
+            <div className="mb-[40px]">
+              <DoubleButton
+                firstLabel="다시 요리하기"
+                secondLabel="책장에서 지우기"
+                onFirstClick={() => handleModalToggle("confirmReading")}
+                onSecondClick={() => handleModalToggle("confirmDelete")}
+              />
             </div>
           </div>
 
