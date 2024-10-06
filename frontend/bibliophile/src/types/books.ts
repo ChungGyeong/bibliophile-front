@@ -23,12 +23,12 @@ export interface BookResponseType {
 }
 
 export interface RecommendBookRequestType {
-  id: number; // userId
   tags: ClassificationType[];
 }
 
 export interface PopularBookRequestType {
-  page: number;
-  size: number;
-  sort: string[];
+  gender: "MAN" | "WOMAN";
+  ageGroup: AgeType;
 }
+
+export type AgeType = 10 | 20 | 30 | 40 | 50;

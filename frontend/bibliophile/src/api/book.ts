@@ -1,9 +1,5 @@
 import { clientInstance } from "@/libs/http-clients.ts";
-import {
-  BookResponseType,
-  PopularBookRequestType,
-  RecommendBookRequestType,
-} from "@/types/books.ts";
+import { BookResponseType, RecommendBookRequestType } from "@/types/books.ts";
 
 export const getBookDetailByBookId = async (bookId: number) => {
   return await clientInstance
@@ -27,9 +23,16 @@ export const getRecommendedBookList = async (requestBody: RecommendBookRequestTy
     });
 };
 
-export const getPopularBookList = async (requestBody: PopularBookRequestType) => {
+export const getPopularBookList = async (gender: "MAN" | "WOMAN", ageGroup: number) => {
   return await clientInstance
-    .post("/book/popular", requestBody)
+    .get("/book/popular", {
+      params: {
+        gender: gender,
+        ageGroup: ageGroup,
+        page: 0,
+        size: 6,
+      },
+    })
     .then(response => {
       return response;
     })

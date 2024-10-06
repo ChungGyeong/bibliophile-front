@@ -40,8 +40,8 @@ export const loadRecommendedBookList = createAsyncThunk(
 
 export const loadPopularBookList = createAsyncThunk(
   "book/loadPopularBookList",
-  async (requestBody: PopularBookRequestType) => {
-    const response = await getPopularBookList(requestBody);
+  async ({ gender, ageGroup }: PopularBookRequestType) => {
+    const response = await getPopularBookList(gender, ageGroup);
     return response.data;
   }
 );
