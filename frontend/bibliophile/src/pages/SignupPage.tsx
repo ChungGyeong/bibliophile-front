@@ -88,22 +88,22 @@ const SignupPage: React.FC = () => {
       classification: inputs.classification.map(translateTagToEnglish),
     };
 
-    dispatch(signup(signupData));
-
-    if (error !== undefined) {
-      alert("회원가입에 실패했습니다. ㅠㅠ");
-      setInputs(prev => ({
-        ...prev,
-        nickname: "",
-        gender: "MAN",
-        birthday: "",
-        classification: [],
-        profileImage: "",
-      }));
-    } else if (!loading) {
-      alert("회원가입 성공!");
-      navigate("/");
-    }
+    dispatch(signup(signupData)).then(response => {
+      if (!loading && response.payload !== undefined) {
+        alert("회원가입 성공!");
+        navigate("/");
+      } else {
+        alert("회원가입에 실패했습니다. ㅠㅠ");
+        setInputs(prev => ({
+          ...prev,
+          nickname: "",
+          gender: "MAN",
+          birthday: "",
+          classification: [],
+          profileImage: "",
+        }));
+      }
+    });
   }, [inputs, user, dispatch, navigate, error, loading]);
 
   const validationNickname = useCallback(
