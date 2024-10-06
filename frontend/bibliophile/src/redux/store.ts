@@ -5,6 +5,8 @@ import { imageReducer } from "@/redux/imageSlice.ts";
 import { reportReducer } from "@/redux/reportSlice";
 import { reviewReducer } from "@/redux/reviewSlice";
 import { bookReducer } from "@/redux/bookSlice.ts";
+import { myBookReducer } from "@/redux/myBookSlice.ts";
+import { myBookStatisticsReducer } from "@/redux/myBookStatisticsSlice.ts";
 
 const store = configureStore({
   reducer: {
@@ -14,6 +16,8 @@ const store = configureStore({
     report: reportReducer,
     review: reviewReducer,
     book: bookReducer,
+    myBook: myBookReducer,
+    myBookStatistics: myBookStatisticsReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
