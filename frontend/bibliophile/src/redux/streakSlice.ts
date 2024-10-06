@@ -11,7 +11,8 @@ const initialState: StreakType = {
 export const loadStreaks = createAsyncThunk(
   "streak/getStreaks",
   async ({year, month}: {year:number; month: number}) => {
-    return await getStreaks(year, month);
+    const response = await getStreaks(year, month);
+    return response.data;
   }
 );
 

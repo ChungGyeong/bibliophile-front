@@ -3,15 +3,9 @@ import { DayPicker } from "react-day-picker";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import "react-day-picker/style.css";
-
-const data = [
-  { streakDate: 1, totalCount: 1 },
-  { streakDate: 2, totalCount: 1 },
-  { streakDate: 10, totalCount: 2 },
-  { streakDate: 14, totalCount: 3 },
-  { streakDate: 5, totalCount: 1 },
-  { streakDate: 6, totalCount: 25 },
-];
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store.ts";
+import { loadStreaks } from "@/redux/streakSlice";
 
 const defaultStyle: React.CSSProperties = {
   backgroundColor: "#EEEEEE",
@@ -29,13 +23,21 @@ const StreakCalendar: React.FC = () => {
   const [darkOliveDays, setDarkOliveDays] = useState<Date[]>([]);
   const [veryDarkOliveDays, setVeryDarkOliveDays] = useState<Date[]>([]);
 
-  const [selectedYear, setSelectedYear] = useState<number>(2024);
-  const [selectedMonth, setSelectedMonth] = useState<number>(9);
+  const dispatch: AppDispatch = useDispatch();
+  const { Streakdata } = useSelector((state: RootState) => state.streak);
 
-  const handleMonthChange = (month: Date) => {
-    setSelectedYear(month.getFullYear());
-    setSelectedMonth(month.getMonth());
+  const handleMonthChange = async (month: Date) => {
+    await fetchStreak(month.getFullYear(), month.getMonth());
   };
+
+  const fetchStreak = async (year: number, month: number) => {
+    await dispatch(loadStreaks({ year: year, month: month + 1 }));
+  };
+
+  useEffect(() => {
+    const today = new Date();
+    fetchStreak(today.getFullYear(), today.getMonth());
+  }, []);
 
   useEffect(() => {
     const newLightOliveDays: Date[] = [];
@@ -44,8 +46,8 @@ const StreakCalendar: React.FC = () => {
     const newDarkOliveDays: Date[] = [];
     const newVeryDarkOliveDays: Date[] = [];
 
-    data.forEach(item => {
-      const date = new Date(selectedYear, selectedMonth, item.streakDate);
+    Streakdata.forEach(item => {
+      const date = new Date(item.streakDate);
       if (item.totalCount >= 80) {
         newVeryDarkOliveDays.push(date);
       } else if (item.totalCount >= 60) {
@@ -64,7 +66,7 @@ const StreakCalendar: React.FC = () => {
     setMediumOliveDays(newMediumOliveDays);
     setDarkOliveDays(newDarkOliveDays);
     setVeryDarkOliveDays(newVeryDarkOliveDays);
-  }, [selectedYear, selectedMonth]);
+  }, [Streakdata]);
 
   const PreviousButton = (props: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
     <button {...props} className="me-5">
