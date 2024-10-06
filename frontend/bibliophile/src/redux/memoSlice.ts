@@ -19,35 +19,40 @@ const initialState: MemoType = {
 export const loadMemo = createAsyncThunk(
   "memo/getMemo",
   async (memoId: number) => {
-    return await getMemo(memoId);
+    const response = await getMemo(memoId);
+    return response.data;
   }
 );
 
 export const editMemo = createAsyncThunk(
   "memo/updateMemo",
   async ({memoId, updateData}: {memoId:number; updateData: UpdateMemoData}) => {
-    return await updateMemo(memoId, updateData);
+    const response = await updateMemo(memoId, updateData);
+    return response.data;
   }
 )
 
 export const removeMemo = createAsyncThunk(
   "memo/deleteMemo",
   async (memoId: number) => {
-    return await deleteMemo(memoId);
+    const response = await deleteMemo(memoId);
+    return response.data;
   }
 );
 
 export const addMemo = createAsyncThunk(
   "memo/createMemo",
   async (createData: CreateData) => {
-    return await createMemo(createData);
+    const response = await createMemo(createData);
+    return response.data;
   }
 )
 
 export const loadMyMemoList = createAsyncThunk(
   "memo/getMyMemoList",
   async (memoId: number) => {
-    return await getMyMemoList(memoId);
+    const response = await getMyMemoList(memoId);
+    return response.data;
   }
 );
 

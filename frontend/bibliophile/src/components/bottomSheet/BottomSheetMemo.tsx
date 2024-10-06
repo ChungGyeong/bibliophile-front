@@ -57,8 +57,8 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
 
     if (filesToUpload.length > 0) {
       const result = await dispatch(addImage(formData));
-      if (result.payload && Array.isArray(result.payload.data)) {
-        uploadedImageUrls = result.payload.data.map(item => item.url);
+      if (result.payload && Array.isArray(result.payload)) {
+        uploadedImageUrls = result.payload.map(item => item.url);
       } else {
         console.error("Error: Payload data is not an array or undefined", result.payload);
         return;
