@@ -17,35 +17,40 @@ const initialState: ReportType = {
 export const loadReport = createAsyncThunk(
   "reports/getReport",
   async (bookReportId: number) => {
-    return await getReport(bookReportId);
+    const response = await getReport(bookReportId);
+    return response.data;
   }
 );
 
 export const editReport = createAsyncThunk(
   "reports/updateReport",
   async ({bookReportId, updateData}: {bookReportId:number; updateData: UpdateReportData}) => {
-    return await updateReport(bookReportId, updateData);
+    const response = await updateReport(bookReportId, updateData);
+    return response.data;
   }
 )
 
 export const removeReport = createAsyncThunk(
   "reports/deleteReport",
   async (bookReportId: number) => {
-    return await deleteReport(bookReportId);;
+    const response = await deleteReport(bookReportId);
+    return response.data;
   }
 )
 
 export const addReport = createAsyncThunk(
   "reports/createReport",
   async (createData: CreateData) => {
-    return await createReport(createData);
+    const response = await createReport(createData);
+    return response.data;
   }
 )
 
 export const loadMyReport = createAsyncThunk(
   "reports/getMyReport",
   async (myBookId: number) => {
-    return await getMyReport(myBookId);
+    const response = await getMyReport(myBookId);
+    return response.data;
   }
 );
 
