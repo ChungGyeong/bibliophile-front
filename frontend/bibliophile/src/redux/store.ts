@@ -4,8 +4,8 @@ import { memoReducer } from "@/redux/memoSlice.ts";
 import { imageReducer } from "@/redux/imageSlice.ts";
 import { reportReducer } from "@/redux/reportSlice";
 import { reviewReducer } from "@/redux/reviewSlice";
-import { myBookReducer } from "@/redux/myBookSlice.ts";
 import { bookReducer } from "@/redux/bookSlice.ts";
+import { myBookReducer } from "@/redux/myBookSlice.ts";
 import { myBookStatisticsReducer } from "@/redux/myBookStatisticsSlice.ts";
 
 const store = configureStore({

@@ -1,10 +1,14 @@
+import { ClassificationType } from "@/types/user.ts";
+
 export interface BookStateType {
   loading: boolean;
   error: string | undefined;
-  book: BookResponse;
+  book: BookResponseType;
+  recommendedBookList: BookResponseType[];
+  popularBookList: BookResponseType[];
 }
 
-export interface BookResponse {
+export interface BookResponseType {
   bookId: number;
   contents: string;
   isbn: string;
@@ -17,3 +21,14 @@ export interface BookResponse {
   readingStatus: "UNREAD" | "READING" | "READ";
   isBookmarked: boolean;
 }
+
+export interface RecommendBookRequestType {
+  tags: ClassificationType[];
+}
+
+export interface PopularBookRequestType {
+  gender: "MAN" | "WOMAN";
+  ageGroup: AgeType;
+}
+
+export type AgeType = 10 | 20 | 30 | 40 | 50;
