@@ -4,10 +4,12 @@ import Button from "../components/common/Button";
 import BookCardSimpleList from "../components/bookCard/BookCardSimpleList";
 import LikeButton from "../components/common/LikeButton";
 import ReviewCard from "../components/review/ReviewCard";
+import Modal from "../components/common/Modal";
 import { Carousel, CarouselContent, CarouselItem } from "../components/ui/carousel";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store.ts";
 import { loadBookDetailByBookId } from "@/redux/bookSlice.ts";
+import { loadMyBookList, loadMyBookId, addMyBook } from "@/redux/myBookSlice";
 
 interface ReviewDataResponse {
   reviewId: number;
@@ -30,8 +32,15 @@ const BookDetailPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { book } = useSelector((state: RootState) => state.book);
 
+  const {
+    book: myBook,
+    loading: myBookLoading,
+    error: myBookError,
+  } = useSelector((state: RootState) => state.myBook);
+
   const [relatedBooks, setRelatedBooks] = useState<BookSimpleDataResponse[]>([]);
   const [reviews, setReviews] = useState<ReviewDataResponse[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const navigate = useNavigate();
   const { bookId } = useParams<{ bookId: string }>();
@@ -45,12 +54,13 @@ const BookDetailPage: React.FC = () => {
   };
   const groupedReviews = groupReviews(reviews, 5);
 
-  const isReading = book?.readingStatus === "READING" || book?.readingStatus === "READ";
+  const isReading =
+    myBook !== null && (myBook.readingStatus === "READING" || myBook.readingStatus === "READ");
 
   useEffect(() => {
-    // const numericBookId = parseInt(bookId!, 10);
-
-    dispatch(loadBookDetailByBookId(503));
+    const numericBookId = parseInt(bookId!, 10);
+    dispatch(loadBookDetailByBookId(numericBookId));
+    dispatch(loadMyBookId(numericBookId));
 
     // TODO: 추후 API 호출로 변경
     const dummyRelatedBooks: BookSimpleDataResponse[] = [
@@ -141,25 +151,57 @@ const BookDetailPage: React.FC = () => {
     ];
 
     setReviews(dummyReviews);
-  }, [bookId]);
+  }, [dispatch, bookId]);
+
+  useEffect(() => {}, [myBook]);
 
   const handleStartReading = () => {
-    // TODO: API 개발 뒤, 읽기 시작 API 요청으로 대체하기
-    // 성공 시 bookData의 readingStatus가 "READING"이 될 것
-    // 현재는 FE에서만 변경되도록 해둠 (삭제해야 함)
-    // setBookData(prev => (prev ? { ...prev, data: { ...prev, readingStatus: "READING" } } : prev));
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleConfirmStartReading = () => {
+    setIsModalOpen(false);
+    if (bookId) {
+      dispatch(addMyBook(Number(bookId))).then(() => {
+        dispatch(loadMyBookList({ status: "READING" }));
+      });
+    }
   };
 
   const handleNavigateMyBook = () => {
-    navigate(`/reading/${book?.bookId}`);
+    if (myBook && myBook.myBookId) {
+      navigate(`/reading/${myBook.myBookId}`);
+    } else {
+      console.error("myBook이 존재하지 않습니다");
+    }
   };
 
   const handleBack = () => {
     navigate(-1);
   };
 
+  if (myBookLoading) {
+    <div className="fixed inset-0 flex justify-center items-center">
+      Loading...
+      {/* <img src={loadingGif} alt="Loading..." /> */}
+    </div>;
+  }
+
   return (
     <div className="my-[40px]">
+      {isModalOpen && (
+        <Modal
+          isOpen={isModalOpen}
+          handleClickClose={handleModalClose}
+          title="정말 읽기 시작하시겠습니까?"
+          handleClickConfirm={handleConfirmStartReading}
+        />
+      )}
+
       <div className="flex justify-between text-[20px]">
         <button onClick={handleBack}>
           <i className="fi fi-rr-angle-left" />
@@ -167,7 +209,7 @@ const BookDetailPage: React.FC = () => {
         <div>
           {!isReading && book?.bookId !== undefined && (
             <div className="text-[20px]">
-              <LikeButton isBookmarked={book?.isBookmarked} bookId={book?.bookId} />
+              <LikeButton isBookmarked={myBook?.isBookmarked} bookId={book?.bookId} />
             </div>
           )}
         </div>
