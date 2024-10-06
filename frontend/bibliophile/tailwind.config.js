@@ -15,7 +15,11 @@ module.exports = {
       "active-orange": "#FF7628",
       "light-yellow": "#FFFAE6",
       "yellow": "#FFD66C",
+      "light-olive": "#E6F0B2",
       "olive": "#C5D887",
+      "medium-olive": "#A7BC61",
+      "dark-olive": "#728632",
+      "very-dark-olive": "#425112",
       "gray-green": "#EAEFE8",
     },
     screens: {

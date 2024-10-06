@@ -10,7 +10,7 @@ const data = [
   { streakDate: 10, totalCount: 2 },
   { streakDate: 14, totalCount: 3 },
   { streakDate: 5, totalCount: 1 },
-  { streakDate: 6, totalCount: 2 },
+  { streakDate: 6, totalCount: 25 },
 ];
 
 const defaultStyle: React.CSSProperties = {
@@ -23,12 +23,14 @@ const defaultStyle: React.CSSProperties = {
 };
 
 const StreakCalendar: React.FC = () => {
-  const [orangeDays, setOrangeDays] = useState<Date[]>([]);
-  const [greenDays, setGreenDays] = useState<Date[]>([]);
-  const [yellowDays, setYellowDays] = useState<Date[]>([]);
+  const [lightOliveDays, setLightOliveDays] = useState<Date[]>([]);
+  const [oliveDays, setOliveDays] = useState<Date[]>([]);
+  const [mediumOliveDays, setMediumOliveDays] = useState<Date[]>([]);
+  const [darkOliveDays, setDarkOliveDays] = useState<Date[]>([]);
+  const [veryDarkOliveDays, setVeryDarkOliveDays] = useState<Date[]>([]);
 
   const [selectedYear, setSelectedYear] = useState<number>(2024);
-  const [selectedMonth, setSelectedMonth] = useState<number>(8);
+  const [selectedMonth, setSelectedMonth] = useState<number>(9);
 
   const handleMonthChange = (month: Date) => {
     setSelectedYear(month.getFullYear());
@@ -36,24 +38,32 @@ const StreakCalendar: React.FC = () => {
   };
 
   useEffect(() => {
-    const newOrangeDays: Date[] = [];
-    const newGreenDays: Date[] = [];
-    const newYellowDays: Date[] = [];
+    const newLightOliveDays: Date[] = [];
+    const newOliveDays: Date[] = [];
+    const newMediumOliveDays: Date[] = [];
+    const newDarkOliveDays: Date[] = [];
+    const newVeryDarkOliveDays: Date[] = [];
 
     data.forEach(item => {
       const date = new Date(selectedYear, selectedMonth, item.streakDate);
-      if (item.totalCount === 1) {
-        newOrangeDays.push(date);
-      } else if (item.totalCount === 2) {
-        newGreenDays.push(date);
-      } else if (item.totalCount === 3) {
-        newYellowDays.push(date);
+      if (item.totalCount >= 80) {
+        newVeryDarkOliveDays.push(date);
+      } else if (item.totalCount >= 60) {
+        newDarkOliveDays.push(date);
+      } else if (item.totalCount >= 40) {
+        newMediumOliveDays.push(date);
+      } else if (item.totalCount >= 20) {
+        newOliveDays.push(date);
+      } else {
+        newLightOliveDays.push(date);
       }
     });
 
-    setOrangeDays(newOrangeDays);
-    setGreenDays(newGreenDays);
-    setYellowDays(newYellowDays);
+    setLightOliveDays(newLightOliveDays);
+    setOliveDays(newOliveDays);
+    setMediumOliveDays(newMediumOliveDays);
+    setDarkOliveDays(newDarkOliveDays);
+    setVeryDarkOliveDays(newVeryDarkOliveDays);
   }, [selectedYear, selectedMonth]);
 
   const PreviousButton = (props: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
@@ -81,25 +91,39 @@ const StreakCalendar: React.FC = () => {
           numberOfMonths={1}
           onMonthChange={handleMonthChange}
           modifiers={{
-            orange: orangeDays,
-            green: greenDays,
-            yellow: yellowDays,
+            lightOlive: lightOliveDays,
+            olive: oliveDays,
+            mediumOlive: mediumOliveDays,
+            darkOlive: darkOliveDays,
+            veryDarkOlive: veryDarkOliveDays,
           }}
           modifiersStyles={{
-            orange: {
-              backgroundColor: "#FFA644",
+            lightOlive: {
+              backgroundColor: "#E6F0B2",
               borderRadius: "50%",
               width: "25px",
               height: "25px",
             },
-            green: {
+            olive: {
               backgroundColor: "#C5D887",
               borderRadius: "50%",
               width: "25px",
               height: "25px",
             },
-            yellow: {
-              backgroundColor: "#FFD66C",
+            mediumOlive: {
+              backgroundColor: "#A7BC61",
+              borderRadius: "50%",
+              width: "25px",
+              height: "25px",
+            },
+            darkOlive: {
+              backgroundColor: "#728632",
+              borderRadius: "50%",
+              width: "25px",
+              height: "25px",
+            },
+            veryDarkOlive: {
+              backgroundColor: "#425112",
               borderRadius: "50%",
               width: "25px",
               height: "25px",
