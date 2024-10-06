@@ -1,19 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import { addBookmark, removeBookmark } from "@/redux/bookmarkSlice";
+import { loadBookDetailByBookId } from "@/redux/bookSlice";
 
 interface LikeButtonProps {
-  isBookmarked?: boolean;
+  isBookmarked: boolean;
   bookId: number;
 }
 
-// @ts-ignore
-const LikeButton: React.FC<LikeButtonProps> = ({ isBookmarked = false, bookmarkId }) => {
+const LikeButton: React.FC<LikeButtonProps> = ({ isBookmarked, bookId }) => {
+  const dispatch: AppDispatch = useDispatch();
   const [bookmarked, setBookmarked] = useState(isBookmarked);
 
-  const handleToggleBookmarked = (e: React.MouseEvent<HTMLButtonElement>) => {
+  useEffect(() => {
+    setBookmarked(isBookmarked);
+  }, [isBookmarked]);
+
+  const handleToggleBookmarked = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    const updateBookmarkedState = !bookmarked;
-    // TODO: API 연결 시에 bookmarked 의 T/F 여부에 따라 다르게 API 연결하기
-    setBookmarked(updateBookmarkedState);
+    if (bookmarked) {
+      await dispatch(removeBookmark(bookId));
+    } else {
+      await dispatch(addBookmark(bookId));
+    }
+    await dispatch(loadBookDetailByBookId(bookId));
   };
 
   return (

@@ -40,7 +40,7 @@ const BookCardItem: React.FC<BookCardItemProps> = ({
         {completionReadingTime ? (
           <p className="text-medium-gray text-[10px] font-medium">{completionReadingTime}</p>
         ) : (
-          <LikeButton isBookmarked={isBookmarked} bookId={bookId} />
+          <LikeButton isBookmarked={isBookmarked ?? false} bookId={bookId} />
         )}
         <div>
           <p

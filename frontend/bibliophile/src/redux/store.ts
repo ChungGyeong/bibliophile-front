@@ -7,6 +7,7 @@ import { reviewReducer } from "@/redux/reviewSlice";
 import { bookReducer } from "@/redux/bookSlice.ts";
 import { myBookReducer } from "@/redux/myBookSlice.ts";
 import { myBookStatisticsReducer } from "@/redux/myBookStatisticsSlice.ts";
+import { bookmarkReducer } from "@/redux/bookmarkSlice.ts";
 
 const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ const store = configureStore({
     book: bookReducer,
     myBook: myBookReducer,
     myBookStatistics: myBookStatisticsReducer,
+    bookmark: bookmarkReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
