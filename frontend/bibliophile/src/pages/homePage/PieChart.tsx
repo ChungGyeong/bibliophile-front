@@ -3,7 +3,7 @@ import ReactApexChart from "react-apexcharts";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/redux/store";
 import { loadMyBookStatistics } from "@/redux/myBookStatisticsSlice";
-import loadingGif from "/public/images/loading.gif";
+import loadingGif from "/images/loading.gif";
 
 type ChartOptions = {
   chart: {

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/redux/store";
 import { loadMyBookList } from "@/redux/myBookSlice";
 import BookCardReadingItem from "../components/bookCard/BookCardReadingItem";
-import loadingGif from "/public/images/loading.gif";
+import loadingGif from "/images/loading.gif";
 
 const MyBookReadingPage: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
