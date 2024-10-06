@@ -1,6 +1,17 @@
-import { BookStateType, PopularBookRequestType, RecommendBookRequestType } from "@/types/books.ts";
+import {
+  BookStateType,
+  PopularBookRequestType,
+  RecommendBookRequestType,
+  SearchByTitleRequestType,
+} from "@/types/books.ts";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getBookDetailByBookId, getPopularBookList, getRecommendedBookList } from "@/api/book.ts";
+import {
+  getBookByIsbn,
+  getBookDetailByBookId,
+  getBookListByTitle,
+  getPopularBookList,
+  getRecommendedBookList,
+} from "@/api/book.ts";
 
 const initialState: BookStateType = {
   loading: false,
@@ -20,6 +31,8 @@ const initialState: BookStateType = {
   },
   recommendedBookList: [],
   popularBookList: [],
+  searchedBookList: [],
+  searchedBookId: undefined,
 };
 
 export const loadBookDetailByBookId = createAsyncThunk(
@@ -46,6 +59,19 @@ export const loadPopularBookList = createAsyncThunk(
   }
 );
 
+export const loadBookListByTitle = createAsyncThunk(
+  "book/loadBookListByTitle",
+  async ({ title: title, page: page }: SearchByTitleRequestType) => {
+    const response = await getBookListByTitle(title, page);
+    return response.data;
+  }
+);
+
+export const loadBookByIsbn = createAsyncThunk("book/loadBookByIsbn", async (isbn: string) => {
+  const response = await getBookByIsbn(isbn);
+  return response.data;
+});
+
 export const bookSlice = createSlice({
   name: "book",
   initialState,
@@ -67,8 +93,9 @@ export const bookSlice = createSlice({
         state.loading = true;
       })
       .addCase(loadRecommendedBookList.fulfilled, (state, action) => {
-        state.loading = false;
         state.recommendedBookList = action.payload.data;
+        state.loading = false;
+        state.error = undefined;
       })
       .addCase(loadRecommendedBookList.rejected, (state, action) => {
         state.error = action.error.message;
@@ -77,10 +104,33 @@ export const bookSlice = createSlice({
         state.loading = true;
       })
       .addCase(loadPopularBookList.fulfilled, (state, action) => {
-        state.loading = false;
         state.popularBookList = action.payload.data;
+        state.error = undefined;
+        state.loading = false;
       })
       .addCase(loadPopularBookList.rejected, (state, action) => {
+        state.error = action.error.message;
+      })
+      .addCase(loadBookListByTitle.pending, state => {
+        state.loading = true;
+      })
+      .addCase(loadBookListByTitle.fulfilled, (state, action) => {
+        state.searchedBookList = action.payload.data;
+        state.error = undefined;
+        state.loading = false;
+      })
+      .addCase(loadBookListByTitle.rejected, (state, action) => {
+        state.error = action.error.message;
+      })
+      .addCase(loadBookByIsbn.pending, state => {
+        state.loading = true;
+      })
+      .addCase(loadBookByIsbn.fulfilled, (state, action) => {
+        state.searchedBookId = action.payload.data.bookId;
+        state.error = undefined;
+        state.loading = false;
+      })
+      .addCase(loadBookByIsbn.rejected, (state, action) => {
         state.error = action.error.message;
       });
   },

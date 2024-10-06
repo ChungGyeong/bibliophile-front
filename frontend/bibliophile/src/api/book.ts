@@ -12,6 +12,38 @@ export const getBookDetailByBookId = async (bookId: number) => {
     });
 };
 
+export const getBookListByTitle = async (title: string, page: number) => {
+  return await clientInstance
+    .get<ApiResponseType<BookResponseType[]>>("/book/search", {
+      params: {
+        title: title,
+        page: page,
+        size: 10,
+      },
+    })
+    .then(response => {
+      return response;
+    })
+    .catch(error => {
+      throw error;
+    });
+};
+
+export const getBookByIsbn = async (isbn: string) => {
+  return await clientInstance
+    .get<ApiResponseType<BookResponseType>>("/book", {
+      params: {
+        isbn: isbn,
+      },
+    })
+    .then(response => {
+      return response;
+    })
+    .catch(error => {
+      throw error;
+    });
+};
+
 export const getRecommendedBookList = async (requestBody: RecommendBookRequestType) => {
   return await clientInstance
     .post("/book/recommend/tag", requestBody)
