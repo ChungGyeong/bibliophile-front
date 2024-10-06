@@ -256,7 +256,7 @@ const ReadingBookDetailPage: React.FC = () => {
             </div>
           </div>
 
-          {review ? (
+          {review && review.reviewId !== 0 ? (
             <div>
               <h2 className="font-semibold text-[18px] mb-[10px]">리뷰</h2>
               <ReviewCard
@@ -279,14 +279,19 @@ const ReadingBookDetailPage: React.FC = () => {
             </div>
           )}
 
-          {report ? (
+          {report && report.bookReportId !== 0 ? (
             <div className="mt-[40px]">
               <h2 className="font-semibold text-[18px] mb-[10px]">독후감</h2>
               <MemoCard
                 id={report.bookReportId}
                 type="report"
                 content={report.content}
-                imgUrl={report.bookReportImgUrlList[0]}
+                imgUrl={
+                  Array.isArray(report.bookReportImgUrlList) &&
+                  report.bookReportImgUrlList.length > 0
+                    ? report.bookReportImgUrlList[0]
+                    : ""
+                }
                 createdDate={report.createdDate}
               />
             </div>

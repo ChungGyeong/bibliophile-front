@@ -36,14 +36,6 @@ const MemoPage: React.FC = () => {
     fetchMemoData();
   }, [memoId]);
 
-  useEffect(() => {
-    if (loading) {
-      console.log("로딩 중...");
-    } else {
-      console.log("로딩 완료");
-    }
-  }, [loading]);
-
   const handleModalClose = () => {
     fetchMemoData();
     setIsModalOpen(false);
@@ -115,21 +107,19 @@ const MemoPage: React.FC = () => {
 
       <Carousel className="w-full" setApi={setApi}>
         <CarouselContent>
-          {data?.memoImgUrlList && Array.isArray(data.memoImgUrlList) ? (
-            data.memoImgUrlList.map((imgUrl, index) => (
-              <CarouselItem key={index}>
-                <div className="w-full text-center">
-                  <img
-                    src={imgUrl}
-                    alt={`사진 ${index + 1}`}
-                    className="w-full h-64 object-cover rounded-lg"
-                  />
-                </div>
-              </CarouselItem>
-            ))
-          ) : (
-            <div>No Images Available</div>
-          )}
+          {data?.memoImgUrlList && Array.isArray(data.memoImgUrlList)
+            ? data.memoImgUrlList.map((imgUrl, index) => (
+                <CarouselItem key={index}>
+                  <div className="w-full text-center">
+                    <img
+                      src={imgUrl}
+                      alt={`사진 ${index + 1}`}
+                      className="w-full h-64 object-cover rounded-lg"
+                    />
+                  </div>
+                </CarouselItem>
+              ))
+            : null}
         </CarouselContent>
       </Carousel>
 
