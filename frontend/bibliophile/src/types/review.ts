@@ -2,6 +2,7 @@ export interface ReviewType {
   loading: boolean;
   error: string | null;
   data: ReviewResponse;
+  reviewList: ReviewResponse[]
 }
 
 export interface ReviewResponse {
