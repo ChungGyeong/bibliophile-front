@@ -9,7 +9,8 @@ import { Carousel, CarouselContent, CarouselItem } from "../components/ui/carous
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store.ts";
 import { loadBookDetailByBookId } from "@/redux/bookSlice.ts";
-import { loadMyBookList, loadMyBookId, addMyBook } from "@/redux/myBookSlice";
+import { loadMyBookId, addMyBook } from "@/redux/myBookSlice";
+import loadingGif from "/public/images/loading.gif";
 
 interface ReviewDataResponse {
   reviewId: number;
@@ -30,7 +31,7 @@ interface BookSimpleDataResponse {
 
 const BookDetailPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { book } = useSelector((state: RootState) => state.book);
+  const { book, loading: bookLoading } = useSelector((state: RootState) => state.book);
 
   const {
     book: myBook,
@@ -153,7 +154,10 @@ const BookDetailPage: React.FC = () => {
     setReviews(dummyReviews);
   }, [dispatch, bookId]);
 
-  useEffect(() => {}, [myBook]);
+  useEffect(() => {
+    if (myBook) {
+    }
+  }, [myBook]);
 
   const handleStartReading = () => {
     setIsModalOpen(true);
@@ -167,7 +171,7 @@ const BookDetailPage: React.FC = () => {
     setIsModalOpen(false);
     if (bookId) {
       dispatch(addMyBook(Number(bookId))).then(() => {
-        dispatch(loadMyBookList({ status: "READING" }));
+        dispatch(loadMyBookId(Number(bookId)));
       });
     }
   };
@@ -184,10 +188,9 @@ const BookDetailPage: React.FC = () => {
     navigate(-1);
   };
 
-  if (myBookLoading) {
+  if (myBookLoading || bookLoading) {
     <div className="fixed inset-0 flex justify-center items-center">
-      Loading...
-      {/* <img src={loadingGif} alt="Loading..." /> */}
+      <img src={loadingGif} alt="Loading..." />
     </div>;
   }
 
@@ -209,12 +212,11 @@ const BookDetailPage: React.FC = () => {
         <div>
           {!isReading && book?.bookId !== undefined && (
             <div className="text-[20px]">
-              <LikeButton isBookmarked={myBook?.isBookmarked} bookId={book?.bookId} />
+              <LikeButton isBookmarked={book.isBookmarked} bookId={book.bookId} />
             </div>
           )}
         </div>
       </div>
-
       <div className="mt-[10px] mb-[40px] flex flex-col items-center">
         <img
           className="h-[190px] w-[140px] mb-4"
@@ -253,6 +255,7 @@ const BookDetailPage: React.FC = () => {
                 <div className="space-y-[10px]">
                   {group.map(review => (
                     <ReviewCard
+                      reviewId={review.reviewId}
                       key={review.reviewId}
                       content={review.content}
                       star={review.star}
