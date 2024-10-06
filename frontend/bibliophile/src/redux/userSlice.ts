@@ -1,5 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createCheckNickname, createUser, deleteUser, getUser, updateUser } from "@/api/users.ts";
+import {
+  createCheckNickname,
+  createUser,
+  deleteUser,
+  getUser,
+  leaveAccount,
+  updateUser,
+} from "@/api/users.ts";
 import { socialLogin } from "@/api/outh.ts";
 import { SignupRequest, UpdateUserRequest, UserStateType } from "@/types/user.ts";
 
@@ -54,6 +61,11 @@ export const editUser = createAsyncThunk("user/editUser", async (user: UpdateUse
 
 export const removeUser = createAsyncThunk("user/removeUser", async () => {
   const response = await deleteUser();
+  return response.data;
+});
+
+export const logout = createAsyncThunk("user/logout", async () => {
+  const response = await leaveAccount();
   return response.data;
 });
 
@@ -135,6 +147,15 @@ export const userSlice = createSlice({
         state.loading = false;
       })
       .addCase(removeUser.rejected, (state, action) => {
+        state.error = action.error.message;
+      })
+      .addCase(logout.pending, state => {
+        state.loading = true;
+      })
+      .addCase(logout.fulfilled, state => {
+        state.loading = false;
+      })
+      .addCase(logout.rejected, (state, action) => {
         state.error = action.error.message;
       });
   },

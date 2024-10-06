@@ -17,6 +17,7 @@ import MyPage from "@/pages/myPage/MyPage.tsx";
 import BarcodePage from "@/pages/searchPage/BarcodePage.tsx";
 import BookSuggestionPage from "@/pages/BookSuggestionPage.tsx";
 import SocialLogin from "@/pages/SocialLogin.tsx";
+import PrivacyPolicyPage from "@/pages/myPage/PrivacyPolicyPage.tsx";
 
 const AppRoutes = () => {
   return (
@@ -43,6 +44,8 @@ const AppRoutes = () => {
       <Route path="/search" element={<PageLayout page={<SearchPage />} />} />
       <Route path="/barcode" element={<PageLayout page={<BarcodePage />} />} />
       <Route path="/mypage" element={<PageLayout page={<MyPage />} />} />
+
+      <Route path="/privacy-policy" element={<PageLayout page={<PrivacyPolicyPage />} />} />
     </Routes>
   );
 };

@@ -9,8 +9,9 @@ import ProfileImageUploader from "@/pages/myPage/ProfileImageUploader.tsx";
 import UserInfoField from "@/pages/myPage/UserInfoField.tsx";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store.ts";
-import { editUser, loadUser, removeUser } from "@/redux/userSlice.ts";
+import { editUser, loadUser, logout, removeUser } from "@/redux/userSlice.ts";
 import { translateTagToEnglish } from "@/utils/translator.ts";
+import { useNavigate } from "react-router-dom";
 
 const MyPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -31,6 +32,7 @@ const MyPage: React.FC = () => {
   const [isOpenDeleteMemberModal, setIsOpenDeleteMemberModal] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const navigate = useNavigate();
 
   const handleClickProfileImage = () => {
     if (fileInputRef.current) {
@@ -69,11 +71,13 @@ const MyPage: React.FC = () => {
   };
 
   const handleClickLogout = () => {
-    setIsOpenLogoutModal(!isOpenLogoutModal);
+    dispatch(logout);
+    navigate("/login");
   };
 
   const handleClickDeleteMember = () => {
     dispatch(removeUser());
+    navigate("/login");
   };
 
   useEffect(() => {
@@ -95,8 +99,10 @@ const MyPage: React.FC = () => {
         <Modal
           title="정말 로그아웃 하시겠어요?"
           isOpen={isOpenLogoutModal}
-          handleClickClose={handleClickLogout}
-          handleClickConfirm={() => {}}
+          handleClickClose={() => {
+            setIsOpenLogoutModal(!isOpenLogoutModal);
+          }}
+          handleClickConfirm={handleClickLogout}
         />
       )}
       {isOpenDeleteMemberModal && (
@@ -166,7 +172,9 @@ const MyPage: React.FC = () => {
 
       {!isEdit && (
         <AccountManagement
-          handleClickLogout={handleClickLogout}
+          handleClickLogout={() => {
+            setIsOpenLogoutModal(!isOpenLogoutModal);
+          }}
           handleClickDeleteMember={() => {
             setIsOpenDeleteMemberModal(!isOpenDeleteMemberModal);
           }}
