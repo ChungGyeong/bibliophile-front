@@ -1,6 +1,5 @@
 import { clientInstance } from "../libs/http-clients.ts";
 import { ApiResponse, MyBookResponse } from "@/types/myBook.ts";
-import { AxiosError } from "axios";
 
 // 나의 책 리스트 조회
 export const getMyBookList = async (status: "READ" | "READING" | "UNREAD") => {
