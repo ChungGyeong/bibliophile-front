@@ -6,6 +6,8 @@ export interface BookStateType {
   book: BookResponseType;
   recommendedBookList: BookResponseType[];
   popularBookList: BookResponseType[];
+  isLoadingRelatedBookList: boolean;
+  relatedBookList: BookResponseType[];
   searchedBookList: BookResponseType[];
   searchedBookId: number | undefined;
 }
@@ -36,6 +38,11 @@ export interface PopularBookRequestType {
 export interface SearchByTitleRequestType {
   title: string;
   page: number;
+}
+
+export interface RelatedBookListRequestType {
+  title: string;
+  requestNumber: number;
 }
 
 export type AgeType = 10 | 20 | 30 | 40 | 50;
