@@ -4,6 +4,7 @@ import { memoReducer } from "@/redux/memoSlice.ts";
 import { imageReducer } from "@/redux/imageSlice.ts";
 import { reportReducer } from "@/redux/reportSlice";
 import { reviewReducer } from "@/redux/reviewSlice";
+import { streakReducer } from "@/redux/streakSlice";
 import { bookReducer } from "@/redux/bookSlice.ts";
 import { myBookReducer } from "@/redux/myBookSlice.ts";
 import { myBookStatisticsReducer } from "@/redux/myBookStatisticsSlice.ts";
@@ -16,6 +17,7 @@ const store = configureStore({
     image: imageReducer,
     report: reportReducer,
     review: reviewReducer,
+    streak: streakReducer,
     book: bookReducer,
     myBook: myBookReducer,
     myBookStatistics: myBookStatisticsReducer,

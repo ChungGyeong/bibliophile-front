@@ -3,15 +3,9 @@ import { DayPicker } from "react-day-picker";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import "react-day-picker/style.css";
-
-const data = [
-  { streakDate: 1, totalCount: 1 },
-  { streakDate: 2, totalCount: 1 },
-  { streakDate: 10, totalCount: 2 },
-  { streakDate: 14, totalCount: 3 },
-  { streakDate: 5, totalCount: 1 },
-  { streakDate: 6, totalCount: 2 },
-];
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store.ts";
+import { loadStreaks } from "@/redux/streakSlice";
 
 const defaultStyle: React.CSSProperties = {
   backgroundColor: "#EEEEEE",
@@ -23,38 +17,56 @@ const defaultStyle: React.CSSProperties = {
 };
 
 const StreakCalendar: React.FC = () => {
-  const [orangeDays, setOrangeDays] = useState<Date[]>([]);
-  const [greenDays, setGreenDays] = useState<Date[]>([]);
-  const [yellowDays, setYellowDays] = useState<Date[]>([]);
+  const [lightOliveDays, setLightOliveDays] = useState<Date[]>([]);
+  const [oliveDays, setOliveDays] = useState<Date[]>([]);
+  const [mediumOliveDays, setMediumOliveDays] = useState<Date[]>([]);
+  const [darkOliveDays, setDarkOliveDays] = useState<Date[]>([]);
+  const [veryDarkOliveDays, setVeryDarkOliveDays] = useState<Date[]>([]);
 
-  const [selectedYear, setSelectedYear] = useState<number>(2024);
-  const [selectedMonth, setSelectedMonth] = useState<number>(8);
+  const dispatch: AppDispatch = useDispatch();
+  const { Streakdata } = useSelector((state: RootState) => state.streak);
 
-  const handleMonthChange = (month: Date) => {
-    setSelectedYear(month.getFullYear());
-    setSelectedMonth(month.getMonth());
+  const handleMonthChange = async (month: Date) => {
+    await fetchStreak(month.getFullYear(), month.getMonth());
+  };
+
+  const fetchStreak = async (year: number, month: number) => {
+    await dispatch(loadStreaks({ year: year, month: month + 1 }));
   };
 
   useEffect(() => {
-    const newOrangeDays: Date[] = [];
-    const newGreenDays: Date[] = [];
-    const newYellowDays: Date[] = [];
+    const today = new Date();
+    fetchStreak(today.getFullYear(), today.getMonth());
+  }, []);
 
-    data.forEach(item => {
-      const date = new Date(selectedYear, selectedMonth, item.streakDate);
-      if (item.totalCount === 1) {
-        newOrangeDays.push(date);
-      } else if (item.totalCount === 2) {
-        newGreenDays.push(date);
-      } else if (item.totalCount === 3) {
-        newYellowDays.push(date);
+  useEffect(() => {
+    const newLightOliveDays: Date[] = [];
+    const newOliveDays: Date[] = [];
+    const newMediumOliveDays: Date[] = [];
+    const newDarkOliveDays: Date[] = [];
+    const newVeryDarkOliveDays: Date[] = [];
+
+    Streakdata.forEach(item => {
+      const date = new Date(item.streakDate);
+      if (item.totalCount >= 80) {
+        newVeryDarkOliveDays.push(date);
+      } else if (item.totalCount >= 60) {
+        newDarkOliveDays.push(date);
+      } else if (item.totalCount >= 40) {
+        newMediumOliveDays.push(date);
+      } else if (item.totalCount >= 20) {
+        newOliveDays.push(date);
+      } else {
+        newLightOliveDays.push(date);
       }
     });
 
-    setOrangeDays(newOrangeDays);
-    setGreenDays(newGreenDays);
-    setYellowDays(newYellowDays);
-  }, [selectedYear, selectedMonth]);
+    setLightOliveDays(newLightOliveDays);
+    setOliveDays(newOliveDays);
+    setMediumOliveDays(newMediumOliveDays);
+    setDarkOliveDays(newDarkOliveDays);
+    setVeryDarkOliveDays(newVeryDarkOliveDays);
+  }, [Streakdata]);
 
   const PreviousButton = (props: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
     <button {...props} className="me-5">
@@ -81,25 +93,39 @@ const StreakCalendar: React.FC = () => {
           numberOfMonths={1}
           onMonthChange={handleMonthChange}
           modifiers={{
-            orange: orangeDays,
-            green: greenDays,
-            yellow: yellowDays,
+            lightOlive: lightOliveDays,
+            olive: oliveDays,
+            mediumOlive: mediumOliveDays,
+            darkOlive: darkOliveDays,
+            veryDarkOlive: veryDarkOliveDays,
           }}
           modifiersStyles={{
-            orange: {
-              backgroundColor: "#FFA644",
+            lightOlive: {
+              backgroundColor: "#E6F0B2",
               borderRadius: "50%",
               width: "25px",
               height: "25px",
             },
-            green: {
+            olive: {
               backgroundColor: "#C5D887",
               borderRadius: "50%",
               width: "25px",
               height: "25px",
             },
-            yellow: {
-              backgroundColor: "#FFD66C",
+            mediumOlive: {
+              backgroundColor: "#A7BC61",
+              borderRadius: "50%",
+              width: "25px",
+              height: "25px",
+            },
+            darkOlive: {
+              backgroundColor: "#728632",
+              borderRadius: "50%",
+              width: "25px",
+              height: "25px",
+            },
+            veryDarkOlive: {
+              backgroundColor: "#425112",
               borderRadius: "50%",
               width: "25px",
               height: "25px",
