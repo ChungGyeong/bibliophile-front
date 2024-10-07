@@ -1,13 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
-
-const initialSeries = [
-  {
-    name: "독서시간",
-    data: [2.3, 3.1, 4.0, 10.1, 4.0, 3.6, 3.2, 2.3, 1.4, 0.8, 0.5, 0.2],
-  },
-];
+import { useDispatch, useSelector } from "react-redux";
+import { loadTimerList } from "@/redux/timerSlice";
+import { AppDispatch, RootState } from "@/redux/store.ts";
 
 const initialOptions: ApexOptions = {
   chart: {
@@ -78,11 +74,26 @@ const initialOptions: ApexOptions = {
   },
 };
 
-interface BarChartProps {}
+const BarChart: React.FC = () => {
+  const [series, setSeries] = useState([{ name: "독서시간", data: [] as number[] }]);
+  const [options] = useState<ApexOptions>(initialOptions);
+  const dispatch: AppDispatch = useDispatch();
 
-const BarChart: React.FC<BarChartProps> = () => {
-  const [series] = React.useState(initialSeries);
-  const [options] = React.useState<ApexOptions>(initialOptions);
+  const { data } = useSelector((state: RootState) => state.timer);
+
+  useEffect(() => {
+    dispatch(loadTimerList());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (data && Array.isArray(data)) {
+      const chartData = data.map(item => {
+        const [hours, minutes] = item.readingTime.split(":").map(Number);
+        return hours + minutes / 60;
+      });
+      setSeries([{ name: "독서시간", data: chartData }]);
+    }
+  }, [data]);
 
   return (
     <div className="flex justify-center w-full h-full">
