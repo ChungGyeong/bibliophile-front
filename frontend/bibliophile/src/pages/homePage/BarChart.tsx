@@ -40,7 +40,10 @@ const initialOptions: ApexOptions = {
       show: false,
     },
     labels: {
-      show: false,
+      show: true, // Y축에 값이 표시되도록 활성화
+      formatter: (value: number) => {
+        return `${value} 시간`; // 소수점 2자리까지 표시
+      },
     },
   },
   title: {
@@ -68,7 +71,7 @@ const initialOptions: ApexOptions = {
     y: {
       formatter: function (val: number | undefined) {
         if (val === undefined) return "";
-        return `${val}시간`;
+        return `${val.toFixed(2)} 시간`;
       },
     },
   },
@@ -98,7 +101,7 @@ const BarChart: React.FC = () => {
   return (
     <div className="flex justify-center w-full h-full">
       <div>
-        <ReactApexChart options={options} series={series} type="bar" width={310} height={200} />
+        <ReactApexChart options={options} series={series} type="bar" width={360} height={200} />
       </div>
     </div>
   );
