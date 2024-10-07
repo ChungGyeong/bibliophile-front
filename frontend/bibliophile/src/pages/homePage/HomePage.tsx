@@ -54,30 +54,44 @@ const HomePage: React.FC = () => {
               <div className="h-[140px] flex justify-center items-center"></div>
             ) : error ? (
               <div className="h-[140px] flex justify-center items-center">ERROR: {error}</div>
+            ) : bookList.length === 0 ? (
+              <div>현재 읽고 있는 책이 없습니다.</div>
+            ) : bookList.length === 1 ? (
+              // 책이 하나만 있을 때 슬라이더 대신 단일 카드만 표시
+              <div className="mx-2">
+                <BookCardReadingItem
+                  myBookId={bookList[0].myBookId}
+                  thumbnail={bookList[0].thumbnail}
+                  title={bookList[0].title}
+                  authors={bookList[0].authors}
+                  publisher={bookList[0].publisher}
+                  createdDate={bookList[0].createdDate}
+                  readingPage={bookList[0].readingPage}
+                  totalPage={bookList[0].totalPage}
+                  readingPercent={bookList[0].readingPercent}
+                  isActive={true}
+                />
+              </div>
             ) : (
               <Slider {...settings(setCurrentSlide)}>
-                {bookList.length > 0 ? (
-                  bookList.map((book, idx) => (
-                    <div key={idx}>
-                      <div className="mx-2">
-                        <BookCardReadingItem
-                          myBookId={book.myBookId}
-                          thumbnail={book.thumbnail}
-                          title={book.title}
-                          authors={book.authors}
-                          publisher={book.publisher}
-                          createdDate={book.createdDate}
-                          readingPage={book.readingPage}
-                          totalPage={book.totalPage}
-                          readingPercent={book.readingPercent}
-                          isActive={idx === currentSlide}
-                        />
-                      </div>
+                {bookList.map((book, idx) => (
+                  <div key={idx}>
+                    <div className="mx-2">
+                      <BookCardReadingItem
+                        myBookId={book.myBookId}
+                        thumbnail={book.thumbnail}
+                        title={book.title}
+                        authors={book.authors}
+                        publisher={book.publisher}
+                        createdDate={book.createdDate}
+                        readingPage={book.readingPage}
+                        totalPage={book.totalPage}
+                        readingPercent={book.readingPercent}
+                        isActive={idx === currentSlide}
+                      />
                     </div>
-                  ))
-                ) : (
-                  <div>현재 읽고 있는 책이 없습니다.</div>
-                )}
+                  </div>
+                ))}
               </Slider>
             )}
           </div>
