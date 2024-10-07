@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "@/redux/store";
+import { loadMyBookList } from "@/redux/myBookSlice";
 import FoxHouse from "./FoxHouse";
 import BookCardReadingItem from "@/components/bookCard/BookCardReadingItem";
 import Slider from "react-slick";
@@ -20,38 +23,19 @@ const settings = (setCurrentSlide: (slideIndex: number) => void) => ({
   beforeChange: (_current: number, next: number) => setCurrentSlide(next),
 });
 
-const readingBooks = [
-  {
-    myBookId: 1,
-    title: "책 먹는 여우",
-    authors: "프란치스카 비어만",
-    publisher: "주니어 김영사",
-    thumbnail: "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788934935018.jpg",
-    createdDate: "2024-02-18",
-    readingPage: 120,
-    totalPage: 220,
-    readingPercent: 54,
-  },
-  {
-    myBookId: 2,
-    title: "책 먹2는22 여우",
-    authors: "프란치스카 비어만",
-    publisher: "주니어 김영사",
-    thumbnail: "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788934935018.jpg",
-    createdDate: "2024-02-18",
-    readingPage: 120,
-    totalPage: 220,
-    readingPercent: 54,
-  },
-];
-
 const HomePage: React.FC = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
   const navigate = useNavigate();
+  const dispatch: AppDispatch = useDispatch();
+  const { bookList = [], loading, error } = useSelector((state: RootState) => state.myBook);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   const handleClick = () => {
     navigate("/mybook/reading");
   };
+
+  useEffect(() => {
+    dispatch(loadMyBookList({ status: "READING" }));
+  }, [dispatch]);
 
   return (
     <div>
@@ -65,26 +49,38 @@ const HomePage: React.FC = () => {
               더보기
             </p>
           </div>
-          <Slider {...settings(setCurrentSlide)}>
-            {readingBooks.map((book, idx) => (
-              <div key={idx}>
-                <div className="mx-2">
-                  <BookCardReadingItem
-                    myBookId={book.myBookId}
-                    thumbnail={book.thumbnail}
-                    title={book.title}
-                    authors={book.authors}
-                    publisher={book.publisher}
-                    createdDate={book.createdDate}
-                    readingPage={book.readingPage}
-                    totalPage={book.totalPage}
-                    readingPercent={book.readingPercent}
-                    isActive={idx === currentSlide}
-                  />
-                </div>
-              </div>
-            ))}
-          </Slider>
+          <div>
+            {loading ? (
+              <div className="h-[140px] flex justify-center items-center"></div>
+            ) : error ? (
+              <div className="h-[140px] flex justify-center items-center">ERROR: {error}</div>
+            ) : (
+              <Slider {...settings(setCurrentSlide)}>
+                {bookList.length > 0 ? (
+                  bookList.map((book, idx) => (
+                    <div key={idx}>
+                      <div className="mx-2">
+                        <BookCardReadingItem
+                          myBookId={book.myBookId}
+                          thumbnail={book.thumbnail}
+                          title={book.title}
+                          authors={book.authors}
+                          publisher={book.publisher}
+                          createdDate={book.createdDate}
+                          readingPage={book.readingPage}
+                          totalPage={book.totalPage}
+                          readingPercent={book.readingPercent}
+                          isActive={idx === currentSlide}
+                        />
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div>현재 읽고 있는 책이 없습니다.</div>
+                )}
+              </Slider>
+            )}
+          </div>
         </div>
 
         <div className="my-[50px] ">
