@@ -65,7 +65,9 @@ const BookInfo: React.FC<BookInfoProps> = ({
           />
         </div>
 
-        <h1 className="text-lg font-medium mb-1.5">{title}</h1>
+        <p className="text-lg font-medium mb-1.5 w-4/5 m-auto text-center leading-none text-balance">
+          {title}
+        </p>
         <p className="text-sm font-light mb-1.5">{authors}</p>
         <p className="text-xs font-light text-gray-300 mb-8">{publisher}</p>
 
