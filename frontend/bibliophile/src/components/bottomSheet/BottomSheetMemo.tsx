@@ -5,6 +5,7 @@ import { editMemo, addMemo } from "@/redux/memoSlice";
 import { editReport, addReport } from "@/redux/reportSlice";
 import { addImage } from "@/redux/imageSlice";
 import { AppDispatch } from "@/redux/store.ts";
+import Modal from "@/components/common/Modal";
 
 interface BottomSheetMemoProps {
   onClose: () => void;
@@ -34,16 +35,26 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
   const [existingImages, setExistingImages] = useState<string[]>(memoImgList);
   const [newImages, setNewImages] = useState<string[]>([]);
   const [filesToUpload, setFilesToUpload] = useState<File[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [modalMessage, setModalMessage] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const dispatch: AppDispatch = useDispatch();
+
+  const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/jpg"];
+  const MAX_FILE_SIZE = 2 * 1024 * 1024;
 
   const handleMemoChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMemo(e.target.value);
   };
 
   const handlePageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPage(Number(e.target.value));
+    const inputValue = Number(e.target.value);
+    if (inputValue < 0) {
+      setPage(0);
+    } else {
+      setPage(inputValue);
+    }
   };
 
   const handleButtonClick = async () => {
@@ -113,8 +124,25 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
     if (e.target.files) {
       const fileArray = Array.from(e.target.files);
 
+      for (const file of fileArray) {
+        if (!ALLOWED_FILE_TYPES.includes(file.type)) {
+          setModalMessage(
+            `${file.name}은(는) 지원하지 않는 형식입니다. JPG, PNG 형식만 업로드 가능합니다.`
+          );
+          setIsModalOpen(true);
+          return;
+        }
+
+        if (file.size > MAX_FILE_SIZE) {
+          setModalMessage(`${file.name}은(는) 파일 크기가 2MB를 초과하였습니다.`);
+          setIsModalOpen(true);
+          return;
+        }
+      }
+
       if (existingImages.length + newImages.length + fileArray.length > 3) {
-        alert("이미지는 3개까지 업로드 할 수 있습니다.");
+        setModalMessage("이미지는 3개까지 업로드 할 수 있습니다.");
+        setIsModalOpen(true);
         return;
       }
 
@@ -153,6 +181,10 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
     return label === "메모" ? "h-1/3" : "h-1/2";
   };
 
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div className="flex flex-col items-center justify-center m-[5%] h-full pb-[75px] px-[5%]">
       <p className="font-bold text-xl leading-normal mb-[10%]">
@@ -169,7 +201,7 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
           type="number"
           placeholder="페이지를 숫자로 입력해주세요"
           className="w-full border-b-2 focus:border-black outline-none text-gray-500 text-sm py-3 mb-6"
-          value={page ?? 0}
+          value={page === 0 ? "" : page}
           onChange={handlePageChange}
         />
       )}
@@ -218,6 +250,13 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
         ))}
       </div>
       <Button label="작성 완료" handleClickButton={handleButtonClick} />
+
+      <Modal
+        isOpen={isModalOpen}
+        handleClickClose={closeModal}
+        title={modalMessage}
+        handleClickConfirm={closeModal}
+      />
     </div>
   );
 };

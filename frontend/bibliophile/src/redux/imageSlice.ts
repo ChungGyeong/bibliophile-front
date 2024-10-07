@@ -29,7 +29,6 @@ const imageSlice = createSlice({
   extraReducers: (builder) => {
     builder
     .addCase(addImage.fulfilled, (state, action) => {
-      console.log('image hi')
       state.files = action.payload;
       state.loading = false;
     })
