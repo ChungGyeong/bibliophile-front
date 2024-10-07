@@ -8,7 +8,7 @@ import Modal from "../components/common/Modal";
 import { Carousel, CarouselContent, CarouselItem } from "../components/ui/carousel";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store.ts";
-import { loadBookDetailByBookId } from "@/redux/bookSlice.ts";
+import { loadBookDetailByBookId, loadRelatedBookList } from "@/redux/bookSlice.ts";
 import { loadMyBookId, addMyBook } from "@/redux/myBookSlice";
 import { loadReviews } from "@/redux/reviewSlice";
 
@@ -22,16 +22,14 @@ interface ReviewDataResponse {
   lastModifyDate: string;
 }
 
-interface BookSimpleDataResponse {
-  bookId: number;
-  title: string;
-  authors: string;
-  thumbnail: string;
-}
-
 const BookDetailPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { book, loading: bookLoading } = useSelector((state: RootState) => state.book);
+  const {
+    book,
+    loading: bookLoading,
+    isLoadingRelatedBookList,
+    relatedBookList,
+  } = useSelector((state: RootState) => state.book);
   const { reviewList: reviews } = useSelector((state: RootState) => state.review);
 
   const {
@@ -40,7 +38,6 @@ const BookDetailPage: React.FC = () => {
     error: myBookError,
   } = useSelector((state: RootState) => state.myBook);
 
-  const [relatedBooks, setRelatedBooks] = useState<BookSimpleDataResponse[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const navigate = useNavigate();
@@ -60,44 +57,16 @@ const BookDetailPage: React.FC = () => {
 
   useEffect(() => {
     const numericBookId = parseInt(bookId!, 10);
-    dispatch(loadBookDetailByBookId(numericBookId));
+
+    dispatch(loadBookDetailByBookId(numericBookId)).then(response => {
+      if (response.meta.requestStatus === "fulfilled" && book?.title) {
+        dispatch(loadRelatedBookList({ title: book.title, requestNumber: 0 }));
+      }
+    });
+
     dispatch(loadMyBookId(numericBookId));
     dispatch(loadReviews(numericBookId));
-    // TODO: 추후 API 호출로 변경
-    const dummyRelatedBooks: BookSimpleDataResponse[] = [
-      {
-        bookId: 2,
-        title: "책 먹는 여우 2",
-        authors: "프란치스카 비어만",
-        thumbnail: "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788934935018.jpg",
-      },
-      {
-        bookId: 3,
-        title: "책 먹는 여우 3",
-        authors: "프란치스카 비어만",
-        thumbnail: "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788934935018.jpg",
-      },
-      {
-        bookId: 4,
-        title: "책 먹는 여우 4",
-        authors: "프란치스카 비어만",
-        thumbnail: "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788934935018.jpg",
-      },
-      {
-        bookId: 5,
-        title: "책 먹는 여우 5",
-        authors: "프란치스카 비어만",
-        thumbnail: "https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9788934935018.jpg",
-      },
-    ];
-
-    setRelatedBooks(dummyRelatedBooks);
-  }, [dispatch, bookId]);
-
-  useEffect(() => {
-    if (myBook) {
-    }
-  }, [myBook]);
+  }, [dispatch, bookId, book?.title]);
 
   const handleStartReading = () => {
     setIsModalOpen(true);
@@ -222,7 +191,11 @@ const BookDetailPage: React.FC = () => {
 
       <div className="my-[30px] mb-[80px]">
         <h2 className="font-medium text-[18px] mb-[10px]">비슷한 줄거리의 다른 책도 추천해요!</h2>
-        <BookCardSimpleList books={relatedBooks} />
+        {isLoadingRelatedBookList ? (
+          <img src="/images/loading.gif" alt="로딩 중..." className="m-auto h-[100px]" />
+        ) : (
+          <BookCardSimpleList books={relatedBookList} />
+        )}
       </div>
     </div>
   );

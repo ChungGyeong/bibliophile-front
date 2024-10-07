@@ -2,6 +2,7 @@ import {
   BookStateType,
   PopularBookRequestType,
   RecommendBookRequestType,
+  RelatedBookListRequestType,
   SearchByTitleRequestType,
 } from "@/types/books.ts";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
@@ -11,6 +12,7 @@ import {
   getBookListByTitle,
   getPopularBookList,
   getRecommendedBookList,
+  getRelatedBookList,
 } from "@/api/book.ts";
 
 const initialState: BookStateType = {
@@ -31,6 +33,8 @@ const initialState: BookStateType = {
   },
   recommendedBookList: [],
   popularBookList: [],
+  isLoadingRelatedBookList: false,
+  relatedBookList: [],
   searchedBookList: [],
   searchedBookId: undefined,
 };
@@ -72,6 +76,14 @@ export const loadBookByIsbn = createAsyncThunk("book/loadBookByIsbn", async (isb
   return response.data;
 });
 
+export const loadRelatedBookList = createAsyncThunk(
+  "book/loadRelatedBookList",
+  async (requestBody: RelatedBookListRequestType) => {
+    const response = await getRelatedBookList(requestBody);
+    return response.data;
+  }
+);
+
 export const bookSlice = createSlice({
   name: "book",
   initialState,
@@ -109,6 +121,17 @@ export const bookSlice = createSlice({
         state.loading = false;
       })
       .addCase(loadPopularBookList.rejected, (state, action) => {
+        state.error = action.error.message;
+      })
+      .addCase(loadRelatedBookList.pending, state => {
+        state.isLoadingRelatedBookList = true;
+      })
+      .addCase(loadRelatedBookList.fulfilled, (state, action) => {
+        state.relatedBookList = action.payload.data;
+        state.error = undefined;
+        state.isLoadingRelatedBookList = false;
+      })
+      .addCase(loadRelatedBookList.rejected, (state, action) => {
         state.error = action.error.message;
       })
       .addCase(loadBookListByTitle.pending, state => {
