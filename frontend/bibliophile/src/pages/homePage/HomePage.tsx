@@ -17,7 +17,7 @@ const settings = (setCurrentSlide: (slideIndex: number) => void) => ({
   centerMode: true,
   centerPadding: "24px",
   slidesToShow: 1,
-  infinite: false,
+  infinite: true,
   speed: 500,
   arrows: true,
   beforeChange: (_current: number, next: number) => setCurrentSlide(next),
