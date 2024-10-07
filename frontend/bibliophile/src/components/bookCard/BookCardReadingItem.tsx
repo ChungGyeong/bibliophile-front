@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import ProgressBar from "@/components/common/ProgressBar.tsx";
+import { formatDate } from "@/utils/calDate.ts";
 
 interface BookCardReadingProps {
   myBookId: number;
@@ -47,12 +48,12 @@ const BookCardReadingItem: React.FC<BookCardReadingProps> = ({
       <div className="w-2/3 flex flex-col justify-between">
         <div className="flex items-start justify-between">
           <div>
-            <p className="font-medium text-base">{title}</p>
-            <p className="font-medium text-[10px]">{authors}</p>
-            <p className="font-light text-[10px]">{publisher}</p>
+            <p className="font-medium text-base line-clamp-1">{title}</p>
+            <p className="font-medium text-[10px] line-clamp-1">{authors}</p>
+            <p className="font-light text-[10px] line-clamp-1">{publisher}</p>
           </div>
           <p
-            className="font-ligt text-medium-gray text-[10px] z-10 relative active:text-black"
+            className="font-ligt text-medium-gray text-[10px] z-10 relative active:text-black w-1/5 text-right"
             onClick={handleClickNavigateMoreInfo}
           >
             더보기
@@ -60,7 +61,7 @@ const BookCardReadingItem: React.FC<BookCardReadingProps> = ({
         </div>
         <div>
           <div className="flex w-full justify-between">
-            <p className="text-[10px]">{createdDate} ~</p>
+            <p className="text-[10px]">{formatDate(createdDate)} ~</p>
             <p className="font-light text-[10px]">
               {readingPage} / {totalPage} p &nbsp;&nbsp;&nbsp;
             </p>

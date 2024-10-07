@@ -19,6 +19,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({ isBookmarked, bookId }) => {
 
   const handleToggleBookmarked = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
+    setBookmarked(!bookmarked);
     if (bookmarked) {
       await dispatch(removeBookmark(bookId));
     } else {

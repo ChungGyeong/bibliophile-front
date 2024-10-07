@@ -29,8 +29,8 @@ const BookCardSimpleItem: React.FC<BookCardSimpleItemProps> = ({
         <img src={thumbnail} alt={title} className="w-full h-full" />
       </div>
       <div className="h-1/5 flex flex-col items-start justify-between mt-1">
-        <p className="font-regular text-xs">{title}</p>
-        <p className="font-light text-medium-gray text-[10px]">{authors}</p>
+        <p className="font-regular text-xs line-clamp-1">{title}</p>
+        <p className="font-light text-medium-gray text-[10px] line-clamp-1">{authors}</p>
       </div>
     </div>
   );

@@ -8,6 +8,5 @@ export const calculateDaysSince = (date: string): number => {
 };
 
 export const formatDate = (date: string): string => {
-  const datePart = date.split(" ")[0];
-  return datePart.replace(/-/g, "/");
+  return date.slice(0, 10);
 };

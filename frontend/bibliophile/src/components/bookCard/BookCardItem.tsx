@@ -1,6 +1,7 @@
 import React from "react";
 import LikeButton from "@/components/common/LikeButton.tsx";
 import { useNavigate, useLocation } from "react-router-dom";
+import { formatDate } from "@/utils/calDate.ts";
 
 interface BookCardItemProps {
   bookId: number;
@@ -38,13 +39,15 @@ const BookCardItem: React.FC<BookCardItemProps> = ({
     >
       <div className="flex gap-5 justify-between whitespace-nowrap items-start h-[18px]">
         {completionReadingTime ? (
-          <p className="text-medium-gray text-[10px] font-medium">{completionReadingTime}</p>
+          <p className="text-medium-gray text-[10px] font-medium">
+            {formatDate(completionReadingTime)}
+          </p>
         ) : (
           <LikeButton isBookmarked={isBookmarked ?? false} bookId={bookId} />
         )}
         <div>
           <p
-            className="text-medium-gray text-[10px] font-light z-10"
+            className="text-medium-gray text-[10px] font-light z-10 w-full"
             onClick={handleClickNavigateMoreInfo}
           >
             더보기
@@ -58,13 +61,9 @@ const BookCardItem: React.FC<BookCardItemProps> = ({
         className="object-contain self-center mt-2 aspect-[0.75] w-[90px]"
       />
 
-      <p className="self-start mt-3.5 ml-5 font-regular text-xs">
-        {title.slice(0, 7)}
-        {title.length > 7 && "..."}
-      </p>
-      <p className="self-start ml-5 font-light text-medium-gray text-[10px]">
-        {authors.slice(0, 8)}
-        {authors.length > 8 && "..."}
+      <p className="self-start mt-3.5 mx-5 font-regular text-xs line-clamp-1">{title}</p>
+      <p className="self-start mx-5 font-light text-medium-gray text-[10px] line-clamp-1">
+        {authors}
       </p>
     </div>
   );

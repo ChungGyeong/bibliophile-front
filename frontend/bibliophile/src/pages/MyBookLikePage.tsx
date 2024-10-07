@@ -24,9 +24,9 @@ const MyBookLikePage: React.FC = () => {
 
   return (
     <div className="mt-[40px]">
-      <div className="grid grid-cols-2 gap-x-[5%] gap-y-[20px] w-full">
-        {bookmarkList.length > 0 ? (
-          bookmarkList.map((book, idx) => (
+      {bookmarkList.length > 0 ? (
+        <div className="grid grid-cols-2 gap-x-[5%] gap-y-[20px] w-full">
+          {bookmarkList.map((book, idx) => (
             <BookCardItem
               key={idx}
               bookId={book.bookId}
@@ -35,11 +35,11 @@ const MyBookLikePage: React.FC = () => {
               authors={book.authors}
               isBookmarked={true}
             />
-          ))
-        ) : (
-          <div>현재 북마크한 책이 없습니다.</div>
-        )}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div>현재 북마크한 책이 없습니다.</div>
+      )}
     </div>
   );
 };

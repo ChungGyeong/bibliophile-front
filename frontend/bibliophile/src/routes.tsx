@@ -33,7 +33,7 @@ const AppRoutes = () => {
   const { isLoggedIn } = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
-    typeof isLoggedIn !== "undefined" || getIsAuthenticated() ? navigate("/") : navigate("/login");
+    typeof isLoggedIn === "undefined" || (!getIsAuthenticated() && navigate("/login"));
   }, []);
 
   return (
