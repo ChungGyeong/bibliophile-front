@@ -40,7 +40,7 @@ const HomePage: React.FC = () => {
   return (
     <div>
       <div className="mt-4">
-        <FoxHouse foxId={1} level={2} foxType="BABY" foxStatus="GOOD" feedCount={8} exp={70} />
+        <FoxHouse />
 
         <div className="my-[50px]">
           <div className="flex items-center justify-between my-2">
