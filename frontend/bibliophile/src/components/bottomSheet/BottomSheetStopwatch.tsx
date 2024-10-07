@@ -1,10 +1,27 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { addTimer } from "@/redux/timerSlice";
+import { AppDispatch } from "@/redux/store.ts";
 
-const BottomSheetStopwatch: React.FC = () => {
+interface BottomSheetStopwatchProps {
+  myBookId: number;
+  totalReadingTime: string;
+}
+
+const BottomSheetStopwatch: React.FC<BottomSheetStopwatchProps> = ({
+  myBookId,
+  totalReadingTime,
+}) => {
   const [running, setRunning] = useState<boolean>(true);
   const [time, setTime] = useState<number>(0);
+  const [startTime, setStartTime] = useState<Date | null>(null);
+  const dispatch: AppDispatch = useDispatch();
 
-  const total_reading_time: string = "00:20:23";
+  useEffect(() => {
+    const initialStartTime = new Date();
+    setStartTime(initialStartTime);
+    console.log("시작 시간:", initialStartTime.toISOString());
+  }, []);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -29,13 +46,34 @@ const BottomSheetStopwatch: React.FC = () => {
     return `${getHours}:${getMinutes}:${getSeconds}`;
   };
 
-  const handleClickButton = () => {
+  const formatToServerCompatible = (date: Date) => {
+    return date.toISOString().replace("T", " ").split(".")[0] + ".000000";
+  };
+
+  const handleClickButton = async () => {
+    if (running) {
+      const pauseTime = new Date();
+      if (startTime) {
+        const createData = {
+          myBookId: myBookId,
+          startTime: formatToServerCompatible(startTime),
+          endTime: formatToServerCompatible(pauseTime),
+        };
+        await dispatch(addTimer(createData));
+        console.log("시작 시간:", formatToServerCompatible(startTime));
+        console.log("멈춘 시간:", formatToServerCompatible(pauseTime));
+      }
+    } else {
+      const newStartTime = new Date();
+      setStartTime(newStartTime);
+      console.log("새로운 시작 시간:", formatToServerCompatible(newStartTime));
+    }
     setRunning(!running);
   };
 
   return (
     <div className="flex flex-col items-center justify-center m-[20%]">
-      <p className="font-light text-base leading-normal">그동안 읽은 시간 : {total_reading_time}</p>
+      <p className="font-light text-base leading-normal">그동안 읽은 시간 : {totalReadingTime}</p>
       <img className="my-[10%]" src="./src/assets/book-reading-fox.gif" alt="책 읽는 여우" />
       <p className="font-light text-base leading-normal">다시 요리를 시작한지 ...</p>
       <p className="font-bold text-4xl leading-normal mb-[10%]">{formatTime(time)}</p>

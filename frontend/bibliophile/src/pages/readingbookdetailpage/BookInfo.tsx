@@ -6,6 +6,7 @@ import { calculateDaysSince, formatDate } from "@/utils/calDate.ts";
 
 interface BookInfoProps {
   bookId: number;
+  myBookId: number;
   thumbnail: string;
   title: string;
   authors: string;
@@ -16,6 +17,7 @@ interface BookInfoProps {
 
 const BookInfo: React.FC<BookInfoProps> = ({
   bookId,
+  myBookId,
   thumbnail,
   title,
   authors,
@@ -39,7 +41,7 @@ const BookInfo: React.FC<BookInfoProps> = ({
     <div className="relative w-screen -left-[5.5%] h-fit max-w-[600px] overflow-hidden">
       {isOpenStopwatch && (
         <BottomSheet height={600} handleCloseBottomSheet={handleClickOpenStopwatch}>
-          <BottomSheetStopwatch />
+          <BottomSheetStopwatch myBookId={myBookId} totalReadingTime={totalReadingTime} />
         </BottomSheet>
       )}
       <div

@@ -199,6 +199,7 @@ const ReadingBookDetailPage: React.FC = () => {
           <div className="mb-[40px]">
             <BookInfo
               bookId={book.bookId}
+              myBookId={Number(myBookId)}
               thumbnail={book.thumbnail}
               title={book.title}
               authors={book.authors}
@@ -234,6 +235,7 @@ const ReadingBookDetailPage: React.FC = () => {
           <div className="mb-[40px]">
             <BookInfo
               bookId={book.bookId}
+              myBookId={Number(myBookId)}
               thumbnail={book.thumbnail}
               title={book.title}
               authors={book.authors}
