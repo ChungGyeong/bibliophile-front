@@ -45,7 +45,14 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
   const MAX_FILE_SIZE = 2 * 1024 * 1024;
 
   const handleMemoChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setMemo(e.target.value);
+    const inputMemo = e.target.value;
+
+    if (inputMemo.length > 400) {
+      setModalMessage("최대 400자까지 입력 가능합니다.");
+      setIsModalOpen(true);
+    } else {
+      setMemo(inputMemo);
+    }
   };
 
   const handlePageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,8 +65,9 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
   };
 
   const handleButtonClick = async () => {
-    if (memo.length > 400) {
-      alert("400자 이하로 작성해주세요!");
+    if (!memo) {
+      setModalMessage("내용을 입력해주세요.");
+      setIsModalOpen(true);
       return;
     }
 
@@ -84,6 +92,11 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
     const finalImages = [...existingImages, ...uploadedImageUrls];
 
     if (label === "메모") {
+      if (!page) {
+        setModalMessage("페이지를 입력해주세요.");
+        setIsModalOpen(true);
+        return;
+      }
       if (mode === "작성하기") {
         const createData = {
           myBookId: myBookId,
