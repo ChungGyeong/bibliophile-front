@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { ReviewType, CreateData, UpdateReviewData } from "@/types/review.ts";
-import { getMyReview, createReview, deleteReview, updateReview } from "@/api/review";
+import { getMyReview, createReview, deleteReview, updateReview, getReviews } from "@/api/review";
 
 const initialState: ReviewType = {
   loading: true,
@@ -13,36 +13,49 @@ const initialState: ReviewType = {
     isHost: false,
     createdDate: "",
     lastModifyDate: "",
-  }
+  },
+  reviewList: []
 };
 
 export const loadMyReview = createAsyncThunk(
   "review/getMyReview",
   async (myBookId: number) => {
-    return await getMyReview(myBookId);
+    const response = await getMyReview(myBookId);
+    return response.data;
   }
 );
 
 export const addReview = createAsyncThunk(
   "review/createReview",
   async (createData: CreateData) => {
-    return await createReview(createData);
+    const response = await createReview(createData);
+    return response.data;
   }
 )
 
 export const removeReview = createAsyncThunk(
   "review/deleteReview",
   async (reviewId: number) => {
-    return await deleteReview(reviewId);
+    const response = await deleteReview(reviewId);
+    return response.data;
   }
 );
 
 export const editReview = createAsyncThunk(
   "review/updateReview",
   async ({reviewId, updateData}: {reviewId:number; updateData: UpdateReviewData}) => {
-    return await updateReview(reviewId, updateData);
+    const response = await updateReview(reviewId, updateData);
+    return response.data;
   }
 )
+
+export const loadReviews = createAsyncThunk(
+  "review/getReviews",
+  async (book: number) => {
+    const response = await getReviews(book);
+    return response.data;
+  }
+);
 
 const reviewSlice = createSlice({
   name: "review",
@@ -89,6 +102,15 @@ const reviewSlice = createSlice({
       .addCase(editReview.rejected, (state, action) => {
         state.error = action.error.message || "Review update failed";
       })
+
+      .addCase(loadReviews.fulfilled, (state, action) => {
+        state.reviewList = action.payload.data;
+        state.loading = false;
+      })
+      .addCase(loadReviews.rejected, (state, action) => {
+        state.error = action.error.message || "Failed to load memo list";
+        state.loading = false;
+      });
   },
 });
 

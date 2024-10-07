@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store.ts";
 import { loadBookDetailByBookId } from "@/redux/bookSlice.ts";
 import { loadMyBookId, addMyBook } from "@/redux/myBookSlice";
+import { loadReviews } from "@/redux/reviewSlice";
 
 interface ReviewDataResponse {
   reviewId: number;
@@ -31,6 +32,7 @@ interface BookSimpleDataResponse {
 const BookDetailPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { book, loading: bookLoading } = useSelector((state: RootState) => state.book);
+  const { reviewList: reviews } = useSelector((state: RootState) => state.review);
 
   const {
     book: myBook,
@@ -39,7 +41,6 @@ const BookDetailPage: React.FC = () => {
   } = useSelector((state: RootState) => state.myBook);
 
   const [relatedBooks, setRelatedBooks] = useState<BookSimpleDataResponse[]>([]);
-  const [reviews, setReviews] = useState<ReviewDataResponse[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const navigate = useNavigate();
@@ -61,7 +62,7 @@ const BookDetailPage: React.FC = () => {
     const numericBookId = parseInt(bookId!, 10);
     dispatch(loadBookDetailByBookId(numericBookId));
     dispatch(loadMyBookId(numericBookId));
-
+    dispatch(loadReviews(numericBookId));
     // TODO: 추후 API 호출로 변경
     const dummyRelatedBooks: BookSimpleDataResponse[] = [
       {
@@ -91,66 +92,6 @@ const BookDetailPage: React.FC = () => {
     ];
 
     setRelatedBooks(dummyRelatedBooks);
-
-    // TODO: 추후 API 호출로 변경
-    const dummyReviews: ReviewDataResponse[] = [
-      {
-        reviewId: 1,
-        nickname: "사용자",
-        content: "사용자가 작성한 리뷰가 보입니다.",
-        star: 4,
-        isHost: true,
-        createdDate: "2024-02-18 07:53:23.795698",
-        lastModifyDate: "2024-02-18 07:53:23.795698",
-      },
-      {
-        reviewId: 2,
-        nickname: "사용자",
-        content: "사용자가 작성한 리뷰가 보입니다.",
-        star: 3,
-        isHost: true,
-        createdDate: "2024-02-18 07:53:23.795698",
-        lastModifyDate: "2024-02-18 07:53:23.795698",
-      },
-      {
-        reviewId: 3,
-        nickname: "사용자",
-        content: "사용자가 작성한 리뷰가 보입니다.",
-        star: 3,
-        isHost: true,
-        createdDate: "2024-02-18 07:53:23.795698",
-        lastModifyDate: "2024-02-18 07:53:23.795698",
-      },
-      {
-        reviewId: 4,
-        nickname: "사용자",
-        content: "사용자가 작성한 리뷰가 보입니다.",
-        star: 3,
-        isHost: true,
-        createdDate: "2024-02-18 07:53:23.795698",
-        lastModifyDate: "2024-02-18 07:53:23.795698",
-      },
-      {
-        reviewId: 5,
-        nickname: "사용자",
-        content: "사용자가 작성한 리뷰가 보입니다.",
-        star: 3,
-        isHost: true,
-        createdDate: "2024-02-18 07:53:23.795698",
-        lastModifyDate: "2024-02-18 07:53:23.795698",
-      },
-      {
-        reviewId: 6,
-        nickname: "사용자",
-        content: "사용자가 작성한 리뷰가 보입니다.",
-        star: 3,
-        isHost: true,
-        createdDate: "2024-02-18 07:53:23.795698",
-        lastModifyDate: "2024-02-18 07:53:23.795698",
-      },
-    ];
-
-    setReviews(dummyReviews);
   }, [dispatch, bookId]);
 
   useEffect(() => {
@@ -251,26 +192,30 @@ const BookDetailPage: React.FC = () => {
       <div className="mt-[30px] mb-[40px]">
         <h2 className="font-medium text-[18px] mb-[10px]">리뷰 모아보기</h2>
 
-        <Carousel>
-          <CarouselContent>
-            {groupedReviews.map((group, index) => (
-              <CarouselItem key={index}>
-                <div className="space-y-[10px]">
-                  {group.map(review => (
-                    <ReviewCard
-                      reviewId={review.reviewId}
-                      key={review.reviewId}
-                      content={review.content}
-                      star={review.star}
-                      nickname="사용자"
-                      type="list"
-                    />
-                  ))}
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-        </Carousel>
+        {groupedReviews && groupedReviews.length > 0 ? (
+          <Carousel>
+            <CarouselContent>
+              {groupedReviews.map((group, index) => (
+                <CarouselItem key={index}>
+                  <div className="space-y-[10px]">
+                    {group.map(review => (
+                      <ReviewCard
+                        reviewId={review.reviewId}
+                        key={review.reviewId}
+                        content={review.content}
+                        star={review.star}
+                        nickname={review.nickname}
+                        type="list"
+                      />
+                    ))}
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
+        ) : (
+          <div className="text-[14px] font-light">등록된 리뷰가 없습니다</div>
+        )}
       </div>
 
       <hr />
