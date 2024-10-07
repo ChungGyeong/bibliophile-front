@@ -39,7 +39,7 @@ const BookInfo: React.FC<BookInfoProps> = ({
     <div className="relative w-screen -left-[5.5%] h-fit max-w-[600px] overflow-hidden">
       {isOpenStopwatch && (
         <BottomSheet height={600} handleCloseBottomSheet={handleClickOpenStopwatch}>
-          <BottomSheetStopwatch />
+          <BottomSheetStopwatch myBookId={bookId} totalReadingTime={totalReadingTime} />
         </BottomSheet>
       )}
       <div
