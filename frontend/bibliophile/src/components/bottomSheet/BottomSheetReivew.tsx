@@ -20,6 +20,11 @@ const BottomSheetReview: React.FC<BottomSheetReviewProps> = ({ onClose, bookId, 
     setReview(e.target.value);
   };
   const handleButtonClick = async () => {
+    if (review.length > 100) {
+      alert("리뷰는 100글자 이하로 작성해주세요!");
+      return;
+    }
+
     const createData = {
       content: review,
       star: score,

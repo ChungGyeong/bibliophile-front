@@ -61,8 +61,10 @@ const BookCardItem: React.FC<BookCardItemProps> = ({
         className="object-contain self-center mt-2 aspect-[0.75] w-[90px]"
       />
 
-      <p className="self-start mt-3.5 mx-5 font-regular text-xs line-clamp-1">{title}</p>
-      <p className="self-start mx-5 font-light text-medium-gray text-[10px] line-clamp-1">
+      <p className="self-start mt-3.5 font-regular text-xs w-[100px] m-auto line-clamp-1">
+        {title}
+      </p>
+      <p className="self-start  w-[100px] m-auto  font-light text-medium-gray text-[10px] line-clamp-1">
         {authors}
       </p>
     </div>

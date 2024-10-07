@@ -137,7 +137,7 @@ const ReadingBookDetailPage: React.FC = () => {
     <div>
       {modalType !== null && (
         <Modal
-          isOpen={modalType !== null}
+          isOpen={true}
           handleClickClose={() => setModalType(null)}
           title={
             modalType === "confirmReading"
@@ -209,18 +209,17 @@ const ReadingBookDetailPage: React.FC = () => {
           </div>
 
           <div>
-            <h2 className="font-semibold text-[18px] mb-[10px]">현재 요리는 이만큼 완성!</h2>
-            <div className="mb-[20px]">
-              <div className="flex justify-between">
-                <span className="font-light text-[12px] text-gray">
-                  클릭해서 페이지를 수정하세요!
-                </span>
-                <span className="font-medium text-[14px]" onClick={handlePageBottomSheetToggle}>
-                  {book.readingPage} / {book.totalPage} p
-                </span>
-              </div>
-              <ProgressBar isThin={false} percent={book.readingPercent} />
+            <h2 className="font-semibold text-[18px] mb-5">현재 요리는 이만큼 완성!</h2>
+            <div className="w-full flex flex-col items-end">
+              <span className="font-light text-[12px] text-wrap text-gray text-end w-full">
+                클릭해서 페이지를 수정하세요!
+              </span>
+              <span className="font-medium text-[14px]" onClick={handlePageBottomSheetToggle}>
+                {book.readingPage} / {book.totalPage} p
+              </span>
             </div>
+            <ProgressBar isThin={false} percent={book.readingPercent} />
+            <br />
             <DoubleButton
               firstLabel="끝까지 요리했어요!"
               secondLabel="책장에서 지우기"

@@ -47,6 +47,11 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
   };
 
   const handleButtonClick = async () => {
+    if (memo.length > 400) {
+      alert("400자 이하로 작성해주세요!");
+      return;
+    }
+
     const formData = new FormData();
 
     if (filesToUpload.length > 0) {
@@ -137,9 +142,9 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
 
   const getPlaceholder = (label: string): string => {
     if (label === "메모") {
-      return "책을 읽으면서 떠오르는 생각이나 감정을 간단히 메모해 보세요.";
+      return "책을 읽으면서 떠오르는 생각이나 감정을 간단히 메모해 보세요. (최대 400자)";
     } else if (label === "독후감") {
-      return "책에 대한 생각이나 감정, 주제나 메시지, 또는 인상 깊었던 장면 등 자유롭게 작성해주세요.";
+      return "책에 대한 생각이나 감정, 주제나 메시지, 또는 인상 깊었던 장면 등 자유롭게 작성해주세요. (최대 400자)";
     }
     return "";
   };
@@ -149,7 +154,7 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center m-[5%] h-full pb-[75px]">
+    <div className="flex flex-col items-center justify-center m-[5%] h-full pb-[75px] px-[5%]">
       <p className="font-bold text-xl leading-normal mb-[10%]">
         {label} {mode}
       </p>
@@ -157,18 +162,18 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
         value={memo}
         onChange={handleMemoChange}
         placeholder={getPlaceholder(label)}
-        className={`w-[90%] ${getHeightByLabel(label)} border-2 border-gray-300 p-2 rounded-md outline-none mb-6 font-light text-xs`}
+        className={`w-full ${getHeightByLabel(label)} border-2 border-gray-300 p-2 rounded-md outline-none mb-6 font-light text-xs`}
       />
       {label === "메모" && (
         <input
-          type="text"
-          placeholder="페이지를 입력해주세요"
-          className="w-[80%] border-b-2 border-gray focus:border-black outline-none text-gray-500 text-sm py-3 mb-6"
+          type="number"
+          placeholder="페이지를 숫자로 입력해주세요"
+          className="w-full border-b-2 focus:border-black outline-none text-gray-500 text-sm py-3 mb-6"
           value={page ?? 0}
           onChange={handlePageChange}
         />
       )}
-      <div className="flex justify-start items-center w-[90%] h-[10%] my-3">
+      <div className="flex justify-start items-center w-full h-[10%] my-3">
         <div
           onClick={handleIconClick}
           className="me-4 aspect-square h-full border-2 border-gray-300 p-2 rounded-md outline-none mb-5 flex items-center justify-center"

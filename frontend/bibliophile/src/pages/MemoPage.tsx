@@ -34,7 +34,7 @@ const MemoPage: React.FC = () => {
 
   useEffect(() => {
     fetchMemoData();
-  }, [memoId]);
+  }, [memoId, navigate]);
 
   const handleModalClose = () => {
     fetchMemoData();

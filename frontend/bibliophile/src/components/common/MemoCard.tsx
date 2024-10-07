@@ -38,7 +38,7 @@ const MemoCard: React.FC<CardProps> = ({ type, id, content, imgUrl, createdDate,
         )}
       </div>
 
-      <div className="h-[120px] ml-[10px] flex-grow flex-grow flex flex-col justify-between">
+      <div className="h-[120px] ml-[10px] flex-grow  flex flex-col justify-between">
         <div>
           <div className="flex justify-between text-[10px] mb-[6px]">
             <div className="font-medium">{formatDate(createdDate)}</div>
@@ -51,9 +51,9 @@ const MemoCard: React.FC<CardProps> = ({ type, id, content, imgUrl, createdDate,
             {content}
           </div>
         </div>
-        {type === "memo" && memoPage && (
+        {type === "memo" && (
           <div className="text-right font-medium text-[10px] text-gray-500 mt-2">
-            ... {memoPage} p
+            {memoPage ? `...${memoPage} p` : "페이지 없음"}
           </div>
         )}
       </div>

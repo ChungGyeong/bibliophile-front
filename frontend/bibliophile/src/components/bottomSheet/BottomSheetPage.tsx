@@ -25,11 +25,11 @@ const BottomSheetPage: React.FC<BottomSheetPageProps> = ({ onSave, totalPage }) 
   return (
     <div>
       <div className="flex flex-col items-center justify-center m-[20%]">
-        <p className="font-bold text-xl leading-normal my-[15%]">페이지를 입력하세요</p>
+        <p className="font-bold text-xl leading-normal my-[15%]">페이지를 숫자로 입력하세요</p>
         <input
-          type="text"
+          type="number"
           placeholder={`전체 ${totalPage}p`}
-          className="border-b-2 border-gray focus:border-black outline-none text-gray-500 text-sm py-2 mb-[30%]"
+          className="w-full border-b-2 focus:border-black outline-none text-gray-500 text-sm py-2 mb-[30%]"
           value={inputValue}
           onChange={handleInputChange}
         />
