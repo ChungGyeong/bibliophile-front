@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store.ts";
 import { addTimer } from "@/redux/timerSlice";
-import { AppDispatch } from "@/redux/store.ts";
+import { loadFox } from "@/redux/foxSlice";
 
 interface BottomSheetStopwatchProps {
   myBookId: number;
@@ -12,10 +13,15 @@ const BottomSheetStopwatch: React.FC<BottomSheetStopwatchProps> = ({
   myBookId,
   totalReadingTime,
 }) => {
+  const dispatch: AppDispatch = useDispatch();
+  const { fox } = useSelector((state: RootState) => state.fox);
   const [running, setRunning] = useState<boolean>(true);
   const [time, setTime] = useState<number>(0);
   const [startTime, setStartTime] = useState<Date | null>(null);
-  const dispatch: AppDispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(loadFox());
+  }, [dispatch]);
 
   useEffect(() => {
     const initialStartTime = new Date();
@@ -70,7 +76,15 @@ const BottomSheetStopwatch: React.FC<BottomSheetStopwatchProps> = ({
   return (
     <div className="flex flex-col items-center justify-center m-[20%]">
       <p className="font-light text-base leading-normal">그동안 읽은 시간 : {totalReadingTime}</p>
-      <img className="my-[10%]" src="./src/assets/book-reading-fox.gif" alt="책 읽는 여우" />
+      {fox && (
+        <div>
+          <img
+            className="my-[10%]"
+            src={`/images/fox/${fox.foxType === "ADULT" ? "youth" : fox.foxType.toLowerCase()}_timer.gif`}
+            alt="책 읽는 여우"
+          />
+        </div>
+      )}
       <p className="font-light text-base leading-normal">다시 요리를 시작한지 ...</p>
       <p className="font-bold text-4xl leading-normal mb-[10%]">{formatTime(time)}</p>
       <div onClick={handleClickButton}>
