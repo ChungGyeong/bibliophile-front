@@ -11,7 +11,7 @@ import { socialLogin } from "@/api/outh.ts";
 import { SignupRequest, UpdateUserRequest, UserStateType } from "@/types/user.ts";
 
 const initialState: UserStateType = {
-  isLoggedIn: false,
+  isLoggedIn: undefined,
   loading: false,
   error: undefined,
   isNicknameExist: false,
@@ -110,6 +110,7 @@ export const userSlice = createSlice({
           nickname,
           profileImage,
         };
+        state.isLoggedIn = true;
         state.loading = false;
         state.error = undefined;
       })
@@ -154,6 +155,7 @@ export const userSlice = createSlice({
       })
       .addCase(logout.fulfilled, state => {
         state.loading = false;
+        state.isLoggedIn = undefined;
       })
       .addCase(logout.rejected, (state, action) => {
         state.error = action.error.message;

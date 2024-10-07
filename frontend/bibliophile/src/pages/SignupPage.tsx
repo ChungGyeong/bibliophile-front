@@ -91,6 +91,7 @@ const SignupPage: React.FC = () => {
     dispatch(signup(signupData)).then(response => {
       if (!loading && response.payload !== undefined) {
         alert("회원가입 성공!");
+        localStorage.setItem("isAuthenticated", "yes");
         navigate("/");
       } else {
         alert("회원가입에 실패했습니다. ㅠㅠ");

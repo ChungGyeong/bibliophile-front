@@ -72,6 +72,7 @@ const MyPage: React.FC = () => {
 
   const handleClickLogout = () => {
     dispatch(logout);
+    localStorage.removeItem("isAuthenticated");
     navigate("/login");
   };
 

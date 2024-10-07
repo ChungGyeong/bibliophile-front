@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import HomePage from "./pages/homePage/HomePage.tsx";
 import PageLayout from "./layout/PageLayout.tsx";
 import DefaultLayout from "./layout/DefaultLayout.tsx";
@@ -18,8 +18,24 @@ import BarcodePage from "@/pages/searchPage/BarcodePage.tsx";
 import BookSuggestionPage from "@/pages/BookSuggestionPage.tsx";
 import SocialLogin from "@/pages/SocialLogin.tsx";
 import PrivacyPolicyPage from "@/pages/myPage/PrivacyPolicyPage.tsx";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store.ts";
+
+const getIsAuthenticated = (): boolean => {
+  const isAuthenticated = localStorage.getItem("isAuthenticated");
+  return !!isAuthenticated;
+};
 
 const AppRoutes = () => {
+  const navigate = useNavigate();
+
+  const { isLoggedIn } = useSelector((state: RootState) => state.user);
+
+  useEffect(() => {
+    typeof isLoggedIn !== "undefined" || getIsAuthenticated() ? navigate("/") : navigate("/login");
+  }, []);
+
   return (
     <Routes>
       <Route path="/login">

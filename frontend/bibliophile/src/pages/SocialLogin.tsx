@@ -5,7 +5,7 @@ import { AppDispatch, RootState } from "@/redux/store.ts";
 import { useNavigate, useParams } from "react-router-dom";
 
 const SocialLogin = () => {
-  const { isLoggedIn, isFirst } = useSelector((state: RootState) => state.user);
+  const { isLoggedIn } = useSelector((state: RootState) => state.user);
   const dispatch: AppDispatch = useDispatch();
 
   const { provider } = useParams();
@@ -15,17 +15,18 @@ const SocialLogin = () => {
     const code = new URL(window.location.href).searchParams.get("code");
 
     if (code) {
-      dispatch(login({ oauthServerType: provider!.toUpperCase(), code }));
+      dispatch(login({ oauthServerType: provider!.toUpperCase(), code })).then(response => {
+        if (response.meta.requestStatus === "fulfilled" && !response.payload.data.isFirst) {
+          localStorage.setItem("isAuthenticated", "yes");
+          navigate("/");
+        } else if (response.meta.requestStatus === "fulfilled" && !response.payload.data.isFirst) {
+          navigate("/signup");
+        } else if (response.meta.requestStatus === "rejected") {
+          alert("로그인에 실패했습니다. 다시 로그인 해주세요!");
+        }
+      });
     }
   }, [dispatch, provider]);
-
-  useEffect(() => {
-    if (isLoggedIn && isFirst) {
-      navigate("/signup");
-    } else if (isLoggedIn && !isFirst) {
-      navigate("/");
-    }
-  }, [isLoggedIn, isFirst, navigate]);
 
   return (
     !isLoggedIn && (

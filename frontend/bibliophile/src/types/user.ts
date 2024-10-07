@@ -1,5 +1,5 @@
 export interface UserStateType {
-  isLoggedIn: boolean;
+  isLoggedIn: boolean | undefined;
   loading: boolean;
   error: string | undefined;
   isNicknameExist: boolean;
