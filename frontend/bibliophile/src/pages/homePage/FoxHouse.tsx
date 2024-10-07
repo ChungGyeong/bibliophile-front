@@ -1,59 +1,62 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
+import { loadFox, editFoxFeed } from "@/redux/foxSlice";
 import ProgressBar from "@/components/common/ProgressBar";
 
-interface FoxData {
-  foxId: number;
-  level: number;
-  foxType: string;
-  exp: number;
-  feedCount: number;
-  foxStatus: string;
-}
+const FoxHouse: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { fox, error } = useSelector((state: RootState) => state.fox);
+  const [isFeeding, setIsFeeding] = useState(false);
 
-// @ts-ignore
-const FoxHouse: React.FC<FoxData> = ({ foxId, level, foxType, exp, feedCount, foxStatus }) => {
-  // @ts-ignore
-  const [currentFeedCount, setCurrentFeedCount] = useState(feedCount);
-
-  const renderFoxStatus = () => {
-    // TODO: 현재는 이모지이지만, 추후 이미지로 바꾸어야 함
-    // TODO: 또한 BE와 상의하여 foxType 결과에 대해 이야기하고, 맞춰 수정해야 함 (현재는 임의값)
-    if (foxType === "BABY" && foxStatus === "GOOD") {
-      return "🐰";
-    } else if (foxType === "BABY" && foxStatus === "BAD") {
-      return "🐹";
-    } else if (foxType === "YOUTH" && foxStatus === "GOOD") {
-      return "🐶";
-    } else if (foxType === "YOUTH" && foxStatus === "BAD") {
-      return "🐔";
-    } else if (foxType === "ADULT" && foxStatus === "GOOD") {
-      return "🦊";
-    } else if (foxType === "ADULT" && foxStatus === "BAD") {
-      return "😻";
+  const renderFoxImg = () => {
+    if (isFeeding) {
+      return fox.foxType === "ADULT"
+        ? `/images/fox/youth_eat.gif`
+        : `/images/fox/${fox.foxType.toLowerCase()}_eat.gif`;
+    } else if (fox.foxType === "BABY") {
+      return `/images/fox/baby_${fox.foxStatus.toLowerCase()}.gif`;
+    } else if (fox.foxType === "YOUTH") {
+      return `/images/fox/youth_${fox.foxStatus.toLowerCase()}.gif`;
+    } else if (fox.foxType === "ADULT") {
+      return `/images/fox/youth_${fox.foxStatus.toLowerCase()}.gif`;
     }
-    return "💥";
   };
 
   const renderStatusIcon = () => {
-    if (foxStatus === "GOOD") {
+    if (fox.foxStatus === "GOOD") {
       return { iconClass: "fi fi-rr-smile-beam", label: "행복함" };
-    } else if (foxStatus === "BAD") {
+    } else if (fox.foxStatus === "BAD") {
       return { iconClass: "fi fi-rr-sad-tear", label: "배고픔" };
     }
   };
 
   const status = renderStatusIcon();
 
-  const handleFeedBtnClick = () => {
-    if (currentFeedCount >= 1) {
-      // TODO: 밥 먹이기 API POST
-      // TODO: 요청이 제대로 갔을 시 API GET 하여 setCurrentFeedCount로 밥 남은 것 업데이트
+  const handleFeedBtnClick = async () => {
+    setIsFeeding(true);
+    try {
+      await dispatch(editFoxFeed()).unwrap();
+      setTimeout(() => {
+        setIsFeeding(false);
+        dispatch(loadFox());
+      }, 3000);
+    } catch (error) {
+      setIsFeeding(false);
     }
   };
 
+  useEffect(() => {
+    dispatch(loadFox());
+  }, [dispatch]);
+
+  if (error) return <div>ERROR: {error}</div>;
+
   return (
     <div className="w-full h-[280px] shadow-custom border rounded-[5px]">
-      <div className="h-[200px] flex items-center justify-center">{renderFoxStatus()}</div>
+      <div className="h-[200px] flex items-center justify-center">
+        <img src={renderFoxImg()} alt="여우" className="h-full" />
+      </div>
 
       <div className="h-[80px] bg-orange rounded-b-[5px] flex items-center justify-between px-5">
         <div className="flex flex-col items-center">
@@ -64,9 +67,8 @@ const FoxHouse: React.FC<FoxData> = ({ foxId, level, foxType, exp, feedCount, fo
         </div>
 
         <div className="w-[160px] flex flex-col items-center">
-          <span className="text-white text-sm font-medium">Lv {level}</span>
-          {/* TODO: 프로그레스바 최대 경험치 기준 어떻게 받을지에 따라 마저 작성 */}
-          <ProgressBar isThin={false} percent={exp} />
+          <span className="text-white text-sm font-medium">Lv {fox.level}</span>
+          <ProgressBar isThin={false} percent={fox.percent} />
         </div>
 
         <div className="flex flex-col items-center">
@@ -76,7 +78,9 @@ const FoxHouse: React.FC<FoxData> = ({ foxId, level, foxType, exp, feedCount, fo
           >
             <i className="fi fi-rr-restaurant text-active-orange text-[26px] flex items-center justify-center" />
           </button>
-          <div className="text-xs font-medium text-white mt-1">{currentFeedCount} / 10</div>
+          <div className="text-xs font-medium text-white mt-1">
+            {fox.feedCount >= 1000 ? "999..." : fox.feedCount}
+          </div>
         </div>
       </div>
     </div>
