@@ -20,7 +20,6 @@ const BottomSheetStopwatch: React.FC<BottomSheetStopwatchProps> = ({
   useEffect(() => {
     const initialStartTime = new Date();
     setStartTime(initialStartTime);
-    console.log("시작 시간:", initialStartTime.toISOString());
   }, []);
 
   useEffect(() => {
@@ -60,13 +59,10 @@ const BottomSheetStopwatch: React.FC<BottomSheetStopwatchProps> = ({
           endTime: formatToServerCompatible(pauseTime),
         };
         await dispatch(addTimer(createData));
-        console.log("시작 시간:", formatToServerCompatible(startTime));
-        console.log("멈춘 시간:", formatToServerCompatible(pauseTime));
       }
     } else {
       const newStartTime = new Date();
       setStartTime(newStartTime);
-      console.log("새로운 시작 시간:", formatToServerCompatible(newStartTime));
     }
     setRunning(!running);
   };

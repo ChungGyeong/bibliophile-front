@@ -13,6 +13,7 @@ interface BookInfoProps {
   publisher: string;
   createDate: string;
   totalReadingTime: string;
+  reloadmybook?: () => void;
 }
 
 const BookInfo: React.FC<BookInfoProps> = ({
@@ -24,6 +25,7 @@ const BookInfo: React.FC<BookInfoProps> = ({
   publisher,
   createDate,
   totalReadingTime,
+  reloadmybook,
 }) => {
   const [isOpenStopwatch, setIsOpenStopwatch] = React.useState(false);
 
@@ -34,7 +36,10 @@ const BookInfo: React.FC<BookInfoProps> = ({
   };
 
   const handleClickOpenStopwatch = () => {
-    setIsOpenStopwatch(!isOpenStopwatch);
+    if (reloadmybook) {
+      reloadmybook();
+    }
+    setIsOpenStopwatch(false);
   };
 
   return (
@@ -75,7 +80,7 @@ const BookInfo: React.FC<BookInfoProps> = ({
           <p className="text-sm font-medium">
             {formatDate(createDate)}부터 {calculateDaysSince(createDate)}일째
           </p>
-          <div className="flex items-end gap-2" onClick={handleClickOpenStopwatch}>
+          <div className="flex items-end gap-2" onClick={() => setIsOpenStopwatch(true)}>
             <i className="fi fi-rr-alarm-clock"></i>
             <span className="text-lg font-regular">{totalReadingTime}</span>
           </div>

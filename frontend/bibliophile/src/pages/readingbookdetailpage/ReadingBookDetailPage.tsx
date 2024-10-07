@@ -109,6 +109,10 @@ const ReadingBookDetailPage: React.FC = () => {
     await dispatch(loadMyReview(Number(myBookId)));
   };
 
+  const reloadmybook = async () => {
+    dispatch(loadMyBook(Number(myBookId)));
+  };
+
   if (loading) {
     return (
       <div className="fixed inset-0 flex justify-center items-center">
@@ -206,6 +210,7 @@ const ReadingBookDetailPage: React.FC = () => {
               publisher={book.publisher}
               createDate={book.createdDate}
               totalReadingTime={book.totalReadingTime}
+              reloadmybook={reloadmybook}
             />
           </div>
 
