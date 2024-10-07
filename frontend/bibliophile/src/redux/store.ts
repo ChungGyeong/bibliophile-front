@@ -10,6 +10,7 @@ import { myBookReducer } from "@/redux/myBookSlice.ts";
 import { myBookStatisticsReducer } from "@/redux/myBookStatisticsSlice.ts";
 import { bookmarkReducer } from "@/redux/bookmarkSlice.ts";
 import { timerReducer } from "@/redux/timerSlice";
+import { foxReducer } from "@/redux/foxSlice";
 
 const store = configureStore({
   reducer: {
@@ -24,6 +25,7 @@ const store = configureStore({
     myBookStatistics: myBookStatisticsReducer,
     bookmark: bookmarkReducer,
     timer: timerReducer,
+    fox: foxReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
