@@ -17,7 +17,7 @@ const settings = (setCurrentSlide: (slideIndex: number) => void) => ({
   centerMode: true,
   centerPadding: "24px",
   slidesToShow: 1,
-  infinite: true,
+  infinite: false,
   speed: 500,
   arrows: true,
   beforeChange: (_current: number, next: number) => setCurrentSlide(next),
@@ -57,7 +57,6 @@ const HomePage: React.FC = () => {
             ) : bookList.length === 0 ? (
               <div>현재 읽고 있는 책이 없습니다.</div>
             ) : bookList.length === 1 ? (
-              // 책이 하나만 있을 때 슬라이더 대신 단일 카드만 표시
               <div className="mx-2">
                 <BookCardReadingItem
                   myBookId={bookList[0].myBookId}
