@@ -68,3 +68,14 @@ export const leaveAccount = async () => {
       throw error;
     });
 };
+
+export const getWordCloud = async () => {
+  return await clientInstance
+    .get("/users/word-cloud")
+    .then(response => {
+      return response;
+    })
+    .catch(error => {
+      throw error;
+    });
+};
