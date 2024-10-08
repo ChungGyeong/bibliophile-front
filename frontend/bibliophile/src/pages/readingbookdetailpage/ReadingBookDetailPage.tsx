@@ -162,6 +162,7 @@ const ReadingBookDetailPage: React.FC = () => {
             <BottomSheetPage
               onSave={(page: number) => handleSavePage(page)}
               totalPage={book.totalPage}
+              currentPage={book.readingPage}
             />
           </BottomSheet>
         )}

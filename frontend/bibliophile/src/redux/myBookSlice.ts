@@ -53,7 +53,6 @@ export const editReadingPage = createAsyncThunk(
   async ({ myBookId, page }: { myBookId: number; page: number }) => {
     const response = await updateReadingPage(myBookId, page);
     return response.data;
-    // return await updateReadingPage(myBookId, page);
   }
 );
 
@@ -61,7 +60,6 @@ export const removeMyBook = createAsyncThunk("myBook/deleteMyBook", async (myBoo
   return await deleteMyBook(myBookId);
 });
 
-// pending, fulfilled, rejected
 const myBookSlice = createSlice({
   name: "myBook",
   initialState,
@@ -69,7 +67,6 @@ const myBookSlice = createSlice({
   extraReducers: builder => {
     builder
 
-      // 나의 책 리스트 조회 처리
       .addCase(loadMyBookList.pending, state => {
         state.loading = true;
         state.error = null;
@@ -83,7 +80,6 @@ const myBookSlice = createSlice({
         state.error = action.error.message || "나의 책 리스트 확인 중 오류가 발생했습니다.";
       })
 
-      // 나의 책 단건 조회 처리
       .addCase(loadMyBook.pending, state => {
         state.loading = true;
         state.error = null;
@@ -97,7 +93,6 @@ const myBookSlice = createSlice({
         state.error = action.error.message || "책 정보 확인 중 오류가 발생했습니다.";
       })
 
-      // 나의 책장에서 보기
       .addCase(loadMyBookId.pending, state => {
         state.loading = true;
         state.error = null;
@@ -111,7 +106,6 @@ const myBookSlice = createSlice({
         state.error = action.error.message || "myBookId를 얻는 중 오류가 발생했습니다.";
       })
 
-      // 나의 책 추가
       .addCase(addMyBook.pending, state => {
         state.loading = true;
         state.error = null;
@@ -125,7 +119,6 @@ const myBookSlice = createSlice({
         state.error = action.error.message || "나의 책 추가 중 오류가 발생했습니다.";
       })
 
-      // 나의 책 상태 변경
       .addCase(editMyBookStatus.pending, state => {
         state.loading = true;
         state.error = null;
@@ -139,7 +132,6 @@ const myBookSlice = createSlice({
         state.error = action.error.message || "책 상태 변경 중 오류가 발생했습니다.";
       })
 
-      // 나의 책 현재까지 읽은 페이지 변경
       .addCase(editReadingPage.pending, state => {
         state.loading = true;
         state.error = null;
