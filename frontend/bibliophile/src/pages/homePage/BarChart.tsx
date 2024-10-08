@@ -98,10 +98,19 @@ const BarChart: React.FC = () => {
     }
   }, [data]);
 
+  const screenWidth = window.innerWidth;
+  const chartWidth = screenWidth * 0.77;
+
   return (
     <div className="flex justify-center w-full h-full">
       <div>
-        <ReactApexChart options={options} series={series} type="bar" width={360} height={200} />
+        <ReactApexChart
+          options={options}
+          series={series}
+          type="bar"
+          width={chartWidth}
+          height={200}
+        />
       </div>
     </div>
   );
