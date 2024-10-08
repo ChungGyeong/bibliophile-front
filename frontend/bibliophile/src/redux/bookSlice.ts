@@ -2,7 +2,6 @@ import {
   BookStateType,
   PopularBookRequestType,
   RecommendBookRequestType,
-  RelatedBookListRequestType,
   SearchByTitleRequestType,
 } from "@/types/books.ts";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
@@ -79,8 +78,8 @@ export const loadBookByIsbn = createAsyncThunk("book/loadBookByIsbn", async (isb
 
 export const loadRelatedBookList = createAsyncThunk(
   "book/loadRelatedBookList",
-  async (requestBody: RelatedBookListRequestType) => {
-    const response = await getRelatedBookList(requestBody);
+  async (bookId: number) => {
+    const response = await getRelatedBookList(bookId);
     return response.data;
   }
 );

@@ -41,9 +41,4 @@ export interface SearchByTitleRequestType {
   page: number;
 }
 
-export interface RelatedBookListRequestType {
-  title: string;
-  requestNumber: number;
-}
-
 export type AgeType = 10 | 20 | 30 | 40 | 50;

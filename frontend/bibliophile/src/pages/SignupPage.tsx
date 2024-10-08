@@ -5,17 +5,18 @@ import SelectBox from "@/components/common/SelectBox";
 import { SignupRequest } from "@/types/user";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
-import { checkNicknameDuplication, signup } from "@/redux/userSlice";
+import { signup } from "@/redux/userSlice";
 import { useNavigate } from "react-router-dom";
-import { debounce } from "lodash";
 import { isBefore, isValid, parse } from "date-fns";
 import { GENDER_OPTIONS } from "@/constants/constants";
 import TagItemList from "@/components/tagItem/tagItemList.tsx";
 import { translateTagToEnglish } from "@/utils/translator.ts";
+import { useCheckNickName } from "@/hooks/useCheckNickName.tsx";
+import { InputField } from "@/components/common/InputFiled.tsx";
 
 const SignupPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { user, isNicknameExist, error, loading } = useSelector((state: RootState) => state.user);
+  const { user, error, loading } = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
 
   const [inputs, setInputs] = useState<SignupRequest>({
@@ -23,12 +24,13 @@ const SignupPage: React.FC = () => {
     gender: "MAN",
     birthday: "",
     classification: [],
-    profileImage: "",
+    profileImage:
+      "https://closetoyoubucket.s3.ap-northeast-2.amazonaws.com/42c9bd10-933d-4274-8575-883fd2fa0cec.jpg",
     email: user.email,
     oauthServerType: user.oauthServerType,
   });
 
-  const [validationString, setValidationString] = useState("");
+  const { validationText, validationNickname, debouncedCheckNickname } = useCheckNickName();
 
   const isFormValid = useMemo(
     () => inputs.nickname && inputs.gender && inputs.birthday,
@@ -89,7 +91,7 @@ const SignupPage: React.FC = () => {
     };
 
     dispatch(signup(signupData)).then(response => {
-      if (!loading && response.payload !== undefined) {
+      if (response.meta.requestStatus === "fulfilled") {
         alert("회원가입 성공!");
         localStorage.setItem("isAuthenticated", "yes");
         navigate("/");
@@ -101,34 +103,12 @@ const SignupPage: React.FC = () => {
           gender: "MAN",
           birthday: "",
           classification: [],
-          profileImage: "",
+          profileImage:
+            "https://closetoyoubucket.s3.ap-northeast-2.amazonaws.com/42c9bd10-933d-4274-8575-883fd2fa0cec.jpg",
         }));
       }
     });
   }, [inputs, user, dispatch, navigate, error, loading]);
-
-  const validationNickname = useCallback(
-    (nickname: string) => {
-      if (nickname.length < 2 || nickname.length > 7) {
-        setValidationString("length");
-      } else if (isNicknameExist) {
-        setValidationString("exist");
-      } else {
-        setValidationString("");
-      }
-    },
-    [isNicknameExist]
-  );
-
-  const debouncedCheckNickname = useMemo(
-    () =>
-      debounce((nickname: string) => {
-        if (nickname.length >= 2 && nickname.length <= 7) {
-          dispatch(checkNicknameDuplication(nickname));
-        }
-      }, 300),
-    [dispatch]
-  );
 
   useEffect(() => {
     validationNickname(inputs.nickname);
@@ -155,13 +135,7 @@ const SignupPage: React.FC = () => {
             value={inputs.nickname}
             handleChangeInput={e => handleChangeInput("nickname", e.target.value)}
             placeholder="닉네임을 입력해주세요"
-            noticeMessage={
-              validationString === "length"
-                ? "최소 2자에서 최대 7자로 입력해주세요."
-                : validationString === "exist"
-                  ? "이미 사용 중인 닉네임 입니다."
-                  : "사용 가능한 닉네입 입니다!"
-            }
+            noticeMessage={validationText}
           />
         }
       />
@@ -200,15 +174,5 @@ const SignupPage: React.FC = () => {
     </div>
   );
 };
-
-const InputField: React.FC<{
-  label: string;
-  component?: React.ReactNode;
-}> = React.memo(({ label, component }) => (
-  <div className="flex w-full justify-between items-center">
-    <p className="w-1/3 font-medium text-base">{label}</p>
-    {component}
-  </div>
-));
 
 export default SignupPage;

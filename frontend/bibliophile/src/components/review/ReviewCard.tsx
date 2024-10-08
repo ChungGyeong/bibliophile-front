@@ -80,7 +80,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
   };
 
   const renderListType = () => {
-    const shortContent = content.length > 20 ? `${content.slice(0, 20)}...` : content;
+    const shortContent = content.length > 20 ? `${content.slice(0, 15)}...` : content;
 
     return isLong ? (
       <div

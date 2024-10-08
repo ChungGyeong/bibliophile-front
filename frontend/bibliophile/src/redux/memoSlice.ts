@@ -11,7 +11,8 @@ const initialState: MemoType = {
     memoPage: 0,
     memoImgUrlList: [],
     createdDate: "",
-    lastModifyDate: ""
+    lastModifyDate: "",
+    bookPage:0,
   },
   myMemoList: []
 };
@@ -87,7 +88,10 @@ const memoSlice = createSlice({
         state.error = action.error.message || "Memo update failed";
       })
 
-      .addCase(removeMemo.fulfilled, (state) => {
+      .addCase(removeMemo.fulfilled, (state, action) => {
+        const deletedMemoId = action.meta.arg;
+        state.myMemoList = state.myMemoList.filter(memo => memo.memoId !== deletedMemoId);
+        state.loading = false;
         state.data = {
           memoId: 0,
           content: "",
@@ -95,7 +99,9 @@ const memoSlice = createSlice({
           memoImgUrlList: [],
           createdDate: "",
           lastModifyDate: "",
+          bookPage:0,
         };
+        state.loading=false
       })
       .addCase(removeMemo.rejected, (state, action) => {
         state.error = action.error.message || "Memo delete failed";
@@ -114,6 +120,9 @@ const memoSlice = createSlice({
         state.error = action.error.message || "Memo creation failed";
       })
 
+      .addCase(loadMyMemoList.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(loadMyMemoList.fulfilled, (state, action) => {
         state.myMemoList = action.payload.data;
         state.loading = false;

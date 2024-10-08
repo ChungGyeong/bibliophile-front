@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomSheetStopwatch from "@/components/bottomSheet/BottomSheetStopwatch.tsx";
 import BottomSheet from "@/components/bottomSheet/BottomSheet.tsx";
 import { calculateDaysSince, formatDate } from "@/utils/calDate.ts";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store.ts";
+import { addTimer } from "@/redux/timerSlice";
 
 interface BookInfoProps {
   bookId: number;
@@ -28,25 +31,36 @@ const BookInfo: React.FC<BookInfoProps> = ({
   reloadmybook,
 }) => {
   const [isOpenStopwatch, setIsOpenStopwatch] = React.useState(false);
+  const [formattedTime, setFormattedTime] = useState("");
 
+  const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleClickNavigateBookDetail = (_e: any, bookId: number) => {
     navigate(`/books/${bookId}`);
   };
 
-  const handleClickOpenStopwatch = () => {
+  const handleClickOpenStopwatch = async () => {
+    const createData = {
+      myBookId: myBookId,
+      duration: formattedTime,
+    };
+    await dispatch(addTimer(createData));
     if (reloadmybook) {
       reloadmybook();
     }
     setIsOpenStopwatch(false);
   };
 
+  const sendTime = (time: string) => {
+    setFormattedTime(time);
+  };
+
   return (
     <div className="relative w-screen -left-[5.5%] h-fit max-w-[600px] overflow-hidden">
       {isOpenStopwatch && (
-        <BottomSheet height={600} handleCloseBottomSheet={handleClickOpenStopwatch}>
-          <BottomSheetStopwatch myBookId={myBookId} totalReadingTime={totalReadingTime} />
+        <BottomSheet height={80} handleCloseBottomSheet={handleClickOpenStopwatch}>
+          <BottomSheetStopwatch totalReadingTime={totalReadingTime} sendTime={sendTime} />
         </BottomSheet>
       )}
       <div

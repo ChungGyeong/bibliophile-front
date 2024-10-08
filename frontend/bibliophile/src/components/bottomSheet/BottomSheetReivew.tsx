@@ -64,7 +64,7 @@ const BottomSheetReview: React.FC<BottomSheetReviewProps> = ({ onClose, bookId, 
       <textarea
         value={review}
         onChange={handleReviewChange}
-        placeholder="책에 대한 평가를 남겨주세요"
+        placeholder="100자 이내로 작성해주세요"
         className="w-[300px] h-[100px] border-2 border-gray-300 p-2 rounded-md outline-none font-light text-xs mt-[3%] mb-[5%]"
       />
       <Button label="작성 완료" handleClickButton={handleButtonClick} />

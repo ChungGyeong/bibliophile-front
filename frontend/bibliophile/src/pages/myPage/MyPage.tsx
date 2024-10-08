@@ -13,6 +13,8 @@ import { editUser, loadUser, logout, removeUser } from "@/redux/userSlice.ts";
 import { translateTagToEnglish } from "@/utils/translator.ts";
 import { useNavigate } from "react-router-dom";
 import { addImage } from "@/redux/imageSlice";
+import { useCheckNickName } from "@/hooks/useCheckNickName.tsx";
+import { InputField } from "@/components/common/InputFiled.tsx";
 
 const MyPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -35,11 +37,13 @@ const MyPage: React.FC = () => {
   const [modalMessage, setModalMessage] = useState<string>("");
   const [uploadImage, setUploadImage] = useState<File | null>(null);
 
+  const { validationText, validationNickname } = useCheckNickName();
+
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
 
   const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/jpg"];
-  const MAX_FILE_SIZE = 2 * 1024 * 1024;
+  const MAX_FILE_SIZE = 50 * 1024 * 1024;
 
   const handleClickProfileImage = () => {
     if (fileInputRef.current) {
@@ -47,7 +51,7 @@ const MyPage: React.FC = () => {
     }
   };
 
-  const handleChangeImageFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeImageFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
 
@@ -65,8 +69,54 @@ const MyPage: React.FC = () => {
         return;
       }
 
+      const isValidImage = await checkFileType(file);
+      if (!isValidImage) {
+        setModalMessage(`${file.name}은(는) 잘못된 파일입니다. 파일 형식을 확인해주세요.`);
+        setIsModalOpen(true);
+        return;
+      }
+
       setUploadImage(file);
     }
+  };
+
+  const checkFileType = (file: File): Promise<boolean> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onloadend = function () {
+        const arr = new Uint8Array(reader.result as ArrayBuffer).subarray(0, 4);
+        let header = "";
+        for (let i = 0; i < arr.length; i++) {
+          header += arr[i].toString(16);
+        }
+
+        let fileType;
+        switch (header) {
+          case "89504e47":
+            fileType = "image/png";
+            break;
+          case "ffd8ffe0":
+          case "ffd8ffe1":
+          case "ffd8ffe2":
+          case "ffd8ffe3":
+          case "ffd8ffe8":
+            fileType = "image/jpeg";
+            break;
+          default:
+            fileType = "";
+            break;
+        }
+
+        resolve(ALLOWED_FILE_TYPES.includes(fileType));
+      };
+
+      reader.onerror = function () {
+        reject(false);
+      };
+
+      reader.readAsArrayBuffer(file);
+    });
   };
 
   const handleChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,6 +139,7 @@ const MyPage: React.FC = () => {
     if (result && result.payload && Array.isArray(result.payload) && result.payload.length > 0) {
       newProfileImage = result.payload[0].url;
     }
+
     dispatch(
       editUser({
         nickname: inputs.nickname,
@@ -97,25 +148,61 @@ const MyPage: React.FC = () => {
         }),
         profileImage: newProfileImage,
       })
-    ).then(() => {
+    ).then(response => {
       dispatch(loadUser());
+      if (response.meta.requestStatus === "rejected") {
+        setInputs({
+          ...inputs,
+          nickname: user.nickname,
+          classification: user.classification,
+          profileImage: user.profileImage,
+        });
+      } else {
+        navigate("/mypage");
+      }
     });
   };
 
   const handleClickLogout = () => {
-    dispatch(logout);
-    localStorage.removeItem("isAuthenticated");
-    navigate("/login");
+    dispatch(logout()).then(response => {
+      if (response.meta.requestStatus === "fulfilled") {
+        localStorage.removeItem("isAuthenticated");
+        navigate("/login");
+      } else alert("로그아웃에 실패했습니다. 다시 시도해주세요!");
+    });
   };
 
   const handleClickDeleteMember = () => {
-    dispatch(removeUser());
-    navigate("/login");
+    dispatch(removeUser()).then(response => {
+      if (response.meta.requestStatus === "fulfilled") navigate("/login");
+      else {
+        navigate("/mypage");
+        alert("회원 탈퇴에 실패했습니다. 다시 시도해주세요!");
+      }
+    });
   };
 
   useEffect(() => {
-    dispatch(loadUser());
-  }, []);
+    validationNickname(inputs.nickname);
+  }, [inputs.nickname, validationNickname]);
+
+  useEffect(() => {
+    dispatch(loadUser()).then(response => {
+      if (response.meta.requestStatus === "fulfilled") {
+        setInputs({
+          ...inputs,
+          userId: user.userId,
+          email: user.email,
+          nickname: user.nickname,
+          gender: user.gender,
+          birthday: user.birthday,
+          classification: user.classification,
+          profileImage: user.profileImage,
+          oauthServerType: user.oauthServerType,
+        });
+      }
+    });
+  }, [isEdit, setIsEdit]);
 
   if (loading)
     return (
@@ -151,31 +238,36 @@ const MyPage: React.FC = () => {
         />
       )}
       {isEdit ? (
-        <div>
+        <div className="w-full">
           <ProfileImageUploader
             handleClickProfileImage={handleClickProfileImage}
             profileImage={uploadImage ? URL.createObjectURL(uploadImage) : inputs.profileImage}
-            nickname={user.nickname}
             fileInputRef={fileInputRef}
             handleChangeImageFiles={handleChangeImageFiles}
           />
-          <div className="w-[120px] h-[28px]">
-            <InputBox
-              type="bold"
-              value={inputs.nickname}
-              placeholder={inputs.nickname}
-              handleChangeInput={handleChangeNickname}
-            />
-          </div>
+          <div className="h-7"></div>
+          <InputField
+            label="닉네임 수정"
+            component={
+              <InputBox
+                value={inputs.nickname}
+                handleChangeInput={e => {
+                  setInputs((prev: UsersResponse) => ({ ...prev, nickname: e.target.value }));
+                }}
+                placeholder="닉네임을 입력해주세요"
+                noticeMessage={validationText}
+              />
+            }
+          />
         </div>
       ) : (
         <div>
           <img
             className="w-[120px] h-[120px] rounded-md object-cover mt-10 mb-2.5 border-common"
             src={user.profileImage ? user.profileImage : "/images/no-image.svg"}
-            alt={`${user.nickname}의 프로필 이미지`}
+            alt="프로필 이미지"
           />
-          <p className="font-medium text-lg text-center m-auto">{user.nickname}</p>
+          <p className="font-medium text-lg text-center ">{user.nickname}</p>
         </div>
       )}
 
@@ -197,7 +289,7 @@ const MyPage: React.FC = () => {
 
       <TagItemList
         layoutType={isEdit ? "mypageSelect" : "mySelect"}
-        tags={inputs.classification.length === 0 ? user.classification : inputs.classification}
+        tags={isEdit ? inputs.classification : user.classification}
         setTags={newTags => setInputs({ ...inputs, classification: newTags })}
       />
 
