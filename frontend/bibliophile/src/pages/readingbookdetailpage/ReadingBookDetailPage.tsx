@@ -174,6 +174,7 @@ const ReadingBookDetailPage: React.FC = () => {
               label="메모"
               mode="작성하기"
               myBookId={Number(myBookId)}
+              totalPage={book.totalPage}
             />
           </BottomSheet>
         )}
