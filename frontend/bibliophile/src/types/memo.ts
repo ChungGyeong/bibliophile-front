@@ -12,6 +12,7 @@ export interface MemoResponse {
   memoImgUrlList: string[];
   createdDate: string;
   lastModifyDate: string;
+  bookPage: number;
 }
 
 export interface UpdateMemoData {

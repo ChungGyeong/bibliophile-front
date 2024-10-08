@@ -25,11 +25,11 @@ const MemoPage: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
 
   const { data, loading } = useSelector((state: RootState) => state.memo);
-
   const fetchMemoData = () => {
     if (memoId) {
       dispatch(loadMemo(Number(memoId)));
     }
+    console.log(data);
   };
 
   useEffect(() => {
@@ -163,6 +163,7 @@ const MemoPage: React.FC = () => {
               memoPage={data?.memoPage}
               memoImgList={data?.memoImgUrlList}
               onClose={handleModalClose}
+              totalPage={data?.bookPage}
             />
           </BottomSheet>
         </div>
