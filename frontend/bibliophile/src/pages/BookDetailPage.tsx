@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import Button from "../components/common/Button";
 import BookCardSimpleList from "../components/bookCard/BookCardSimpleList";
 import LikeButton from "../components/common/LikeButton";
@@ -24,24 +24,26 @@ interface ReviewDataResponse {
 
 const BookDetailPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const { bookId } = useParams<{ bookId: string }>();
+
   const {
     book,
     loading: bookLoading,
     isLoadingRelatedBookList,
     relatedBookList,
   } = useSelector((state: RootState) => state.book);
+
+  const { book: myBook, loading: myBookLoading } = useSelector((state: RootState) => state.myBook);
+
   const { reviewList: reviews } = useSelector((state: RootState) => state.review);
 
-  const {
-    book: myBook,
-    loading: myBookLoading,
-    error: myBookError,
-  } = useSelector((state: RootState) => state.myBook);
+  const prevMyBookRef = useRef(myBook);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const navigate = useNavigate();
-  const { bookId } = useParams<{ bookId: string }>();
+  const [isBookDataLoaded, setIsBookDataLoaded] = useState(false);
 
   const groupReviews = (reviews: ReviewDataResponse[], size: number) => {
     const grouped = [];
@@ -50,22 +52,33 @@ const BookDetailPage: React.FC = () => {
     }
     return grouped;
   };
+
   const groupedReviews = groupReviews(reviews, 5);
 
-  const isReading = myBook?.readingStatus === "READING" || myBook?.readingStatus === "READ";
+  useEffect(() => {
+    if (bookId) {
+      const numericBookId = parseInt(bookId, 10);
+
+      const loadBookData = async () => {
+        try {
+          await dispatch(loadBookDetailByBookId(numericBookId)).unwrap();
+          await dispatch(loadMyBookId(numericBookId)).unwrap();
+
+          dispatch(loadRelatedBookList({ title: book?.title || "", requestNumber: 1 }));
+          dispatch(loadReviews(numericBookId));
+        } finally {
+          setIsBookDataLoaded(true);
+        }
+      };
+      loadBookData();
+    }
+  }, [dispatch, bookId]);
 
   useEffect(() => {
-    const numericBookId = parseInt(bookId!, 10);
-
-    dispatch(loadBookDetailByBookId(numericBookId)).then(response => {
-      if (response.meta.requestStatus === "fulfilled" && book?.title) {
-        dispatch(loadRelatedBookList({ title: book.title, requestNumber: 1 }));
-      }
-    });
-
-    dispatch(loadMyBookId(numericBookId));
-    dispatch(loadReviews(numericBookId));
-  }, [dispatch, bookId, book?.title]);
+    if (prevMyBookRef.current !== myBook) {
+      prevMyBookRef.current = myBook;
+    }
+  }, [myBook]);
 
   const handleStartReading = () => {
     setIsModalOpen(true);
@@ -86,9 +99,7 @@ const BookDetailPage: React.FC = () => {
 
   const handleNavigateMyBook = () => {
     if (myBook && myBook.myBookId) {
-      navigate(`/reading/${myBook.myBookId}`);
-    } else {
-      console.error("myBook이 존재하지 않습니다");
+      navigate(`/reading/${myBook.myBookId}`, { state: { from: location.pathname } });
     }
   };
 
@@ -96,14 +107,12 @@ const BookDetailPage: React.FC = () => {
     navigate(-1);
   };
 
-  if (myBookLoading || bookLoading) {
-    <div className="fixed inset-0 flex justify-center items-center">
-      <img src="/images/loading.gif" alt="Loading..." />
-    </div>;
-  }
-
-  if (myBookError) {
-    <div>Error: {myBookError}</div>;
+  if (myBookLoading || bookLoading || !isBookDataLoaded) {
+    return (
+      <div className="fixed inset-0 flex justify-center items-center">
+        <img src="/images/loading.gif" alt="Loading..." />
+      </div>
+    );
   }
 
   return (
@@ -122,7 +131,7 @@ const BookDetailPage: React.FC = () => {
           <i className="fi fi-rr-angle-left" />
         </button>
         <div>
-          {!isReading && book?.bookId !== undefined && (
+          {book && (myBook?.bookId !== book.bookId || !myBook) && (
             <div className="text-[20px]">
               <LikeButton isBookmarked={book.isBookmarked} bookId={book.bookId} />
             </div>
@@ -140,10 +149,10 @@ const BookDetailPage: React.FC = () => {
         <span className="font-regular text-medium-gray text-[12px] mb-5">{book?.publisher}</span>
 
         <div className="w-[200px]">
-          {isReading ? (
-            <Button label="나의 책장에서 보기" handleClickButton={handleNavigateMyBook} />
-          ) : (
+          {!myBook || myBook?.bookId !== book?.bookId ? (
             <Button label="읽기 시작하기" handleClickButton={handleStartReading} />
+          ) : (
+            <Button label="나의 책장에서 보기" handleClickButton={handleNavigateMyBook} />
           )}
         </div>
       </div>
