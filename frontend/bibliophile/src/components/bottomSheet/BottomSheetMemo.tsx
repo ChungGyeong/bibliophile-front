@@ -17,6 +17,7 @@ interface BottomSheetMemoProps {
   content?: string;
   memoPage?: number;
   memoImgList?: string[];
+  totalPage?: number;
 }
 
 const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
@@ -29,6 +30,7 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
   content = "",
   memoPage = 0,
   memoImgList = [],
+  totalPage = 0,
 }) => {
   const [memo, setMemo] = useState<string>(content);
   const [page, setPage] = useState<number>(memoPage);
@@ -94,6 +96,11 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
     if (label === "메모") {
       if (!page) {
         setModalMessage("페이지를 입력해주세요.");
+        setIsModalOpen(true);
+        return;
+      }
+      if (totalPage < page) {
+        setModalMessage("올바른 페이지를 입력해주세요");
         setIsModalOpen(true);
         return;
       }
