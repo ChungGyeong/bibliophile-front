@@ -43,7 +43,7 @@ const MyPage: React.FC = () => {
   const navigate = useNavigate();
 
   const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/jpg"];
-  const MAX_FILE_SIZE = 2 * 1024 * 1024;
+  const MAX_FILE_SIZE = 50 * 1024 * 1024;
 
   const handleClickProfileImage = () => {
     if (fileInputRef.current) {
@@ -51,7 +51,7 @@ const MyPage: React.FC = () => {
     }
   };
 
-  const handleChangeImageFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeImageFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
 
@@ -69,8 +69,58 @@ const MyPage: React.FC = () => {
         return;
       }
 
+      const isValidImage = await checkFileType(file);
+      if (!isValidImage) {
+        setModalMessage(`${file.name}은(는) 잘못된 파일입니다. 파일 형식을 확인해주세요.`);
+        setIsModalOpen(true);
+        return;
+      }
+
       setUploadImage(file);
     }
+  };
+
+  const checkFileType = (file: File): Promise<boolean> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onloadend = function () {
+        const arr = new Uint8Array(reader.result as ArrayBuffer).subarray(0, 4);
+        let header = "";
+        for (let i = 0; i < arr.length; i++) {
+          header += arr[i].toString(16);
+        }
+
+        let fileType;
+        switch (header) {
+          case "89504e47":
+            fileType = "image/png";
+            break;
+          case "ffd8ffe0":
+          case "ffd8ffe1":
+          case "ffd8ffe2":
+          case "ffd8ffe3":
+          case "ffd8ffe8":
+            fileType = "image/jpeg";
+            break;
+          default:
+            fileType = "";
+            break;
+        }
+
+        resolve(ALLOWED_FILE_TYPES.includes(fileType));
+      };
+
+      reader.onerror = function () {
+        reject(false);
+      };
+
+      reader.readAsArrayBuffer(file);
+    });
+  };
+
+  const handleChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputs((prev: UsersResponse) => ({ ...prev, nickname: e.target.value }));
   };
 
   const handleClickButton = async () => {

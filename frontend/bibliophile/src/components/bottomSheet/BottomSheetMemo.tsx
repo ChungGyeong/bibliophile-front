@@ -44,7 +44,7 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
   const dispatch: AppDispatch = useDispatch();
 
   const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/jpg"];
-  const MAX_FILE_SIZE = 2 * 1024 * 1024;
+  const MAX_FILE_SIZE = 50 * 1024 * 1024;
 
   const handleMemoChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const inputMemo = e.target.value;
@@ -140,7 +140,7 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
     onClose();
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const fileArray = Array.from(e.target.files);
 
@@ -155,6 +155,13 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
 
         if (file.size > MAX_FILE_SIZE) {
           setModalMessage(`${file.name}은(는) 파일 크기가 2MB를 초과하였습니다.`);
+          setIsModalOpen(true);
+          return;
+        }
+
+        const isValidImage = await checkFileType(file);
+        if (!isValidImage) {
+          setModalMessage(`${file.name}은(는) 잘못된 파일입니다. 파일 형식을 확인해주세요.`);
           setIsModalOpen(true);
           return;
         }
@@ -186,6 +193,45 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
       setNewImages(prevImages => prevImages.filter((_, i) => i !== index));
       setFilesToUpload(prevFiles => prevFiles.filter((_, i) => i !== index));
     }
+  };
+
+  const checkFileType = (file: File): Promise<boolean> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onloadend = function () {
+        const arr = new Uint8Array(reader.result as ArrayBuffer).subarray(0, 4);
+        let header = "";
+        for (let i = 0; i < arr.length; i++) {
+          header += arr[i].toString(16);
+        }
+
+        let fileType;
+        switch (header) {
+          case "89504e47":
+            fileType = "image/png";
+            break;
+          case "ffd8ffe0":
+          case "ffd8ffe1":
+          case "ffd8ffe2":
+          case "ffd8ffe3":
+          case "ffd8ffe8":
+            fileType = "image/jpeg";
+            break;
+          default:
+            fileType = "";
+            break;
+        }
+
+        resolve(ALLOWED_FILE_TYPES.includes(fileType));
+      };
+
+      reader.onerror = function () {
+        reject(false);
+      };
+
+      reader.readAsArrayBuffer(file);
+    });
   };
 
   const getPlaceholder = (label: string): string => {
