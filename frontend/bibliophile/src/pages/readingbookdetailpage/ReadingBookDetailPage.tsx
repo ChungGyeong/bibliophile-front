@@ -17,6 +17,7 @@ import {
   loadMyBook,
   editMyBookStatus,
   editReadingPage,
+  editReReadBook,
   removeMyBook,
 } from "@/redux/myBookSlice.ts";
 import { AppDispatch, RootState } from "@/redux/store.ts";
@@ -79,7 +80,7 @@ const ReadingBookDetailPage: React.FC = () => {
   const handleConfirm = () => {
     if (book) {
       if (modalType === "confirmReading") {
-        dispatch(editMyBookStatus({ myBookId: book.myBookId, status: "READING" }));
+        dispatch(editReReadBook(book.myBookId));
       } else if (modalType === "confirmRead") {
         dispatch(editMyBookStatus({ myBookId: book.myBookId, status: "READ" }));
       } else if (modalType === "confirmDelete") {

@@ -6,6 +6,7 @@ import {
   createMyBook,
   updateMyBookStatus,
   updateReadingPage,
+  updateReReadBook,
   deleteMyBook,
   getMyBookId,
 } from "@/api/myBook";
@@ -52,6 +53,14 @@ export const editReadingPage = createAsyncThunk(
   "myBook/updateReadingPage",
   async ({ myBookId, page }: { myBookId: number; page: number }) => {
     const response = await updateReadingPage(myBookId, page);
+    return response.data;
+  }
+);
+
+export const editReReadBook = createAsyncThunk(
+  "myBook/updateReReadBook",
+  async (myBookId: number) => {
+    const response = await updateReReadBook(myBookId);
     return response.data;
   }
 );
@@ -143,6 +152,19 @@ const myBookSlice = createSlice({
       .addCase(editReadingPage.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "읽은 책 페이지 업데이트 중 오류가 발생했습니다.";
+      })
+
+      .addCase(editReReadBook.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(editReReadBook.fulfilled, (state, action) => {
+        state.loading = false;
+        state.book = action.payload.data;
+      })
+      .addCase(editReReadBook.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "다시 읽기 업데이트 중 오류가 발생했습니다.";
       })
 
       .addCase(removeMyBook.pending, state => {
