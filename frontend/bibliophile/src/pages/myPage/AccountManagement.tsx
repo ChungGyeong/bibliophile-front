@@ -18,16 +18,19 @@ const AccountManagement: React.FC<AccountManagementProps> = ({
         onClick={() => {
           navigate("/privacy-policy");
         }}
-        className="text-medium-gray text-sm font-light visited:text-medium-gray"
+        className="text-medium-gray text-sm font-light visited:text-medium-gray cursor-pointer"
       >
         개인정보 처리방침
       </p>
       <div className="h-[1px] w-full my-1  bg-soft-gray"></div>
-      <p onClick={handleClickLogout} className="text-medium-gray text-sm font-light">
+      <p onClick={handleClickLogout} className="text-medium-gray text-sm font-light cursor-pointer">
         로그아웃
       </p>
       <div className="h-[1px] w-full my-1  bg-soft-gray"></div>
-      <p onClick={handleClickDeleteMember} className="text-medium-gray text-sm font-light">
+      <p
+        onClick={handleClickDeleteMember}
+        className="text-medium-gray text-sm font-light cursor-pointer"
+      >
         회원탈퇴
       </p>
     </div>

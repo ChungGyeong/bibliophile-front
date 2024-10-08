@@ -74,12 +74,7 @@ const TagItemList: React.FC<TagItemListProps> = React.memo(({ layoutType, tags, 
           <div className="w-full h-[100px] bg-light-yellow flex-shrink-0 p-[10px] rounded-[5px]">
             <p className="font-medium text-base leading-normal mx-[5px] mb-2">관심사</p>
             {tags.map(tag => (
-              <TagItem
-                key={tag}
-                label={tag}
-                selected={true}
-                handleClickTag={() => handleTagClick(tag)}
-              />
+              <TagItem key={tag} label={tag} selected={true} />
             ))}
           </div>
         );

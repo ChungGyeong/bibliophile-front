@@ -41,13 +41,9 @@ export interface UpdateUserRequest {
 }
 
 export type ClassificationType =
-  | "ECONOMICS"
-  | "COMICS"
   | "SOCIETY"
-  | "LOVE"
   | "FICTION"
-  | "TRAVEL"
-  | "IT_SCIENCE"
+  | "SCIENCE"
   | "ARTS"
   | "LANGUAGE"
   | "HISTORY";
