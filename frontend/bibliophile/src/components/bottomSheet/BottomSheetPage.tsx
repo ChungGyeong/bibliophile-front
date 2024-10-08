@@ -4,10 +4,11 @@ import Button from "../common/Button";
 interface BottomSheetPageProps {
   onSave: (page: number) => void;
   totalPage: number;
+  currentPage: number;
 }
 
-const BottomSheetPage: React.FC<BottomSheetPageProps> = ({ onSave, totalPage }) => {
-  const [inputValue, setInputValue] = useState<string>("");
+const BottomSheetPage: React.FC<BottomSheetPageProps> = ({ onSave, totalPage, currentPage }) => {
+  const [inputValue, setInputValue] = useState<string>(currentPage.toString());
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,8 +25,11 @@ const BottomSheetPage: React.FC<BottomSheetPageProps> = ({ onSave, totalPage }) 
     } else if (pageNumber < 1) {
       setErrorMessage("페이지 번호는 1 이상이어야 합니다.");
       return;
+    } else if (pageNumber < currentPage) {
+      setErrorMessage(`페이지는 기존 페이지 이상이어야 합니다.`);
+      return;
     } else if (pageNumber > totalPage) {
-      setErrorMessage(`페이지 번호는 ${totalPage} 이하여야 합니다.`);
+      setErrorMessage(`페이지는 ${totalPage} 이하여야 합니다.`);
       return;
     }
     onSave(pageNumber);
