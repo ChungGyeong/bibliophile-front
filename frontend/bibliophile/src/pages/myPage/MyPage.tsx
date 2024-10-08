@@ -12,6 +12,7 @@ import { AppDispatch, RootState } from "@/redux/store.ts";
 import { editUser, loadUser, logout, removeUser } from "@/redux/userSlice.ts";
 import { translateTagToEnglish } from "@/utils/translator.ts";
 import { useNavigate } from "react-router-dom";
+import { addImage } from "@/redux/imageSlice";
 
 const MyPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -30,9 +31,15 @@ const MyPage: React.FC = () => {
   });
   const [isOpenLogoutModal, setIsOpenLogoutModal] = useState(false);
   const [isOpenDeleteMemberModal, setIsOpenDeleteMemberModal] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [modalMessage, setModalMessage] = useState<string>("");
+  const [uploadImage, setUploadImage] = useState<File | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
+
+  const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/jpg"];
+  const MAX_FILE_SIZE = 2 * 1024 * 1024;
 
   const handleClickProfileImage = () => {
     if (fileInputRef.current) {
@@ -41,10 +48,24 @@ const MyPage: React.FC = () => {
   };
 
   const handleChangeImageFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files && files[0]) {
-      const newImageSrc = URL.createObjectURL(files[0]);
-      setInputs((prev: UsersResponse) => ({ ...prev, profileImage: newImageSrc }));
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+
+      if (!ALLOWED_FILE_TYPES.includes(file.type)) {
+        setModalMessage(
+          `${file.name}은(는) 지원하지 않는 형식입니다. JPG, JPEG, PNG 형식만 업로드 가능합니다.`
+        );
+        setIsModalOpen(true);
+        return;
+      }
+
+      if (file.size > MAX_FILE_SIZE) {
+        setModalMessage(`${file.name}은(는) 파일 크기가 2MB를 초과하였습니다.`);
+        setIsModalOpen(true);
+        return;
+      }
+
+      setUploadImage(file);
     }
   };
 
@@ -52,18 +73,29 @@ const MyPage: React.FC = () => {
     setInputs((prev: UsersResponse) => ({ ...prev, nickname: e.target.value }));
   };
 
-  const handleClickButton = () => {
+  const handleClickButton = async () => {
     setIsEdit(!isEdit);
 
     if (!isEdit) return;
 
+    let newProfileImage = inputs.profileImage;
+    let result = null;
+
+    if (uploadImage) {
+      const formData = new FormData();
+      formData.append("files", uploadImage);
+      result = await dispatch(addImage(formData));
+    }
+    if (result && result.payload && Array.isArray(result.payload) && result.payload.length > 0) {
+      newProfileImage = result.payload[0].url;
+    }
     dispatch(
       editUser({
         nickname: inputs.nickname,
         classification: inputs.classification.map(classification => {
           return translateTagToEnglish(classification);
         }),
-        profileImage: inputs.profileImage,
+        profileImage: newProfileImage,
       })
     ).then(() => {
       dispatch(loadUser());
@@ -122,7 +154,7 @@ const MyPage: React.FC = () => {
         <div>
           <ProfileImageUploader
             handleClickProfileImage={handleClickProfileImage}
-            profileImage={inputs.profileImage}
+            profileImage={uploadImage ? URL.createObjectURL(uploadImage) : inputs.profileImage}
             nickname={user.nickname}
             fileInputRef={fileInputRef}
             handleChangeImageFiles={handleChangeImageFiles}
@@ -181,6 +213,13 @@ const MyPage: React.FC = () => {
           }}
         />
       )}
+
+      <Modal
+        isOpen={isModalOpen}
+        handleClickClose={() => setIsModalOpen(false)}
+        title={modalMessage}
+        handleClickConfirm={() => setIsModalOpen(false)}
+      />
     </div>
   );
 };

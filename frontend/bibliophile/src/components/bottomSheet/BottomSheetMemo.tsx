@@ -140,7 +140,7 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
       for (const file of fileArray) {
         if (!ALLOWED_FILE_TYPES.includes(file.type)) {
           setModalMessage(
-            `${file.name}은(는) 지원하지 않는 형식입니다. JPG, PNG 형식만 업로드 가능합니다.`
+            `${file.name}은(는) 지원하지 않는 형식입니다. JPG, JPEG, PNG 형식만 업로드 가능합니다.`
           );
           setIsModalOpen(true);
           return;
