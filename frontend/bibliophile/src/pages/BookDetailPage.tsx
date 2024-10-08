@@ -52,8 +52,7 @@ const BookDetailPage: React.FC = () => {
   };
   const groupedReviews = groupReviews(reviews, 5);
 
-  const isReading =
-    myBook !== null && (myBook.readingStatus === "READING" || myBook.readingStatus === "READ");
+  const isReading = myBook?.readingStatus === "READING" || myBook?.readingStatus === "READ";
 
   useEffect(() => {
     const numericBookId = parseInt(bookId!, 10);
