@@ -13,6 +13,8 @@ import { editUser, loadUser, logout, removeUser } from "@/redux/userSlice.ts";
 import { translateTagToEnglish } from "@/utils/translator.ts";
 import { useNavigate } from "react-router-dom";
 import { addImage } from "@/redux/imageSlice";
+import { useCheckNickName } from "@/hooks/useCheckNickName.tsx";
+import { InputField } from "@/components/common/InputFiled.tsx";
 
 const MyPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -34,6 +36,8 @@ const MyPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalMessage, setModalMessage] = useState<string>("");
   const [uploadImage, setUploadImage] = useState<File | null>(null);
+
+  const { validationText, validationNickname } = useCheckNickName();
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
@@ -69,10 +73,6 @@ const MyPage: React.FC = () => {
     }
   };
 
-  const handleChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputs((prev: UsersResponse) => ({ ...prev, nickname: e.target.value }));
-  };
-
   const handleClickButton = async () => {
     setIsEdit(!isEdit);
 
@@ -89,6 +89,7 @@ const MyPage: React.FC = () => {
     if (result && result.payload && Array.isArray(result.payload) && result.payload.length > 0) {
       newProfileImage = result.payload[0].url;
     }
+
     dispatch(
       editUser({
         nickname: inputs.nickname,
@@ -97,25 +98,61 @@ const MyPage: React.FC = () => {
         }),
         profileImage: newProfileImage,
       })
-    ).then(() => {
+    ).then(response => {
       dispatch(loadUser());
+      if (response.meta.requestStatus === "rejected") {
+        setInputs({
+          ...inputs,
+          nickname: user.nickname,
+          classification: user.classification,
+          profileImage: user.profileImage,
+        });
+      } else {
+        navigate("/mypage");
+      }
     });
   };
 
   const handleClickLogout = () => {
-    dispatch(logout);
-    localStorage.removeItem("isAuthenticated");
-    navigate("/login");
+    dispatch(logout()).then(response => {
+      if (response.meta.requestStatus === "fulfilled") {
+        localStorage.removeItem("isAuthenticated");
+        navigate("/login");
+      } else alert("로그아웃에 실패했습니다. 다시 시도해주세요!");
+    });
   };
 
   const handleClickDeleteMember = () => {
-    dispatch(removeUser());
-    navigate("/login");
+    dispatch(removeUser()).then(response => {
+      if (response.meta.requestStatus === "fulfilled") navigate("/login");
+      else {
+        navigate("/mypage");
+        alert("회원 탈퇴에 실패했습니다. 다시 시도해주세요!");
+      }
+    });
   };
 
   useEffect(() => {
-    dispatch(loadUser());
-  }, []);
+    validationNickname(inputs.nickname);
+  }, [inputs.nickname, validationNickname]);
+
+  useEffect(() => {
+    dispatch(loadUser()).then(response => {
+      if (response.meta.requestStatus === "fulfilled") {
+        setInputs({
+          ...inputs,
+          userId: user.userId,
+          email: user.email,
+          nickname: user.nickname,
+          gender: user.gender,
+          birthday: user.birthday,
+          classification: user.classification,
+          profileImage: user.profileImage,
+          oauthServerType: user.oauthServerType,
+        });
+      }
+    });
+  }, [isEdit, setIsEdit]);
 
   if (loading)
     return (
@@ -151,31 +188,36 @@ const MyPage: React.FC = () => {
         />
       )}
       {isEdit ? (
-        <div>
+        <div className="w-full">
           <ProfileImageUploader
             handleClickProfileImage={handleClickProfileImage}
             profileImage={uploadImage ? URL.createObjectURL(uploadImage) : inputs.profileImage}
-            nickname={user.nickname}
             fileInputRef={fileInputRef}
             handleChangeImageFiles={handleChangeImageFiles}
           />
-          <div className="w-[120px] h-[28px]">
-            <InputBox
-              type="bold"
-              value={inputs.nickname}
-              placeholder={inputs.nickname}
-              handleChangeInput={handleChangeNickname}
-            />
-          </div>
+          <div className="h-7"></div>
+          <InputField
+            label="닉네임 수정"
+            component={
+              <InputBox
+                value={inputs.nickname}
+                handleChangeInput={e => {
+                  setInputs((prev: UsersResponse) => ({ ...prev, nickname: e.target.value }));
+                }}
+                placeholder="닉네임을 입력해주세요"
+                noticeMessage={validationText}
+              />
+            }
+          />
         </div>
       ) : (
         <div>
           <img
             className="w-[120px] h-[120px] rounded-md object-cover mt-10 mb-2.5 border-common"
             src={user.profileImage ? user.profileImage : "/images/no-image.svg"}
-            alt={`${user.nickname}의 프로필 이미지`}
+            alt="프로필 이미지"
           />
-          <p className="font-medium text-lg text-center m-auto">{user.nickname}</p>
+          <p className="font-medium text-lg text-center ">{user.nickname}</p>
         </div>
       )}
 
@@ -197,7 +239,7 @@ const MyPage: React.FC = () => {
 
       <TagItemList
         layoutType={isEdit ? "mypageSelect" : "mySelect"}
-        tags={inputs.classification.length === 0 ? user.classification : inputs.classification}
+        tags={isEdit ? inputs.classification : user.classification}
         setTags={newTags => setInputs({ ...inputs, classification: newTags })}
       />
 
