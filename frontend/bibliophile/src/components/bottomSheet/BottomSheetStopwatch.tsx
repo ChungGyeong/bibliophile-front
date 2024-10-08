@@ -1,32 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store.ts";
-import { addTimer } from "@/redux/timerSlice";
 import { loadFox } from "@/redux/foxSlice";
 
 interface BottomSheetStopwatchProps {
-  myBookId: number;
   totalReadingTime: string;
+  sendTime: (time: string) => void;
 }
 
 const BottomSheetStopwatch: React.FC<BottomSheetStopwatchProps> = ({
-  myBookId,
   totalReadingTime,
+  sendTime,
 }) => {
   const dispatch: AppDispatch = useDispatch();
   const { fox } = useSelector((state: RootState) => state.fox);
   const [running, setRunning] = useState<boolean>(true);
   const [time, setTime] = useState<number>(0);
-  const [startTime, setStartTime] = useState<Date | null>(null);
 
   useEffect(() => {
     dispatch(loadFox());
   }, [dispatch]);
-
-  useEffect(() => {
-    const initialStartTime = new Date();
-    setStartTime(initialStartTime);
-  }, []);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -51,25 +44,21 @@ const BottomSheetStopwatch: React.FC<BottomSheetStopwatchProps> = ({
     return `${getHours}:${getMinutes}:${getSeconds}`;
   };
 
-  const formatToServerCompatible = (date: Date) => {
-    return date.toISOString().replace("T", " ").split(".")[0] + ".000000";
-  };
+  function formatSecondsToISOTime(seconds: number) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+
+    let isoString = "PT";
+    if (hours > 0) isoString += `${hours}H`;
+    if (minutes > 0) isoString += `${minutes}M`;
+    if (remainingSeconds > 0) isoString += `${remainingSeconds}S`;
+
+    return isoString;
+  }
 
   const handleClickButton = async () => {
-    if (running) {
-      const pauseTime = new Date();
-      if (startTime) {
-        const createData = {
-          myBookId: myBookId,
-          startTime: formatToServerCompatible(startTime),
-          endTime: formatToServerCompatible(pauseTime),
-        };
-        await dispatch(addTimer(createData));
-      }
-    } else {
-      const newStartTime = new Date();
-      setStartTime(newStartTime);
-    }
+    sendTime(formatSecondsToISOTime(time));
     setRunning(!running);
   };
 

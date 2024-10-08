@@ -1,7 +1,6 @@
 export interface CreateData {
   myBookId: number;
-  startTime: string;
-  endTime: string;
+  duration: string;
 }
 
 export interface TimerType {
