@@ -9,6 +9,7 @@ export interface BookStateType {
   isLoadingRelatedBookList: boolean;
   relatedBookList: BookResponseType[];
   searchedBookList: BookResponseType[];
+  hasMoreSearchResult: boolean;
   searchedBookId: number | undefined;
 }
 

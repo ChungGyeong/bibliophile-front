@@ -60,7 +60,7 @@ const BookDetailPage: React.FC = () => {
 
     dispatch(loadBookDetailByBookId(numericBookId)).then(response => {
       if (response.meta.requestStatus === "fulfilled" && book?.title) {
-        dispatch(loadRelatedBookList({ title: book.title, requestNumber: 0 }));
+        dispatch(loadRelatedBookList({ title: book.title, requestNumber: 1 }));
       }
     });
 

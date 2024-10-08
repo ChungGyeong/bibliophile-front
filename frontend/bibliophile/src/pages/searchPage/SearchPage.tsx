@@ -7,25 +7,25 @@ import InfinityBookCard from "@/components/bookCard/InfinityBookCard.tsx";
 
 const SearchPage: React.FC = () => {
   const [searchString, setSearchString] = React.useState("");
+  const [validationText, setValidationText] = React.useState("");
   const [page, setPage] = React.useState(0);
 
   const dispatch = useDispatch<AppDispatch>();
   const { searchedBookList } = useSelector((state: RootState) => state.book);
 
   const handleChangeSearchBox = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value.length === 1) setValidationText("두 글자 이상 입력해주세요.");
+    else setValidationText("");
+
     setSearchString(e.target.value);
   };
 
   const handleClickSearchIcon = () => {
+    if (searchString && searchString.length < 2) alert("두 글자 이상 입력해주세요.");
     if (searchString) {
       dispatch(loadBookListByTitle({ title: searchString, page: 0 }));
     }
   };
-
-  useEffect(() => {
-    if (searchedBookList.length === 0) {
-    }
-  }, [searchedBookList]);
 
   useEffect(() => {
     dispatch(loadBookListByTitle({ title: searchString, page: page }));
@@ -38,6 +38,9 @@ const SearchPage: React.FC = () => {
         handleChangeSearchBox={handleChangeSearchBox}
         handleClickSearchIcon={handleClickSearchIcon}
       />
+      {validationText && (
+        <p className="text-orange text-sm font-light -mt-6 pl-2">{validationText}</p>
+      )}
       {searchedBookList.length === 0 && page === 0 ? (
         <p className="mt-7 m-auto text-base font-light">검색 결과가 없습니다.</p>
       ) : searchedBookList.length === 0 && page > 0 ? (
@@ -46,7 +49,7 @@ const SearchPage: React.FC = () => {
           다시 검색해주세요.
         </p>
       ) : (
-        <InfinityBookCard page={page} setPage={setPage} searchString={searchString} />
+        <InfinityBookCard setPage={setPage} />
       )}
     </div>
   );

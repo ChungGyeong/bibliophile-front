@@ -1,42 +1,60 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import BookCardItem from "@/components/bookCard/BookCardItem.tsx";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store.ts";
 
 interface InfinityBookCardProps {
-  page: number;
   setPage: (value: React.SetStateAction<number>) => void;
-  searchString: string;
 }
 
 const InfinityBookCard: React.FC<InfinityBookCardProps> = ({ setPage }) => {
-  const { searchedBookList, loading } = useSelector((state: RootState) => state.book);
+  const [isScroll, setIsScroll] = React.useState(false);
 
-  const handleObserver = (entries: IntersectionObserverEntry[]) => {
-    const target = entries[0];
-    if (target.isIntersecting && !loading) {
-      setPage(prevPage => prevPage + 1);
-    }
+  const { searchedBookList, loading, hasMoreSearchResult } = useSelector(
+    (state: RootState) => state.book
+  );
+
+  const observer = useRef<IntersectionObserver | null>(null);
+
+  const handleScroll = () => {
+    if (window.scrollY > 100) setIsScroll(true);
+    else setIsScroll(false);
+  };
+
+  const handleClickToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   useEffect(() => {
-    const observer = new IntersectionObserver(handleObserver, {
-      threshold: 0.2,
-    });
+    if (observer.current) observer.current.disconnect();
 
-    const observerTarget = document.getElementById("observer");
+    const callback = (entries: IntersectionObserverEntry[]) => {
+      if (hasMoreSearchResult && entries[0].isIntersecting && !loading) {
+        setPage(prev => prev + 1);
+      }
+    };
 
-    if (observerTarget) {
-      observer.observe(observerTarget);
-    }
-  }, [searchedBookList]);
+    observer.current = new IntersectionObserver(callback);
+    const currentObserver = observer.current;
 
-  if (loading)
-    return (
-      <div className="w-full">
-        <img src="/images/loading.gif" alt="로딩 중..." className="m-auto mt-[50%]" />
-      </div>
-    );
+    const target = document.querySelector("#load-more");
+    if (target) currentObserver.observe(target);
+
+    return () => {
+      if (currentObserver) currentObserver.disconnect();
+    };
+  }, [loading]);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <div>
@@ -52,7 +70,21 @@ const InfinityBookCard: React.FC<InfinityBookCardProps> = ({ setPage }) => {
           />
         ))}
       </div>
-      <div id="observer" className="h-2"></div>
+      {loading && (
+        <div className="w-full">
+          <img src="/images/loading.gif" alt="로딩 중..." className="m-auto mt-[50%]" />
+        </div>
+      )}
+      {!loading && !hasMoreSearchResult && (
+        <div className="text-center mt-10">더 이상 결과가 없습니다.</div>
+      )}
+      {isScroll && (
+        <i
+          className="fi fi-sr-arrow-circle-up fixed bottom-16 right-1 text-5xl text-orange"
+          onClick={handleClickToTop}
+        ></i>
+      )}
+      <div id="load-more" className="h-[200px]"></div>
     </div>
   );
 };
