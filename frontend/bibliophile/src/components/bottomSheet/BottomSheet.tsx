@@ -10,6 +10,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ height, children, handleClose
   const getHeightClass = () => {
     if (height === 90) return "h-[90%]";
     else if (height === 440) return "h-[440px]";
+    else if (height === 80) return "h-[80%]";
     return "h-[600px]";
   };
 

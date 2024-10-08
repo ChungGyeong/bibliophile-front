@@ -1,7 +1,5 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import BottomSheetStopwatch from "@/components/bottomSheet/BottomSheetStopwatch.tsx";
-import BottomSheet from "@/components/bottomSheet/BottomSheet.tsx";
 import { calculateDaysSince, formatDate } from "@/utils/calDate.ts";
 
 interface BookInfoProps {
@@ -37,11 +35,6 @@ const BookInfo: React.FC<BookInfoProps> = ({
 
   return (
     <div className="relative w-screen -left-[5.5%] h-fit max-w-[600px] overflow-hidden">
-      {isOpenStopwatch && (
-        <BottomSheet height={600} handleCloseBottomSheet={handleClickOpenStopwatch}>
-          <BottomSheetStopwatch myBookId={bookId} totalReadingTime={totalReadingTime} />
-        </BottomSheet>
-      )}
       <div
         className="absolute inset-0 bg-cover bg-center filter blur-md"
         style={{ backgroundImage: `url(${thumbnail})` }}
