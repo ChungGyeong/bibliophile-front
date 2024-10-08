@@ -26,6 +26,9 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
   const [isLong, setIsLong] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [score, setScore] = useState(star);
+  const [isOpenEditModal, setIsOpenEditModal] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [modalMessage, setModalMessage] = useState<string>("");
   const dispatch: AppDispatch = useDispatch();
 
   // @ts-ignore
@@ -41,10 +44,23 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
   };
 
   const handleChangeContent = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setEditedContent(e.target.value);
+    const inputReview = e.target.value;
+
+    if (inputReview.length > 100) {
+      setModalMessage("최대 100자까지 입력 가능합니다.");
+      setIsModalOpen(true);
+    } else {
+      setEditedContent(inputReview);
+    }
   };
 
   const handleClickSaveButton = async () => {
+    if (!editedContent) {
+      setModalMessage("내용을 입력해주세요.");
+      setIsModalOpen(true);
+      return;
+    }
+
     const updateData = {
       content: editedContent,
       star: score,
@@ -104,6 +120,15 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
           onChange={handleChangeContent}
           value={editedContent}
         />
+
+        {isModalOpen && (
+          <Modal
+            isOpen={isModalOpen}
+            handleClickClose={() => setIsModalOpen(false)}
+            title={modalMessage}
+            handleClickConfirm={() => setIsModalOpen(false)}
+          />
+        )}
       </div>
     ) : (
       <div
