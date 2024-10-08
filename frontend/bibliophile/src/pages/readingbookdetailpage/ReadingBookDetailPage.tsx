@@ -47,8 +47,8 @@ const ReadingBookDetailPage: React.FC = () => {
 
   useEffect(() => {
     if (myBookId) {
-      dispatch(loadMyBook(Number(myBookId)));
       dispatch(loadMyMemoList(Number(myBookId)));
+      dispatch(loadMyBook(Number(myBookId)));
       dispatch(loadMyReport(Number(myBookId)));
       dispatch(loadMyReview(Number(myBookId)));
     }
