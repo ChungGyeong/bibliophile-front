@@ -22,7 +22,7 @@ export const getBookListByTitle = async (title: string, page: number) => {
       params: {
         title: title,
         page: page,
-        size: 10,
+        size: 8,
       },
     })
     .then(response => {

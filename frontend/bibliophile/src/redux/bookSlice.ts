@@ -36,6 +36,7 @@ const initialState: BookStateType = {
   isLoadingRelatedBookList: false,
   relatedBookList: [],
   searchedBookList: [],
+  hasMoreSearchResult: true,
   searchedBookId: undefined,
 };
 
@@ -138,7 +139,11 @@ export const bookSlice = createSlice({
         state.loading = true;
       })
       .addCase(loadBookListByTitle.fulfilled, (state, action) => {
-        state.searchedBookList = action.payload.data;
+        if (action.payload.data.length === 0) state.hasMoreSearchResult = false;
+        else {
+          state.searchedBookList = [...state.searchedBookList, ...action.payload.data];
+          state.hasMoreSearchResult = true;
+        }
         state.error = undefined;
         state.loading = false;
       })
