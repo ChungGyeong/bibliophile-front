@@ -1,6 +1,8 @@
 export interface UserStateType {
   isLoggedIn: boolean | undefined;
   loading: boolean;
+  isWordCloudLoading: boolean;
+  wordCloudImageUrl: string;
   error: string | undefined;
   isNicknameExist: boolean;
   isFirst: boolean;

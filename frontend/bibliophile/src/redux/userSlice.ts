@@ -4,6 +4,7 @@ import {
   createUser,
   deleteUser,
   getUser,
+  getWordCloud,
   leaveAccount,
   updateUser,
 } from "@/api/users.ts";
@@ -13,6 +14,8 @@ import { SignupRequest, UpdateUserRequest, UserStateType } from "@/types/user.ts
 const initialState: UserStateType = {
   isLoggedIn: undefined,
   loading: false,
+  isWordCloudLoading: false,
+  wordCloudImageUrl: "",
   error: undefined,
   isNicknameExist: false,
   isFirst: true,
@@ -66,6 +69,11 @@ export const removeUser = createAsyncThunk("user/removeUser", async () => {
 
 export const logout = createAsyncThunk("user/logout", async () => {
   const response = await leaveAccount();
+  return response.data;
+});
+
+export const loadWordCloud = createAsyncThunk("user/loadWordCloud", async () => {
+  const response = await getWordCloud();
   return response.data;
 });
 
@@ -158,6 +166,16 @@ export const userSlice = createSlice({
         state.isLoggedIn = undefined;
       })
       .addCase(logout.rejected, (state, action) => {
+        state.error = action.error.message;
+      })
+      .addCase(loadWordCloud.pending, state => {
+        state.isWordCloudLoading = true;
+      })
+      .addCase(loadWordCloud.fulfilled, (state, action) => {
+        state.isWordCloudLoading = false;
+        state.wordCloudImageUrl = action.payload.data.wordCloud;
+      })
+      .addCase(loadWordCloud.rejected, (state, action) => {
         state.error = action.error.message;
       });
   },
