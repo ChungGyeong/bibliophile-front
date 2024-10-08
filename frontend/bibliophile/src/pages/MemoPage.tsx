@@ -29,7 +29,6 @@ const MemoPage: React.FC = () => {
     if (memoId) {
       dispatch(loadMemo(Number(memoId)));
     }
-    console.log(data);
   };
 
   useEffect(() => {
