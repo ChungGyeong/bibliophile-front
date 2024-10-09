@@ -11,6 +11,7 @@ import { loadPopularBookList, loadRecommendedBookList } from "@/redux/bookSlice.
 import { BookResponseType, PopularBookRequestType } from "@/types/books.ts";
 import { ClassificationType } from "@/types/user.ts";
 import { translateTagToEnglish } from "@/utils/translator.ts";
+import { loadUser } from "@/redux/userSlice.ts";
 
 const BookSuggestionPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -35,6 +36,7 @@ const BookSuggestionPage: React.FC = () => {
   );
 
   useEffect(() => {
+    dispatch(loadUser());
     dispatch(
       loadRecommendedBookList({
         tags: tags.map(translateTagToEnglish),
@@ -58,7 +60,7 @@ const BookSuggestionPage: React.FC = () => {
 
   return (
     <div>
-      <div className="bg-white flex flex-col gap-5 min-h-[40vh]">
+      <div className="bg-white flex flex-col gap-5 min-h-[75vh]">
         <div className="mt-10">
           <p className="text-lg">나에게 딱! 맞는 맞춤 추천</p>
           <p className="text-xs font-light">여우의 입맛에 맞을 추천 메뉴</p>
@@ -84,7 +86,7 @@ const BookSuggestionPage: React.FC = () => {
         </BookCardGrid>
       </div>
 
-      <div className="bg-gray-green -mx-[5.5%] pb-[100px] -mb-[100px] mt-5 rounded-t-[10px] min-h-[50vh]">
+      <div className="bg-gray-green -mx-[5.5%] pb-[100px] -mb-[100px] mt-5 rounded-t-[10px] min-h-[75vh]">
         <div className="w-[90%] m-auto flex flex-col gap-5">
           <div className="mt-5">
             <p className="text-lg">성별과 연령대에 따른 책 추천</p>
