@@ -39,15 +39,13 @@ const BookCardReadingItem: React.FC<BookCardReadingProps> = ({
 
   return (
     <div
-      className={`border-common h-[140px] w-full flex p-[10px] gap-[10px] shadow-custom active:shadow-custom-inner ${isActive && activeClass}`}
+      className={`border-common h-[140px] w-full flex p-4 gap-8 shadow-custom active:shadow-custom-inner ${isActive && activeClass}`}
       onClick={handleClickNavigateMoreInfo}
     >
-      <div className="w-1/3 h-full overflow-hidden object-center object-cover">
-        <img src={thumbnail} alt={title} className="w-full h-full" />
-      </div>
-      <div className="w-2/3 flex flex-col justify-between">
-        <div className="flex items-start justify-between">
-          <div>
+      <img src={thumbnail} alt={title} className="w-fit h-full object-contain" />
+      <div className="w-full flex flex-col justify-between">
+        <div className="w-full flex items-start justify-between">
+          <div className="w-4/5">
             <p className="font-medium text-base line-clamp-1">{title}</p>
             <p className="font-medium text-[10px] line-clamp-1">{authors}</p>
             <p className="font-light text-[10px] line-clamp-1">{publisher}</p>
