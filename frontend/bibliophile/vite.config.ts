@@ -9,11 +9,6 @@ export default defineConfig({
     watch: {
       usePolling: true,
     },
-    hmr: {
-      protocol: "wss",
-      host: "j11b204.p.ssafy.io",
-      port: 8080,
-    },
   },
   plugins: [
     react(),
