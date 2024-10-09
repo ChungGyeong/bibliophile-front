@@ -9,6 +9,12 @@ export default defineConfig({
     watch: {
       usePolling: true,
     },
+    strictPort: true,
+    port: 443,
+    hmr: {
+      protocol: "wss",
+      clientPort: 443,
+    },
   },
   plugins: [
     react(),
