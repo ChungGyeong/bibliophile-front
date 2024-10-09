@@ -1,27 +1,41 @@
 import React, { ChangeEventHandler } from "react";
 import { useNavigate } from "react-router-dom";
 import InputBox from "./InputBox";
+import { initSearchBookList, loadBookListByTitle } from "@/redux/bookSlice.ts";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store.ts";
 
 interface SearchBoxProps {
   value?: string;
   handleChangeSearchBox: ChangeEventHandler<HTMLInputElement>;
-  handleClickSearchIcon: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-const SearchBox: React.FC<SearchBoxProps> = ({
-  value = "",
-  handleChangeSearchBox,
-  handleClickSearchIcon,
-}) => {
+const SearchBox: React.FC<SearchBoxProps> = ({ value = "", handleChangeSearchBox }) => {
   const navigate = useNavigate();
+
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleBarcodeIconClick = () => {
     navigate("/barcode");
   };
 
+  const handleClickSearchIcon = () => {
+    if (value && value.length < 2) alert("두 글자 이상 입력해주세요.");
+    if (value) {
+      console.log("click");
+      dispatch(initSearchBookList());
+      dispatch(loadBookListByTitle({ title: value, page: 0 }));
+    }
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      handleClickSearchIcon(e as any);
+      if (e.nativeEvent.isComposing) return;
+      if (value && value.length < 2) alert("두 글자 이상 입력해주세요.");
+      if (value) {
+        dispatch(initSearchBookList());
+        dispatch(loadBookListByTitle({ title: value, page: 0 }));
+      }
     }
   };
 
@@ -33,7 +47,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
           placeholder="검색어를 입력해주세요"
           value={value}
           handleChangeInput={handleChangeSearchBox}
-          onKeyDown={handleKeyDown}
+          onKeyDown={e => handleKeyDown(e)}
         />
       </div>
 

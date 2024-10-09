@@ -20,14 +20,6 @@ const SearchPage: React.FC = () => {
     setSearchString(e.target.value);
   };
 
-  const handleClickSearchIcon = () => {
-    if (searchString && searchString.length < 2) alert("두 글자 이상 입력해주세요.");
-    if (searchString) {
-      dispatch(initSearchBookList());
-      dispatch(loadBookListByTitle({ title: searchString, page: 0 }));
-    }
-  };
-
   useEffect(() => {
     dispatch(loadBookListByTitle({ title: searchString, page: page }));
   }, [page]);
@@ -38,11 +30,7 @@ const SearchPage: React.FC = () => {
 
   return (
     <div className="flex flex-col w-full gap-8 overflow-y-auto mt-5">
-      <SearchBox
-        value={searchString}
-        handleChangeSearchBox={handleChangeSearchBox}
-        handleClickSearchIcon={handleClickSearchIcon}
-      />
+      <SearchBox value={searchString} handleChangeSearchBox={handleChangeSearchBox} />
       {validationText && (
         <p className="text-orange text-sm font-light -mt-6 pl-2">{validationText}</p>
       )}

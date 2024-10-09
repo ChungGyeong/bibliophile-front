@@ -6,7 +6,7 @@ interface InputBoxProps {
   value?: string;
   handleChangeInput: ChangeEventHandler<HTMLInputElement>;
   noticeMessage?: string;
-  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onKeyDown?: React.KeyboardEventHandler<HTMLInputElement> | undefined;
 }
 
 const InputBox: React.FC<InputBoxProps> = ({
