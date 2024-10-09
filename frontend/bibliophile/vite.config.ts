@@ -10,10 +10,9 @@ export default defineConfig({
       usePolling: true,
     },
     hmr: {
-      host: 'localhost',
-      port: 8080,
-      protocol: 'wss'
-    }
+      host: "localhost",
+      protocol: "wss",
+    },
   },
   plugins: [
     react(),
