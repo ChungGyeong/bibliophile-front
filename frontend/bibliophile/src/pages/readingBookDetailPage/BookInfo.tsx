@@ -70,6 +70,13 @@ const BookInfo: React.FC<BookInfoProps> = ({
 
       <div className="absolute inset-0 bg-black bg-opacity-50"></div>
 
+      <i
+        className="fi fi-rr-angle-left absolute top-5 left-5 text-white text-xl z-20"
+        onClick={() => {
+          navigate(-1);
+        }}
+      ></i>
+
       <p
         className="absolute top-5 right-5 text-white text-sm z-20"
         onClick={e => handleClickNavigateBookDetail(e, bookId)}
@@ -86,7 +93,9 @@ const BookInfo: React.FC<BookInfoProps> = ({
           />
         </div>
 
-        <h1 className="text-lg font-medium mb-1.5">{title}</h1>
+        <h1 className="text-lg font-medium mb-1.5 m-auto text-center leading-none text-balance">
+          {title}
+        </h1>
         <p className="text-sm font-light mb-1.5">{authors}</p>
         <p className="text-xs font-light text-gray-300 mb-8">{publisher}</p>
 
@@ -99,7 +108,7 @@ const BookInfo: React.FC<BookInfoProps> = ({
           <div
             className="flex items-end gap-2"
             onClick={() => {
-              !reloadMyBook === undefined && setIsOpenStopwatch(true);
+              reloadMyBook !== undefined && setIsOpenStopwatch(true);
             }}
           >
             <i className="fi fi-rr-alarm-clock"></i>
