@@ -11,6 +11,9 @@ export default defineConfig({
     },
     hmr: {
       overlay: false,
+      protocol: "wss",
+      port: 3000,
+      host: "https://j11b204.p.ssafy.io",
     },
   },
   plugins: [
