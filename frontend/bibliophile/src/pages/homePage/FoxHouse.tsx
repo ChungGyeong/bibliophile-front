@@ -35,19 +35,6 @@ const FoxHouse: React.FC = () => {
 
   const status = renderStatusIcon();
 
-  // const handleFeedBtnClick = async () => {
-  //   setIsFeeding(true);
-  //   try {
-  //     await dispatch(editFoxFeed()).unwrap();
-  //     setTimeout(() => {
-  //       setIsFeeding(false);
-  //       dispatch(loadFox());
-  //     }, 3000);
-  //   } catch (error) {
-  //     setIsFeeding(false);
-  //   }
-  // };
-
   const handleFeedBtnClick = async () => {
     if (fox.feedCount <= 0) {
       setIsModalOpen(true);
