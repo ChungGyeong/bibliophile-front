@@ -204,8 +204,10 @@ const BookDetailPage: React.FC = () => {
         <h2 className="font-medium text-[18px] mb-[10px]">비슷한 줄거리의 다른 책도 추천해요!</h2>
         {isLoadingRelatedBookList ? (
           <img src="/images/loading.gif" alt="로딩 중..." className="m-auto h-[100px]" />
-        ) : (
+        ) : relatedBookList.length > 0 ? (
           <BookCardSimpleList books={relatedBookList} />
+        ) : (
+          <div className="text-[14px] font-light">비슷한 줄거리의 책이 없습니다</div>
         )}
       </div>
     </div>
