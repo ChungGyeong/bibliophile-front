@@ -11,7 +11,7 @@ export default defineConfig({
     },
     hmr: {
       protocol: "wss",
-      host: "j11b204.p.ssafy.io",
+      host: "j11b204.p.ssafy.io/api",
     },
   },
   plugins: [
