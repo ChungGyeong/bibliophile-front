@@ -9,10 +9,8 @@ export default defineConfig({
     watch: {
       usePolling: true,
     },
-    port: 5173,
-    strictPort: true,
     hmr: {
-      port: 5173,
+      host: "j11b204.p.ssafy.io",
     },
   },
   plugins: [
