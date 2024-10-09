@@ -12,7 +12,7 @@ export default defineConfig({
     hmr: {
       protocol: "wss",
       host: "j11b204.p.ssafy.io",
-      port: 443,
+      port: 8080,
     },
   },
   plugins: [
