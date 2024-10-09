@@ -32,6 +32,10 @@ const SearchPage: React.FC = () => {
     dispatch(loadBookListByTitle({ title: searchString, page: page }));
   }, [page]);
 
+  useEffect(() => {
+    if (searchString.length === 0) dispatch(initSearchBookList());
+  }, []);
+
   return (
     <div className="flex flex-col w-full gap-8 overflow-y-auto mt-5">
       <SearchBox
