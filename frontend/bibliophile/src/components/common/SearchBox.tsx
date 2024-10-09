@@ -22,7 +22,6 @@ const SearchBox: React.FC<SearchBoxProps> = ({ value = "", handleChangeSearchBox
   const handleClickSearchIcon = () => {
     if (value && value.length < 2) alert("두 글자 이상 입력해주세요.");
     if (value) {
-      console.log("click");
       dispatch(initSearchBookList());
       dispatch(loadBookListByTitle({ title: value, page: 0 }));
     }
@@ -31,11 +30,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({ value = "", handleChangeSearchBox
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       if (e.nativeEvent.isComposing) return;
-      if (value && value.length < 2) alert("두 글자 이상 입력해주세요.");
-      if (value) {
-        dispatch(initSearchBookList());
-        dispatch(loadBookListByTitle({ title: value, page: 0 }));
-      }
+
+      handleClickSearchIcon();
     }
   };
 
