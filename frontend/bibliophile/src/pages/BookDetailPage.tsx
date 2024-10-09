@@ -64,7 +64,6 @@ const BookDetailPage: React.FC = () => {
           await dispatch(loadBookDetailByBookId(numericBookId)).unwrap();
           await dispatch(loadMyBookId(numericBookId)).unwrap();
 
-          dispatch(loadRelatedBookList(numericBookId));
           dispatch(loadReviews(numericBookId));
         } finally {
           setIsBookDataLoaded(true);
@@ -79,6 +78,10 @@ const BookDetailPage: React.FC = () => {
       prevMyBookRef.current = myBook;
     }
   }, [myBook]);
+
+  useEffect(() => {
+    dispatch(loadRelatedBookList(Number(bookId)));
+  }, [bookId]);
 
   const handleStartReading = () => {
     setIsModalOpen(true);
