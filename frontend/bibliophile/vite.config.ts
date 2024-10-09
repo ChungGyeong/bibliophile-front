@@ -10,9 +10,9 @@ export default defineConfig({
       usePolling: true,
     },
     hmr: {
-      protocol: "ws",
-      host: "localhost",
-      port: 8080,
+      protocol: "wss",
+      host: "j11b204.p.ssafy.io",
+      port: 443,
     },
   },
   plugins: [
