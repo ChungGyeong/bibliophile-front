@@ -80,7 +80,7 @@ const InfinityBookCard: React.FC<InfinityBookCardProps> = ({ setPage }) => {
       )}
       {isScroll && (
         <i
-          className="fi fi-sr-arrow-circle-up fixed bottom-16 right-1 text-5xl text-orange"
+          className="fi fi-sr-arrow-circle-up text-5xl text-orange fixed bottom-16 z-20 left-[75%]"
           onClick={handleClickToTop}
         ></i>
       )}
