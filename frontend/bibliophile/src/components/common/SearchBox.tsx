@@ -19,6 +19,12 @@ const SearchBox: React.FC<SearchBoxProps> = ({
     navigate("/barcode");
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleClickSearchIcon(e as any);
+    }
+  };
+
   return (
     <div className="flex w-full gap-4">
       <div className="flex-grow">
@@ -27,6 +33,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
           placeholder="검색어를 입력해주세요"
           value={value}
           handleChangeInput={handleChangeSearchBox}
+          onKeyDown={handleKeyDown}
         />
       </div>
 
