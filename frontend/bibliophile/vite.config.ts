@@ -11,7 +11,6 @@ export default defineConfig({
     },
     hmr: {
       protocol: "wss",
-      port: 3000,
       host: "j11b204.p.ssafy.io",
     },
   },
