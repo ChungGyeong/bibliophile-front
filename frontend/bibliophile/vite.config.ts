@@ -9,13 +9,6 @@ export default defineConfig({
     watch: {
       usePolling: true,
     },
-    strictPort: true,
-    port: 5173,
-    hmr: {
-      clientPort: 5173,
-      port: 8080,
-      protocol: "wss",
-    },
   },
   plugins: [
     react(),
