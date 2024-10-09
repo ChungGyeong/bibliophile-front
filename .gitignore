@@ -14,6 +14,7 @@ dev-dist
 *.local
 .env
 */*/.env
+frontend/bibliophile/.env
 
 # Editor directories and files
 .vscode/*
