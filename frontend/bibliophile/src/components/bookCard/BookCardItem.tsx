@@ -10,6 +10,7 @@ interface BookCardItemProps {
   authors: string;
   isBookmarked?: boolean;
   completionReadingTime?: string;
+  onBookmarkToggle?: () => void;
 }
 
 const BookCardItem: React.FC<BookCardItemProps> = ({
@@ -19,6 +20,7 @@ const BookCardItem: React.FC<BookCardItemProps> = ({
   authors,
   isBookmarked,
   completionReadingTime,
+  onBookmarkToggle,
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -43,7 +45,11 @@ const BookCardItem: React.FC<BookCardItemProps> = ({
             {formatDate(completionReadingTime)}
           </p>
         ) : (
-          <LikeButton isBookmarked={isBookmarked ?? false} bookId={bookId} />
+          <LikeButton
+            isBookmarked={isBookmarked ?? false}
+            bookId={bookId}
+            onBookmarkToggle={onBookmarkToggle}
+          />
         )}
         <div>
           <p

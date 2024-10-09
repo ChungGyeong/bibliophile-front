@@ -12,6 +12,10 @@ const MyBookLikePage: React.FC = () => {
     dispatch(loadBookmarkList());
   }, [dispatch]);
 
+  const handleBookmarkToggle = () => {
+    dispatch(loadBookmarkList());
+  };
+
   if (loading) {
     return (
       <div className="fixed inset-0 flex justify-center items-center">
@@ -34,6 +38,7 @@ const MyBookLikePage: React.FC = () => {
               thumbnail={book.thumbnail}
               authors={book.authors}
               isBookmarked={true}
+              onBookmarkToggle={handleBookmarkToggle}
             />
           ))}
         </div>

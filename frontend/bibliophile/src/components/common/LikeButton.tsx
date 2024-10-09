@@ -7,9 +7,10 @@ import { loadBookDetailByBookId } from "@/redux/bookSlice";
 interface LikeButtonProps {
   isBookmarked: boolean;
   bookId: number;
+  onBookmarkToggle?: () => void;
 }
 
-const LikeButton: React.FC<LikeButtonProps> = ({ isBookmarked, bookId }) => {
+const LikeButton: React.FC<LikeButtonProps> = ({ isBookmarked, bookId, onBookmarkToggle }) => {
   const dispatch: AppDispatch = useDispatch();
   const [bookmarked, setBookmarked] = useState(isBookmarked);
 
@@ -19,13 +20,19 @@ const LikeButton: React.FC<LikeButtonProps> = ({ isBookmarked, bookId }) => {
 
   const handleToggleBookmarked = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
+    const newBookmarkedStatus = !bookmarked;
     setBookmarked(!bookmarked);
-    if (bookmarked) {
-      await dispatch(removeBookmark(bookId));
-    } else {
+
+    if (newBookmarkedStatus) {
       await dispatch(addBookmark(bookId));
+    } else {
+      await dispatch(removeBookmark(bookId));
     }
     await dispatch(loadBookDetailByBookId(bookId));
+
+    if (onBookmarkToggle) {
+      onBookmarkToggle();
+    }
   };
 
   return (
