@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import SearchBox from "@/components/common/SearchBox.tsx";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store.ts";
-import { loadBookListByTitle } from "@/redux/bookSlice.ts";
+import { initSearchBookList, loadBookListByTitle } from "@/redux/bookSlice.ts";
 import InfinityBookCard from "@/components/bookCard/InfinityBookCard.tsx";
 
 const SearchPage: React.FC = () => {
@@ -23,6 +23,7 @@ const SearchPage: React.FC = () => {
   const handleClickSearchIcon = () => {
     if (searchString && searchString.length < 2) alert("두 글자 이상 입력해주세요.");
     if (searchString) {
+      dispatch(initSearchBookList());
       dispatch(loadBookListByTitle({ title: searchString, page: 0 }));
     }
   };
@@ -41,13 +42,8 @@ const SearchPage: React.FC = () => {
       {validationText && (
         <p className="text-orange text-sm font-light -mt-6 pl-2">{validationText}</p>
       )}
-      {searchedBookList.length === 0 && page === 0 ? (
+      {searchedBookList.length === 0 ? (
         <p className="mt-7 m-auto text-base font-light">검색 결과가 없습니다.</p>
-      ) : searchedBookList.length === 0 && page > 0 ? (
-        <p className="m-auto text-base font-light text-center">
-          모든 검색 결과를 보여드렸어요! <br />
-          다시 검색해주세요.
-        </p>
       ) : (
         <InfinityBookCard setPage={setPage} />
       )}

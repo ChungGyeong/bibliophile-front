@@ -84,7 +84,7 @@ const InfinityBookCard: React.FC<InfinityBookCardProps> = ({ setPage }) => {
           onClick={handleClickToTop}
         ></i>
       )}
-      <div id="load-more" className="h-[200px]"></div>
+      <div id="load-more" className="h-32"></div>
     </div>
   );
 };
