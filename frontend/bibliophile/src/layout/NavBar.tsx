@@ -1,13 +1,14 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 interface NavBarProps {
-  activeNav: string;
+  // activeNav: string;
   onNavChange: (nav: string) => void;
 }
 
-const NavBar: React.FC<NavBarProps> = ({ activeNav, onNavChange }) => {
+const NavBar: React.FC<NavBarProps> = ({ onNavChange }) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const navs = [
     {
@@ -47,6 +48,22 @@ const NavBar: React.FC<NavBarProps> = ({ activeNav, onNavChange }) => {
     navigate(route);
   };
 
+  const getActive = () => {
+    if (location.pathname.startsWith("/books")) {
+      return "추천 책";
+    } else if (
+      location.pathname.startsWith("/reading") ||
+      location.pathname.startsWith("/mybook")
+    ) {
+      return "나의 책장";
+    } else if (location.pathname.startsWith("/search")) {
+      return "검색";
+    } else if (location.pathname.startsWith("/mypage")) {
+      return "프로필";
+    }
+    return "홈";
+  };
+
   return (
     <div className="fixed max-w-[600px] min-w-[320px] m-auto w-full bottom-0 h-[60px] bg-white shadow-navbar flex z-30">
       {navs.map(nav => (
@@ -55,8 +72,10 @@ const NavBar: React.FC<NavBarProps> = ({ activeNav, onNavChange }) => {
           onClick={() => handleNavClick(nav.name, nav.route)}
           className="flex-1 flex flex-col items-center justify-center"
         >
-          <i className={`text-xl ${activeNav === nav.name ? nav.activeIcon : nav.icon}`} />
-          <span className={`text-[10px] leading-none ${activeNav === nav.name ? "" : "text-gray"}`}>
+          <i className={`text-xl ${getActive() === nav.name ? nav.activeIcon : nav.icon}`} />
+          <span
+            className={`text-[10px] leading-none ${getActive() === nav.name ? "" : "text-gray"}`}
+          >
             {nav.name}
           </span>
         </button>
