@@ -1,40 +1,68 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import BottomSheetStopwatch from "@/components/bottomSheet/BottomSheetStopwatch.tsx";
+import BottomSheet from "@/components/bottomSheet/BottomSheet.tsx";
 import { calculateDaysSince, formatDate } from "@/utils/calDate.ts";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store.ts";
+import { addTimer } from "@/redux/timerSlice";
 
 interface BookInfoProps {
   bookId: number;
+  myBookId: number;
   thumbnail: string;
   title: string;
   authors: string;
   publisher: string;
   createDate: string;
   totalReadingTime: string;
+  reloadMyBook?: () => void;
 }
 
 const BookInfo: React.FC<BookInfoProps> = ({
   bookId,
+  myBookId,
   thumbnail,
   title,
   authors,
   publisher,
   createDate,
   totalReadingTime,
+  reloadMyBook,
 }) => {
   const [isOpenStopwatch, setIsOpenStopwatch] = React.useState(false);
+  const [formattedTime, setFormattedTime] = useState("");
 
+  const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleClickNavigateBookDetail = (_e: any, bookId: number) => {
     navigate(`/books/${bookId}`);
   };
 
-  const handleClickOpenStopwatch = () => {
-    setIsOpenStopwatch(!isOpenStopwatch);
+  const handleClickOpenStopwatch = async () => {
+    const createData = {
+      myBookId: myBookId,
+      duration: formattedTime,
+    };
+    await dispatch(addTimer(createData));
+    if (reloadMyBook) {
+      reloadMyBook();
+    }
+    setIsOpenStopwatch(false);
+  };
+
+  const sendTime = (time: string) => {
+    setFormattedTime(time);
   };
 
   return (
     <div className="relative w-screen -left-[5.5%] h-fit max-w-[600px] overflow-hidden">
+      {isOpenStopwatch && (
+        <BottomSheet height={80} handleCloseBottomSheet={handleClickOpenStopwatch}>
+          <BottomSheetStopwatch totalReadingTime={totalReadingTime} sendTime={sendTime} />
+        </BottomSheet>
+      )}
       <div
         className="absolute inset-0 bg-cover bg-center filter blur-md"
         style={{ backgroundImage: `url(${thumbnail})` }}
@@ -58,9 +86,7 @@ const BookInfo: React.FC<BookInfoProps> = ({
           />
         </div>
 
-        <p className="text-lg font-medium mb-1.5 w-4/5 m-auto text-center leading-none text-balance">
-          {title}
-        </p>
+        <h1 className="text-lg font-medium mb-1.5">{title}</h1>
         <p className="text-sm font-light mb-1.5">{authors}</p>
         <p className="text-xs font-light text-gray-300 mb-8">{publisher}</p>
 
@@ -68,7 +94,7 @@ const BookInfo: React.FC<BookInfoProps> = ({
           <p className="text-sm font-medium">
             {formatDate(createDate)}부터 {calculateDaysSince(createDate)}일째
           </p>
-          <div className="flex items-end gap-2" onClick={handleClickOpenStopwatch}>
+          <div className="flex items-end gap-2" onClick={() => setIsOpenStopwatch(true)}>
             <i className="fi fi-rr-alarm-clock"></i>
             <span className="text-lg font-regular">{totalReadingTime}</span>
           </div>

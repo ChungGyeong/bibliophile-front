@@ -106,11 +106,11 @@ const ReadingBookDetailPage: React.FC = () => {
     setIsPageOpen(false);
   };
 
-  const reloadfuction = async () => {
+  const reloadFuction = async () => {
     await dispatch(loadMyReview(Number(myBookId)));
   };
 
-  const reloadmybook = async () => {
+  const reloadMyBook = async () => {
     dispatch(loadMyBook(Number(myBookId)));
   };
 
@@ -213,7 +213,7 @@ const ReadingBookDetailPage: React.FC = () => {
               publisher={book.publisher}
               createDate={book.createdDate}
               totalReadingTime={book.totalReadingTime}
-              reloadmybook={reloadmybook}
+              reloadMyBook={reloadMyBook}
             />
           </div>
 
@@ -273,7 +273,7 @@ const ReadingBookDetailPage: React.FC = () => {
                 star={review.star}
                 nickname={review.nickname}
                 type="item"
-                reload={reloadfuction}
+                reload={reloadFuction}
               />
             </div>
           ) : (

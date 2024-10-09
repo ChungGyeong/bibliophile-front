@@ -11,7 +11,7 @@ import MemoPage from "./pages/MemoPage.tsx";
 import ReportPage from "./pages/ReportPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import SignupPage from "@/pages/SignupPage.tsx";
-import ReadingBookDetailPage from "@/pages/readingbookdetailpage/ReadingBookDetailPage.tsx";
+import ReadingBookDetailPage from "@/pages/readingBookDetailPage/ReadingBookDetailPage.tsx";
 import SearchPage from "@/pages/searchPage/SearchPage.tsx";
 import MyPage from "@/pages/myPage/MyPage.tsx";
 import BarcodePage from "@/pages/searchPage/BarcodePage.tsx";
