@@ -63,20 +63,24 @@ const BottomSheetStopwatch: React.FC<BottomSheetStopwatchProps> = ({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center m-[20%]">
-      <p className="font-light text-base leading-normal">그동안 읽은 시간 : {totalReadingTime}</p>
+    <div className="flex flex-col items-center justify-between h-full">
+      <p className="font-light text-base leading-normal mt-10">
+        그동안 읽은 시간 {totalReadingTime}
+      </p>
       {fox && (
         <div>
           <img
-            className="my-[10%]"
+            className="w-[250px] h-[250px]"
             src={`/images/fox/${fox.foxType === "ADULT" ? "youth" : fox.foxType.toLowerCase()}_timer.gif`}
             alt="책 읽는 여우"
           />
         </div>
       )}
-      <p className="font-light text-base leading-normal">다시 요리를 시작한지 ...</p>
-      <p className="font-bold text-4xl leading-normal mb-[10%]">{formatTime(time)}</p>
-      <div onClick={handleClickButton}>
+      <div className="flex items-center flex-col">
+        <p className="font-light text-base leading-normal">다시 요리를 시작한지 ...</p>
+        <p className="font-bold text-4xl leading-normal">{formatTime(time)}</p>
+      </div>
+      <div onClick={handleClickButton} className="mb-10">
         {running ? (
           <i className="fi fi-rr-pause-circle text-6xl text-active-orange pt-2"></i>
         ) : (
