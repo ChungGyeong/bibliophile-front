@@ -33,8 +33,10 @@ const AppRoutes = () => {
   const { isLoggedIn } = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
-    typeof isLoggedIn === "undefined" && !getIsAuthenticated() && navigate("/login");
-  }, []);
+    if (typeof isLoggedIn === "undefined" && !getIsAuthenticated()) {
+      navigate("/login");
+    }
+  }, [isLoggedIn, navigate]);
 
   return (
     <Routes>
@@ -60,7 +62,6 @@ const AppRoutes = () => {
       <Route path="/search" element={<PageLayout page={<SearchPage />} />} />
       <Route path="/barcode" element={<PageLayout page={<BarcodePage />} />} />
       <Route path="/mypage" element={<PageLayout page={<MyPage />} />} />
-
       <Route path="/privacy-policy" element={<PageLayout page={<PrivacyPolicyPage />} />} />
     </Routes>
   );
