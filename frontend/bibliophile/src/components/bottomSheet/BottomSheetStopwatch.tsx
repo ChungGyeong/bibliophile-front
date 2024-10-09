@@ -62,6 +62,10 @@ const BottomSheetStopwatch: React.FC<BottomSheetStopwatchProps> = ({
     setRunning(!running);
   };
 
+  useEffect(() => {
+    sendTime(formatSecondsToISOTime(time));
+  }, [time]);
+
   return (
     <div className="flex flex-col items-center justify-between h-full">
       <p className="font-light text-base leading-normal mt-10">

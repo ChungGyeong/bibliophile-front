@@ -41,6 +41,8 @@ const BookInfo: React.FC<BookInfoProps> = ({
   };
 
   const handleClickOpenStopwatch = async () => {
+    sendTime(formattedTime); 
+    
     const createData = {
       myBookId: myBookId,
       duration: formattedTime,
