@@ -10,10 +10,11 @@ export default defineConfig({
       usePolling: true,
     },
     strictPort: true,
-    port: 443,
+    port: 5173,
     hmr: {
+      clientPort: 5173,
+      port: 8080,
       protocol: "wss",
-      clientPort: 443,
     },
   },
   plugins: [
