@@ -119,10 +119,6 @@ const MyPage: React.FC = () => {
     });
   };
 
-  const handleChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputs((prev: UsersResponse) => ({ ...prev, nickname: e.target.value }));
-  };
-
   const handleClickButton = async () => {
     setIsEdit(!isEdit);
 

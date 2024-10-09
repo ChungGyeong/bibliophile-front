@@ -64,7 +64,7 @@ const BookDetailPage: React.FC = () => {
           await dispatch(loadBookDetailByBookId(numericBookId)).unwrap();
           await dispatch(loadMyBookId(numericBookId)).unwrap();
 
-          dispatch(loadRelatedBookList({ title: book?.title || "", requestNumber: 1 }));
+          dispatch(loadRelatedBookList(numericBookId));
           dispatch(loadReviews(numericBookId));
         } finally {
           setIsBookDataLoaded(true);
