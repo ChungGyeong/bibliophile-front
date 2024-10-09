@@ -9,9 +9,11 @@ export default defineConfig({
     watch: {
       usePolling: true,
     },
+    host: true,
+    strictPort: true,
+    port: 5173,
     hmr: {
-      host: "localhost",
-      protocol: "wss",
+      clientPort: 5173,
     },
   },
   plugins: [
