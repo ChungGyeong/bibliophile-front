@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import MyBookTab from "./MyBookTab";
 import NavBar from "./NavBar.tsx";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -24,16 +24,11 @@ const MyBookLayout: React.FC<MyBookLayoutProps> = ({ page }) => {
     return "읽는 중";
   };
 
-  const [activeNav, setActiveNav] = useState("나의 책장");
-  const handleNavChange = (nav: string) => {
-    setActiveNav(nav);
-  };
-
   return (
     <main className="max-w-[600px] min-w-[320px] m-auto">
       <MyBookTab activeTab={currentTab()} onChange={handleTabChange} />
       <div className="w-[90%] m-auto mb-[100px]">{page}</div>
-      <NavBar activeNav={activeNav} onNavChange={handleNavChange} />
+      <NavBar />
     </main>
   );
 };

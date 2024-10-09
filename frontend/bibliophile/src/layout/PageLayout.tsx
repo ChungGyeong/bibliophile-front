@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import NavBar from "./NavBar.tsx";
 
 interface PageLayoutProps {
@@ -6,15 +6,10 @@ interface PageLayoutProps {
 }
 
 const PageLayout: React.FC<PageLayoutProps> = ({ page }) => {
-  const [activeNav, setActiveNav] = useState("홈");
-  const handleNavChange = (nav: string) => {
-    setActiveNav(nav);
-  };
-
   return (
     <main className="max-w-[600px] min-w-[320px] m-auto overflow-x-hidden">
       <div className="w-[90%] m-auto mb-[100px]">{page}</div>
-      <NavBar activeNav={activeNav} onNavChange={handleNavChange} />
+      <NavBar />
     </main>
   );
 };

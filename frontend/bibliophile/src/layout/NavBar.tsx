@@ -1,11 +1,7 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-interface NavBarProps {
-  onNavChange: (nav: string) => void;
-}
-
-const NavBar: React.FC<NavBarProps> = ({ onNavChange }) => {
+const NavBar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -42,8 +38,7 @@ const NavBar: React.FC<NavBarProps> = ({ onNavChange }) => {
     },
   ];
 
-  const handleNavClick = (nav: string, route: string) => {
-    onNavChange(nav);
+  const handleNavClick = (route: string) => {
     navigate(route);
   };
 
@@ -68,7 +63,7 @@ const NavBar: React.FC<NavBarProps> = ({ onNavChange }) => {
       {navs.map(nav => (
         <button
           key={nav.name}
-          onClick={() => handleNavClick(nav.name, nav.route)}
+          onClick={() => handleNavClick(nav.route)}
           className="flex-1 flex flex-col items-center justify-center"
         >
           <i className={`text-xl ${getActive() === nav.name ? nav.activeIcon : nav.icon}`} />
