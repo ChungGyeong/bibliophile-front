@@ -87,7 +87,11 @@ export const loadRelatedBookList = createAsyncThunk(
 export const bookSlice = createSlice({
   name: "book",
   initialState,
-  reducers: {},
+  reducers: {
+    initSearchBookList: state => {
+      state.searchedBookList = [];
+    },
+  },
   extraReducers: builder => {
     builder
       .addCase(loadBookDetailByBookId.pending, state => {
@@ -163,4 +167,5 @@ export const bookSlice = createSlice({
   },
 });
 
+export const { initSearchBookList } = bookSlice.actions;
 export const bookReducer = bookSlice.reducer;
