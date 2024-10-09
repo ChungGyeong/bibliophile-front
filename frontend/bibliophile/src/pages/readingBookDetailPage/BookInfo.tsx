@@ -92,9 +92,16 @@ const BookInfo: React.FC<BookInfoProps> = ({
 
         <div className="w-full max-w-[600px] flex justify-between items-end">
           <p className="text-sm font-medium">
-            {formatDate(createDate)}부터 {calculateDaysSince(createDate)}일째
+            {reloadMyBook === undefined
+              ? `${formatDate(createDate)}부터 ${calculateDaysSince(createDate)}일 동안`
+              : `${formatDate(createDate)}부터 ${calculateDaysSince(createDate)}일째`}
           </p>
-          <div className="flex items-end gap-2" onClick={() => setIsOpenStopwatch(true)}>
+          <div
+            className="flex items-end gap-2"
+            onClick={() => {
+              !reloadMyBook === undefined && setIsOpenStopwatch(true);
+            }}
+          >
             <i className="fi fi-rr-alarm-clock"></i>
             <span className="text-lg font-regular">{totalReadingTime}</span>
           </div>
