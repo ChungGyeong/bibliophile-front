@@ -46,7 +46,7 @@ const MemoCard: React.FC<CardProps> = ({ type, id, content, imgUrl, createdDate,
           </div>
 
           <div
-            className={`font-light text-xs ${type === "report" ? "line-clamp-6" : "line-clamp-5"}`}
+            className={`font-light text-xs ${type === "report" ? "line-clamp-6" : "line-clamp-5"} break-all`}
           >
             {content}
           </div>
