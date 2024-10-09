@@ -54,6 +54,10 @@ body,
   /*height: 100%;*/
   width: 100vw;
   font-family: "Pretendard-Regular", "system-ui";
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none;
 }
 
 .border-common {
