@@ -10,10 +10,9 @@ export default defineConfig({
       usePolling: true,
     },
     hmr: {
-      overlay: false,
       protocol: "wss",
       port: 3000,
-      host: "https://j11b204.p.ssafy.io",
+      host: "j11b204.p.ssafy.io",
     },
   },
   plugins: [
