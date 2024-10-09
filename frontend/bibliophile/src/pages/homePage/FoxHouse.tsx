@@ -3,11 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { loadFox, editFoxFeed } from "@/redux/foxSlice";
 import ProgressBar from "@/components/common/ProgressBar";
+import Modal from "@/components/common/Modal";
 
 const FoxHouse: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { fox, error } = useSelector((state: RootState) => state.fox);
   const [isFeeding, setIsFeeding] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const renderFoxImg = () => {
     if (isFeeding) {
@@ -33,7 +35,24 @@ const FoxHouse: React.FC = () => {
 
   const status = renderStatusIcon();
 
+  // const handleFeedBtnClick = async () => {
+  //   setIsFeeding(true);
+  //   try {
+  //     await dispatch(editFoxFeed()).unwrap();
+  //     setTimeout(() => {
+  //       setIsFeeding(false);
+  //       dispatch(loadFox());
+  //     }, 3000);
+  //   } catch (error) {
+  //     setIsFeeding(false);
+  //   }
+  // };
+
   const handleFeedBtnClick = async () => {
+    if (fox.feedCount <= 0) {
+      setIsModalOpen(true);
+      return;
+    }
     setIsFeeding(true);
     try {
       await dispatch(editFoxFeed()).unwrap();
@@ -54,6 +73,15 @@ const FoxHouse: React.FC = () => {
 
   return (
     <div className="w-full h-[280px] shadow-custom border rounded-[5px]">
+      {isModalOpen && (
+        <Modal
+          isOpen={isModalOpen}
+          handleClickClose={() => setIsModalOpen(false)}
+          title="여우에게 줄 밥이 없어요!"
+          handleClickConfirm={() => setIsModalOpen(false)}
+        />
+      )}
+
       <div className="h-[200px] flex items-center justify-center">
         <img src={renderFoxImg()} alt="여우" className="h-full" />
       </div>
