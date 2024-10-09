@@ -9,6 +9,7 @@ export default defineConfig({
     watch: {
       usePolling: true,
     },
+    hmr: process.env.NODE_ENV !== "production",
   },
   plugins: [
     react(),
