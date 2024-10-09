@@ -17,7 +17,7 @@ export const useCheckNickName = () => {
       } else if (isNicknameExist) {
         setValidationText("이미 사용 중인 닉네임 입니다.");
       } else {
-        setValidationText("사용 가능한 닉네입 입니다!");
+        setValidationText("사용 가능한 닉네임 입니다!");
       }
     },
     [isNicknameExist]

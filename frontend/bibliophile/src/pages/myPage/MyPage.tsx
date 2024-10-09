@@ -22,14 +22,14 @@ const MyPage: React.FC = () => {
 
   const [isEdit, setIsEdit] = useState(false);
   const [inputs, setInputs] = useState<UsersResponse>({
-    userId: user.userId,
-    email: user.email,
-    nickname: user.nickname,
-    gender: user.gender,
-    birthday: user.birthday,
-    classification: user.classification,
-    profileImage: user.profileImage,
-    oauthServerType: user.oauthServerType,
+    userId: user?.userId,
+    email: user?.email,
+    nickname: user?.nickname,
+    gender: user?.gender,
+    birthday: user?.birthday,
+    classification: user?.classification,
+    profileImage: user?.profileImage,
+    oauthServerType: user?.oauthServerType,
   });
   const [isOpenLogoutModal, setIsOpenLogoutModal] = useState(false);
   const [isOpenDeleteMemberModal, setIsOpenDeleteMemberModal] = useState(false);
@@ -168,14 +168,13 @@ const MyPage: React.FC = () => {
     });
   };
 
-  const handleClickDeleteMember = () => {
-    dispatch(removeUser()).then(response => {
-      if (response.meta.requestStatus === "fulfilled") navigate("/login");
-      else {
-        navigate("/mypage");
-        alert("회원 탈퇴에 실패했습니다. 다시 시도해주세요!");
-      }
-    });
+  const handleClickDeleteMember = async () => {
+    const response = await dispatch(removeUser());
+    navigate("/login", { replace: true });
+    if (response.meta.requestStatus === "rejected") {
+      navigate("/mypage", { replace: true });
+      alert("회원 탈퇴에 실패했습니다. 다시 시도해주세요!");
+    }
   };
 
   useEffect(() => {
@@ -260,32 +259,36 @@ const MyPage: React.FC = () => {
         <div>
           <img
             className="w-[120px] h-[120px] rounded-md object-cover mt-10 mb-2.5 border-common"
-            src={user.profileImage ? user.profileImage : "/images/no-image.svg"}
+            src={
+              user?.profileImage
+                ? user.profileImage
+                : "https://closetoyoubucket.s3.ap-northeast-2.amazonaws.com/42c9bd10-933d-4274-8575-883fd2fa0cec.jpg"
+            }
             alt="프로필 이미지"
           />
-          <p className="font-medium text-lg text-center ">{user.nickname}</p>
+          <p className="font-medium text-lg text-center ">{user?.nickname}</p>
         </div>
       )}
 
       <UserInfoField
         isEdit={isEdit}
         firstTitle="이메일: "
-        firstContent={user.email}
+        firstContent={user?.email}
         secondTitle="연결된 소셜 계정: "
-        secondContent={user.oauthServerType}
+        secondContent={user?.oauthServerType}
       />
 
       <UserInfoField
         isEdit={isEdit}
         firstTitle="성별: "
-        firstContent={user.gender === "MAN" ? "남성" : "여성"}
+        firstContent={user?.gender === "MAN" ? "남성" : "여성"}
         secondTitle="생일: "
-        secondContent={user.birthday}
+        secondContent={user?.birthday}
       />
 
       <TagItemList
         layoutType={isEdit ? "mypageSelect" : "mySelect"}
-        tags={isEdit ? inputs.classification : user.classification}
+        tags={isEdit ? inputs.classification : user ? user.classification : []}
         setTags={newTags => setInputs({ ...inputs, classification: newTags })}
       />
 
