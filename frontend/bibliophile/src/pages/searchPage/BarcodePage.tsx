@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 // @ts-ignore
 import { BarcodeScanner } from "@thewirv/react-barcode-scanner";
 import { useNavigate } from "react-router-dom";
@@ -7,10 +7,10 @@ import { AppDispatch, RootState } from "@/redux/store.ts";
 import { loadBookByIsbn } from "@/redux/bookSlice.ts";
 
 const BarcodePage: React.FC = () => {
-  const [errorMessage, setErrorMessage] = React.useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const dispatch = useDispatch<AppDispatch>();
-  const { searchedBookId, error } = useSelector((state: RootState) => state.book);
+  const { searchedBookId } = useSelector((state: RootState) => state.book);
 
   const navigate = useNavigate();
 
@@ -20,13 +20,11 @@ const BarcodePage: React.FC = () => {
 
   const handleSuccessDetectedIsbn = (detectedIsbn: React.SetStateAction<string>) => {
     dispatch(loadBookByIsbn(detectedIsbn.toString())).then(response => {
-      if (error !== undefined) {
+      if (response.meta.requestStatus === "fulfilled") {
+        navigate("/books/" + searchedBookId);
+      } else {
         alert("등록되지 않은 책 입니다!");
         return;
-      }
-
-      if (response.payload !== undefined && searchedBookId !== undefined) {
-        navigate("/books/" + searchedBookId);
       }
     });
   };
