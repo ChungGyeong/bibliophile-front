@@ -114,7 +114,7 @@ const HomePage: React.FC = () => {
         </div>
         <div className="w-5/6 h-[240px] shadow-custom bg-white rounded-lg p-3">
           <p className="text-black text-lg font-normal">워드 클라우드</p>
-          <div className="flex justify-center items-center w-5/6 h-4/5 mx-auto">
+          <div className="flex justify-center items-center w-full h-4/5">
             <WordCloud />
           </div>
         </div>

@@ -2,7 +2,7 @@ export interface UserStateType {
   isLoggedIn: boolean | undefined;
   loading: boolean;
   isWordCloudLoading: boolean;
-  wordCloudImageUrl: string;
+  wordCloudImageUrl: string | null;
   error: string | undefined;
   isNicknameExist: boolean;
   isFirst: boolean;

@@ -15,7 +15,7 @@ const initialState: UserStateType = {
   isLoggedIn: undefined,
   loading: false,
   isWordCloudLoading: false,
-  wordCloudImageUrl: "",
+  wordCloudImageUrl: null,
   error: undefined,
   isNicknameExist: false,
   isFirst: true,
