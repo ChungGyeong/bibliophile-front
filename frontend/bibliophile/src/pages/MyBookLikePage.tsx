@@ -1,20 +1,31 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState, AppDispatch } from "@/redux/store";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
 import { loadBookmarkList } from "@/redux/bookmarkSlice";
 import BookCardItem from "../components/bookCard/BookCardItem";
+import { BookmarkResponse } from "@/types/bookmarks";
 
 const MyBookLikePage: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { bookmarkList = [], loading, error } = useSelector((state: RootState) => state.bookmark);
+  const [bookmarkList, setBookmarkList] = useState<BookmarkResponse[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    dispatch(loadBookmarkList());
-  }, [dispatch]);
+    const fetchBookmarks = async () => {
+      try {
+        setLoading(true);
+        const response = await dispatch(loadBookmarkList()).unwrap();
+        setBookmarkList(response.data);
+      } catch (err) {
+        setError("북마크 목록을 불러오는 중 오류가 발생했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const handleBookmarkToggle = () => {
-    dispatch(loadBookmarkList());
-  };
+    fetchBookmarks();
+  }, [dispatch]);
 
   if (loading) {
     return (
@@ -38,7 +49,6 @@ const MyBookLikePage: React.FC = () => {
               thumbnail={book.thumbnail}
               authors={book.authors}
               isBookmarked={true}
-              onBookmarkToggle={handleBookmarkToggle}
             />
           ))}
         </div>
