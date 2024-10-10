@@ -85,7 +85,7 @@ const StreakCalendar: React.FC = () => {
   };
 
   return (
-    <div className="mt-5 w-full flex justify-center mt-5 w-full flex justify-center border-2 border-gray-300 rounded-md p-1">
+    <div className="w-full flex justify-center w-full flex justify-center border-2 border-gray-300 rounded-md p-1">
       <div className="transform scale-90 max-w-[300px] mx-auto">
         <DayPicker
           locale={ko}

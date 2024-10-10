@@ -96,8 +96,13 @@ const HomePage: React.FC = () => {
           </div>
         </div>
 
-        <div className="my-[50px] ">
-          <p className="text-black text-xl font-medium font-semibold">독서 캘린더</p>
+        <div className="my-[50px]">
+          <div className="flex items-center justify-between mt-2">
+            <p className="text-black text-xl font-medium font-semibold mb-2">독서 캘린더</p>
+            <p className="text-black text-sm font-light text-medium-gray">
+              읽은 페이지에 따라 진해집니다
+            </p>
+          </div>
           <div className="flex justify-center w-full">
             <StreakCalendar />
           </div>
