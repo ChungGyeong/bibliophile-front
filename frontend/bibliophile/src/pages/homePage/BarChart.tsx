@@ -99,7 +99,7 @@ const BarChart: React.FC = () => {
   }, [data]);
 
   const screenWidth = window.innerWidth;
-  const chartWidth = screenWidth * 0.77;
+  const chartWidth = Math.min(screenWidth * 0.77, 370);
 
   return (
     <div className="flex justify-center w-full h-full">
