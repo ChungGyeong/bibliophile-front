@@ -195,6 +195,8 @@ const MyPage: React.FC = () => {
           profileImage: user.profileImage,
           oauthServerType: user.oauthServerType,
         });
+      } else {
+        navigate("/login");
       }
     });
   }, [isEdit, setIsEdit]);
