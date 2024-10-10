@@ -32,6 +32,7 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
   memoImgList = [],
   totalPage = 0,
 }) => {
+  const [loading, setLoading] = useState(false);
   const [memo, setMemo] = useState<string>(content);
   const [page, setPage] = useState<number>(memoPage);
   const [existingImages, setExistingImages] = useState<string[]>(memoImgList);
@@ -44,7 +45,7 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
   const dispatch: AppDispatch = useDispatch();
 
   const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/jpg"];
-  const MAX_FILE_SIZE = 50 * 1024 * 1024;
+  const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
   const handleMemoChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const inputMemo = e.target.value;
@@ -72,7 +73,7 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
       setIsModalOpen(true);
       return;
     }
-
+    setLoading(true);
     const formData = new FormData();
 
     if (filesToUpload.length > 0) {
@@ -136,7 +137,7 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
         await dispatch(editReport({ bookReportId, updateData }));
       }
     }
-
+    setLoading(true);
     onClose();
   };
 
@@ -154,7 +155,7 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
         }
 
         if (file.size > MAX_FILE_SIZE) {
-          setModalMessage(`${file.name}은(는) 파일 크기가 2MB를 초과하였습니다.`);
+          setModalMessage(`${file.name}은(는) 파일 크기가 5MB를 초과하였습니다.`);
           setIsModalOpen(true);
           return;
         }
@@ -323,6 +324,11 @@ const BottomSheetMemo: React.FC<BottomSheetMemoProps> = ({
         title={modalMessage}
         handleClickConfirm={closeModal}
       />
+      {loading && (
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-white bg-opacity-75 z-50">
+          <img src="/images/loading.gif" alt="로딩 중..." className="m-auto" />
+        </div>
+      )}
     </div>
   );
 };

@@ -20,6 +20,7 @@ const MyPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { user, loading } = useSelector((state: RootState) => state.user);
 
+  const [uploading, setUploading] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [inputs, setInputs] = useState<UsersResponse>({
     userId: user?.userId,
@@ -43,7 +44,7 @@ const MyPage: React.FC = () => {
   const navigate = useNavigate();
 
   const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/jpg"];
-  const MAX_FILE_SIZE = 50 * 1024 * 1024;
+  const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
   const handleClickProfileImage = () => {
     if (fileInputRef.current) {
@@ -64,7 +65,7 @@ const MyPage: React.FC = () => {
       }
 
       if (file.size > MAX_FILE_SIZE) {
-        setModalMessage(`${file.name}은(는) 파일 크기가 2MB를 초과하였습니다.`);
+        setModalMessage(`${file.name}은(는) 파일 크기가 5MB를 초과하였습니다.`);
         setIsModalOpen(true);
         return;
       }
@@ -124,6 +125,8 @@ const MyPage: React.FC = () => {
 
     if (!isEdit) return;
 
+    setUploading(true);
+
     let newProfileImage = inputs.profileImage;
     let result = null;
 
@@ -157,6 +160,7 @@ const MyPage: React.FC = () => {
         navigate("/mypage");
       }
     });
+    setUploading(false);
   };
 
   const handleClickLogout = () => {
@@ -313,6 +317,12 @@ const MyPage: React.FC = () => {
         title={modalMessage}
         handleClickConfirm={() => setIsModalOpen(false)}
       />
+
+      {uploading && (
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-white bg-opacity-75 z-50">
+          <img src="/images/loading.gif" alt="로딩 중..." className="m-auto" />
+        </div>
+      )}
     </div>
   );
 };
