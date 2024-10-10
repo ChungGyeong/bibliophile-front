@@ -53,6 +53,7 @@ body,
   padding: 0;
   /*height: 100%;*/
   width: 100vw;
+  overflow-x: hidden;
   font-family: "Pretendard-Regular", "system-ui";
   -webkit-user-select:none;
   -moz-user-select:none;

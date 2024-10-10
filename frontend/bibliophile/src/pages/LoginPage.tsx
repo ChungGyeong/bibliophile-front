@@ -5,8 +5,8 @@ const LoginPage: React.FC = () => {
   return (
     <div className="w-full flex flex-col items-center justify-center min-h-screen">
       <div className="flex flex-col items-center justify-center mb-14">
-        <img src="/images/logo.png" alt="로고이미지" className="w-28 h-28" />
-        <p className="text-2xl font-regular mt-2">책 먹는 여우</p>
+        <img src="/images/logo.jpg" alt="로고이미지" className="w-44 h-44" />
+        <p className="text-2xl font-regular">책 먹는 여우</p>
       </div>
       <SocialLoginButton />
       <p className="font-light text-sm text-medium-gray text-center mt-3">
