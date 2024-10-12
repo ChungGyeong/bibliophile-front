@@ -12,9 +12,6 @@ dist
 dist-ssr
 dev-dist
 *.local
-.env
-*/*/.env
-frontend/bibliophile/.env
 
 # Editor directories and files
 .vscode/*
@@ -27,3 +24,4 @@ frontend/bibliophile/.env
 *.sln
 *.sw?
 
+.env
