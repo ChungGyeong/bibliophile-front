@@ -1,17 +1,17 @@
-# 책 먹는 여우🦊📚
+# <img src="./readme/빌리필리.png" alt="🦊" width="40px" /> 책 먹는 여우 <img src="./readme/빌리필리.png" alt="어플 소개 이미지" width="40px" />
 <img src="./readme/main.png" alt="어플 소개 이미지" />
 
-## 프로젝트 개요
+# <img src="./readme/빌리필리.png" alt="🦊" width="30px" /> 프로젝트 개요
 ### 1. 기간
 
 2024.08.26 - 2024.10.11 | 총 7주
 
 ### 2. 팀원
 
-| 백하람<br />(프론트, 팀장)| 오예진<br />(프론트)| 김예원<br />(프론트)| 박찬호<br />(백엔드, 인프라)| 이건희<br />(백엔드)| 김미량<br />(인프라)|
+| 백하람<br />(프론트, 팀장)| 오예진<br />(프론트)| 김예원<br />(프론트)| 박찬호<br />(백엔드, 인프라)| 이건희<br />(백엔드)| 김미량<br />(빅데이터)|
 |---|---|---|---|---|---|
-| <img src="https://avatars.githubusercontent.com/u/74824057?v=4" alt='@ramrami-B' width="120" height="120"> | <img src="https://avatars.githubusercontent.com/u/102010837?v=4" alt="@KBG1" width="120" height="120"> | <img src="https://avatars.githubusercontent.com/u/43288938?v=4" alt="@joareum" width="120" height="120" > | <img src="https://avatars.githubusercontent.com/u/160552393?v=4" alt="@Geunbeom" width="120" height="120" > | <img src="https://avatars.githubusercontent.com/u/92250144?v=4" alt="@GeonHui2" width="120" height="120"> | <img src="https://avatars.githubusercontent.com/u/129651243?v=4" alt="@JeonSungGwon" width="120" height="120" > |
-| [@ramrami-B](https://github.com/ramrami-B)| [@KBG1](https://github.com/KBG1)| [@joareum](https://github.com/joareum)| [@Geunbeom](https://github.com/Geunbeom)| [@GeonHui2](https://github.com/GeonHui2)| [@JeonSungGwon](https://github.com/JeonSungGwon)|
+| <img src="https://avatars.githubusercontent.com/u/74824057?v=4" alt='@ramrami-B' width="120" height="120"> | <img src="https://avatars.githubusercontent.com/u/156629458?v=4" alt="@ooyejinn" width="120" height="120"> | <img src="https://avatars.githubusercontent.com/u/158377990?v=4" alt="@yewone1" width="120" height="120" > | <img src="https://avatars.githubusercontent.com/u/91451735?v=4" alt="@Chaeros" width="120" height="120" > | <img src="https://avatars.githubusercontent.com/u/92250144?v=4" alt="@GeonHui2" width="120" height="120"> | <img src="https://avatars.githubusercontent.com/u/156287271?v=4" alt="@miryang1016" width="120" height="120" > |
+| [@ramrami-B](https://github.com/ramrami-B)| [@ooyejinn](https://github.com/ooyejinn)| [@yewone1](https://github.com/yewone1)| [@Chaeros](https://github.com/Chaeros)| [@GeonHui2](https://github.com/GeonHui2)| [@miryang1016](https://github.com/miryang1016)|
 
 ### 3. 프로젝트 개요
 빅데이터 기반 도서 추천 기능 및 독서 기록 관리 기능이 있는 모바일 웹앱
@@ -57,7 +57,7 @@
 </div>
 
 
-## 기능 및 화면
+# <img src="./readme/빌리필리.png" alt="🦊" width="30px" /> 기능 및 화면
 ### 1. 로그인/회원가입
 <div style="display: flex; gap: 20px;">
   <img src="./readme/로그인.gif" alt="로그인 이미지" width="200"/>
@@ -118,19 +118,19 @@
 - 로그아웃 및 회원탈퇴를 할 수 있습니다.<br/>
 
 
-## 빅데이터 알고리즘
+# <img src="./readme/빌리필리.png" alt="🦊" width="30px" /> 빅데이터 알고리즘
 
-### **1. 협업 필터링(User-Based Collaborative Filtering)**
+### 1. 협업 필터링(User-Based Collaborative Filtering)
 특정 사용자와 유사한 취향을 가진 다른 사용자들의 행동 데이터를 바탕으로 추천하는 알고리즘
 
 ### 2. 콘텐츠 필터링(TF-IDF)
 정보 검색과 텍스트 마이닝에서 사용되는 기법으로, 특정 단어가 문서 내에서 얼마나 중요한지를 평가하는 데 사용되는 알고리즘
 
 
-## 시스템 아키텍처
-<img src="./readme/시스템아키텍처.png" alt="시스템아키텍처 이미지"/>
+# <img src="./readme/빌리필리.png" alt="🦊" width="30px" /> 시스템 아키텍처
+<img src="./readme/시스템아키텍처.png" alt="시스템아키텍처 이미지" width="650px" />
 
 
-## ERD
-<img src="./readme/ERD.png" alt="ERD 이미지"/>
+# <img src="./readme/빌리필리.png" alt="🦊" width="30px" /> ERD
+<img src="./readme/ERD.png" alt="ERD 이미지" width="650px" />
 
